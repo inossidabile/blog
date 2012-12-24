@@ -20,7 +20,7 @@
     <table class="layoutTable" cellspacing="0" cellpadding="0">
       <tbody>
         <tr>
-          <td>
+          <td class="backgroundScroll" >
             <div class="sidebar">
               <div class="sidebarWrap">
                 <div class="addSidePadding">
@@ -85,11 +85,13 @@
               <div class="content">
                 {{ content | expand_urls: root_url }}
               </div>
+                <div class="footer"></div>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
 </body>
 </html>
