@@ -1,0 +1,48 @@
+---
+layout: post
+title: "Rails + REST: avoiding the views nightmare"
+date: 2012-12-23 15:47
+comments: true
+categories: [REST, JSON]
+---
+
+The new trend is about to appear to relay on Rails as a good framework for REST servers. And it really is. We do use Rails in this manner for quite a long time already. There is however a real problem in that thing, the views. The things where you do describe the JSON response.
+At first it may look like everything’s just fine. You don’t need anything but `.to_json` or maybe RABL in some complicated cases. But then things go wild. And you start switching those JSON Builders one after another.
+
+### The problem
+
+Let’s say you have a banking service. That’s like 30 models. Each has extended CRUD endpoint (extensions are maybe 3 or 4 methods per endpoint). Each model either has like 10 or 12 fields which are quite common to be large strings. And off course all this stuff has extensive relationships. Up to like 4 or 5 levels of `belongs_to`.
+
+<!-- more -->
+
+The another thing to remember is that in real life your JSON entities are not just clean dumps of your ActiveRecord attributes. Two very common things are conditions (which attribute should show up in entity? Depends on another one) and custom methods.
+
+The problem is that the consumer needs unique set of fields for EVERY method among this endpoints. This includes inlined children.
+
+Imagine that, you have like 4 or 5 sets of fields to output for different methods. And that’s just a beginning. After that the model gets inlined. And a parent needs just 3 tiny fields to express relation. Then it gets inlined twice to express another relation. And after that the parents gets inlined too. And this time we need just 2 fields.
+
+That’s already 10. And these 10 variations include very different conditionals and custom methods.
+
+The life with pain
+
+The first thing we came up to was to leave the RABL alone. It looks fun and effective at first but you simply can not do anything complex and custom enough with that. And in real life RABL did not really go far away from basic `.to_json`.
+
+We’ve tried a lot of different builders and finally stopped with @dhh’s Jbuilder. It’s very straightforward but still allows you to avoid the boilerplate.
+
+But the nightmare hasn’t gone. What do you do to keep your view DRY? Use partials. Right. In a very short term that gave us 10-15 partials for each model. That’s 30 models * 15 partials = 450 files at your `app/views` folder. This mess appeared to be totally unmanageable.
+
+The Presenter pattern
+
+Another approach to solve this problem with better organization is the Presenter. Since our views are just ruby code it’s a good step forward to fulfill it with OOP.
+
+This allows us to reduce the number of files and to group similar sets into one method with parameters.
+Right. For now we came up to the 1-1 number of models presenters declaring the sets of fields. The only problem with this kind of stuff is that it doesn’t really look Rails-way.
+
+The better look and feel can be achieved with Draper gem. With help of Draper, our code turns into:
+Loading gist https://gist.github.com/2184238.json ...
+
+But now again we stuck into the DRY problem. Having a large amount of fields we are stuck at large inefficient hashes structures containing all the same strings at keyword `:foo` and value `self.foo` sides.
+
+Thanks to the fact Drapper supports the base Application presenter this could be solved easily with one protected builder method. However since our main goal was to improve Jbuilder behavior it should be noted Jbuilder does already have such a method. We don’t really need to work with hashes while decorating. We can build our response from a set of strings using Jbuilder internally at our presenters.
+
+At the moment I write this Jbuilder does not allow us to inject raw JSON string into response. There is another approach to get the required result though. There is a nice fork (pull request was partially approved by @dhh already so this is expected to be supported by Jbuilder very soon).

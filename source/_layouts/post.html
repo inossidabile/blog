@@ -1,0 +1,22 @@
+---
+layout: default
+single: true
+---
+
+{% include disqus.html %}
+<div class="button">
+  <a href="/">&larr;&nbsp; Back to entries</a>
+</div>
+<h1 class="largeTitle">{{ page.title }}</h1>
+<div class="dateBlock">
+  <img src="/images/orange_clock.png">
+  <span class="date">{% include date.html %}{{ time }}</span>
+</div>
+
+{{ content }}
+
+{% if site.disqus_short_name and page.comments == true %}
+  <section class="comments">
+    <div id="disqus_thread" aria-live="polite"></div>
+  </section>
+{% endif %}

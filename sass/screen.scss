@@ -1,0 +1,470 @@
+/* RESET STYLES BEGIN*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+/* RESET STYLES END*/
+
+body {
+    font-family:  Tahoma, Arial, 'Sans-serif' ;
+    font-size: 14px;
+    letter-spacing: 0.1px;
+}
+
+.container {
+
+    height:1222px;
+}
+
+.container .main {
+    width:100%;
+    display: inline-block;
+    vertical-align: top;
+    height:1222px;
+}
+.container .layoutTable td:last-child {
+    width:100%;
+}
+
+.content .date {
+    color:#9D9D9D;
+    font-size: 12px;
+    padding-top: 10px;
+    font-weight: bold;
+}
+.content .largeTitle, .content .largeTitle a {
+    color:#474747;
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.content .largeTitle a:hover {
+    color:#FF9E00;
+    text-decoration: underline;
+}
+
+.dateBlock {
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+.content p {
+    padding-top: 10px;
+    width:755px;
+    line-height: 18px;
+    color:#707070;
+}
+.content h2 {
+    color:#474747;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 18px 0;
+}
+
+.content .addPaddingForPictures {
+    padding: 15px 0;
+    padding-left: 2px;
+}
+
+.content .date {
+    color:#9D9D9D;
+    font-size: 12px;
+    padding-top: 10px;
+    font-weight: bold;
+}
+
+.content .medDark p {
+    font-size: 16px;
+    color:#434343;
+    width:907px;
+    padding-bottom: 15px;
+    line-height: 18px;
+}
+.content .medLight p {
+    font-size: 16px;
+    color:#707070;
+    font-weight: normal;
+    line-height: 20px;
+}
+
+.content .readMore {
+    width:85px;
+    padding:5px 15px 5px 0;
+    border-right: 1px solid #E5E5E5;
+    display: inline-block;
+}
+.content .readMore a, .content .readMore span {
+    font-size: 12px;
+    padding-right:5px;
+    color:#FF9E00;
+    text-decoration: none;
+}
+
+.content .readMore a:hover {
+    text-decoration: underline;
+}
+
+.content .readMore img {
+    position: relative;
+    top:-1px;
+}
+
+.content .commentBlock {
+    width:112px;
+    padding-left: 15px;
+    display: inline-block;
+}
+
+.content .commentBlock a {
+    font-size: 12px;
+    color:#9D9D9D;
+    padding-left:5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.content .commentBlock a:hover {
+    text-decoration: underline;
+}
+.content .commentBlock img {
+    position: relative;
+    top:1px;
+}
+
+.content .button {
+    margin-top:20px;
+    border: 1px solid #E5E5E5;
+    border-radius: 5px;
+    width:118px;
+    padding:8px 10px 10px 10px;
+}
+.content .button a {
+    text-decoration: none;
+    font-size:12px;
+    font-weight:bold;
+    color:#FF9E00;
+    padding-left:5px;
+}
+
+.content .button a:hover {
+    text-decoration: underline;
+}
+
+.content .button img {
+    position: relative;
+    top:-1px;
+}
+
+
+
+/*SIDEBAR STYLES BEGIN*/
+
+.container .sidebar {
+    width:308px;
+    background: url('/images/bg_sidebar.png') 0 0 transparent no-repeat;
+    height:1222px;
+    color: white;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.sidebarWrap {
+    padding:20px;
+    padding-left:18px;
+    padding-right:22px;
+}
+.sidebar a {
+    color: white;
+}
+
+.sidebar p {
+    line-height: 20px;
+    padding-top: 15px;
+}
+.sidebar h1 {
+    font-size: 42px;
+    font-weight: bold;
+    padding-bottom:33px;
+    margin-left: -1px;
+    padding-top: 10px;
+}
+.sidebar h2 {
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.sidebar .border {
+    border-bottom: 1px solid #F1A953;
+    padding-top: 12px;
+}
+
+.addSidePadding {
+    padding-left: 15px;
+}
+
+.sidebar .followMe {
+    padding-top: 20px;
+}
+
+.sidebar .followMe a {
+    display: inline-block;
+    margin-right: 5px;
+    margin-top:10px;
+}
+.sidebar .followMe a img {
+    opacity: 0.7;
+}
+.sidebar .followMe a img:hover {
+    opacity: 1;
+}
+
+.sidebar .myProjects {
+    margin-top:40px;
+    height: 240px;
+    width: 267px;
+    background: url('/images/round_border.png') 0 0 transparent no-repeat;
+    position: relative;
+    padding-top: 8px;
+}
+.sidebar .myProjects a {
+    font-weight: bold;
+    font-family:  Arial, 'Sans-serif' ;
+    text-decoration: none;
+    border-bottom: 1px white solid;
+}
+.sidebar .myProjects p {
+    padding-top: 3px;
+}
+.sidebar .myProjects .oneLine {
+    padding-left:14px;
+    padding-top: 15px;
+}
+.sidebar .sidebarWrap a:hover {
+    text-decoration: none;
+}
+
+.sidebar .myProjects .oneLine a:hover {
+    border-bottom: 0px solid white;
+}
+
+
+.sidebar .myProjects .specialH2 {
+    position: absolute;
+    top:-16px;
+    padding:5px;
+    left:11px;
+}
+/*SIDEBAR STYLES END*/
+
+/*HEADER STYLES BEGIN*/
+.main .header {
+    padding: 20px 0 15px 20px;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.main .header ul li {
+    padding-left: 10px;
+    padding-right: 15px;
+    border-right: 1px solid #E5E5E5;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.main .header ul li:last-child {
+    border: 0px solid black;
+}
+
+.main .header ul {
+    width:190px;
+}
+.main .header ul a {
+    font-size: 20px;
+    color: #FF9E00;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 0.2px;
+}
+
+.main .header ul li.active a, .main .header ul li a:hover{
+    color: #000000;
+}
+
+/*HEADER STYLES END*/
+
+/*CONTENT STYLES BEGIN*/
+    /*ARCHIVES STYLES BEGIN*/
+.content {
+   margin: 0 40px;
+}
+
+.content .archiveTable td {
+    font-size: 24px;
+    font-weight: bold;
+}
+.content .archiveTable td:first-child {
+    color:#9D9D9D;
+}
+.content .archiveTable td .year {
+    padding-top: 30px;
+    width:145px;
+}
+.content .archiveTable td:last-child {
+    padding: 21px 0 15px 10px ;
+    width:100%;
+    border-bottom: 1px solid #E5E5E5;
+}
+.content .archiveTable a {
+    color:#474747;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.content .archiveTable a:hover {
+    color:#FF9E00;
+    text-decoration: underline;
+}
+
+
+.content .archiveTable tr:last-child td{
+    border-bottom: 0px solid #E5E5E5;
+}
+.content .archiveTable tr.border {
+    border-bottom: 1px solid #E5E5E5;
+}
+    /*ARCHIVES STYLES END*/
+    /*BLOG STYLES END*/
+
+.content .largeTitle {
+    padding-top:25px;
+    width:907px;
+}
+.content .dateBlock img {
+    position: relative;
+    top:3px;
+}
+
+
+    /*BLOG STYLES END*/
+    /*MAIN STYLES END*/
+.content .twitterBar {
+    margin-top:14px;
+}
+
+.content .twitterBar ul {
+    border: 1px solid #E5E5E5;
+    border-radius: 8px;
+    width:750px;
+}
+
+.content .twitterBar ul li {
+    padding:10px;
+    border-right: 1px solid #E5E5E5;
+    display: inline-block;
+    vertical-align: top;
+}
+.content .twitterBar ul li:last-child {
+    border-right: 0px solid #E5E5E5;
+}
+.content .twitterBar ul li p {
+    padding: 0;
+    width: auto;
+}
+.content .twitterBar ul li a {
+    color: #59A3C2;
+}
+.content .twitterBar ul li a:hover {
+    text-decoration: none;
+}
+
+
+.content .articles {
+    width:1120px;
+}
+.content .articles li {
+    display: inline-block;
+    vertical-align: top;
+    width: 307px;
+    margin-top:35px;
+}
+
+.content .articles li h2 a {
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    width:280px;
+    color:#474747;
+    display:block;
+}
+.content .articles li h2 a:hover {
+    color:#FF9E00;
+    text-decoration: underline;
+}
+
+.content .articles li p {
+    width:272px;
+}
+
+.content .articles .readMore, .content .articles .commentBlock {
+    margin-top: 10px;
+}
+
+.paginator .button {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+section.comments {
+    margin-top: 30px;
+    width: 907px;
+    padding-bottom: 50px;
+}
+
+/*MAIN STYLES END*/
+
+
+/*CONTENT STYLES END*/
+
+#disqus_thread a {
+    color: #FF9E00 !important;
+}
