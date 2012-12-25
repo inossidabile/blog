@@ -48,7 +48,6 @@ body {
     font-family:  Tahoma, Arial, 'Sans-serif' ;
     font-size: 14px;
     letter-spacing: 0.1px;
-	overflow-x:hidden;
 }
 
 .container {
@@ -359,7 +358,7 @@ body {
 /*CONTENT STYLES BEGIN*/
 /*ARCHIVES STYLES BEGIN*/
 .content {
-    margin: 0 40px;
+    margin: 0 0 0 40px !important;
 }
 
 .content .archiveTable td {
@@ -434,25 +433,25 @@ body {
     text-align: center;
 }
 
-.codeBlock .footer {
+.codeBlock .tableFooter {
     padding: 10px 20px;
     border-top: 1px solid #E5E5E5;
     overflow: hidden;
     font-size: 13px;
     color: #707070;
 }
-.codeBlock .footer .orangeRef {
+.codeBlock .tableFooter .orangeRef {
     color:#FF9E00;
 }
-.codeBlock .footer .orangeRef:hover {
+.codeBlock .tableFooter .orangeRef:hover {
     text-decoration: none;
 }
 
-.codeBlock .footer span{
+.codeBlock .tableFooter span{
     float: right;
     margin-right: 10px;
 }
-.codeBlock .footer .viewRaw {
+.codeBlock .tableFooter .viewRaw {
     float: right;
 }
 
@@ -489,7 +488,7 @@ body {
 }
 
 .content .articles {
-    width:1120px;
+    max-width:1120px;
 }
 .content .articles li {
     display: inline-block;
