@@ -2,8 +2,10 @@
 layout: default
 title: Blog Archive
 ---
+
+
 <table class="archiveTable" cellspacing="0" cellpadding="0">
-    <tbody>
+  <tbody>
     <tr>
         <td>
             <div class="year">2013</div>
@@ -78,6 +80,20 @@ title: Blog Archive
             <div class="date">Feb 15th</div>
         </td>
     </tr>
-    </tbody>
+  </tbody>
 </table>
+
+ <div id="blog-archives">
+-{% for post in site.posts reverse %}
+-{% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
+-{% unless year == this_year %}
+-  {% assign year = this_year %}
+  <h2>{{ year }}</h2>
+-{% endunless %}
+<article>
+-  {% include archive_post.html %}
+</article>
+-{% endfor %}
+</div>
+
 
