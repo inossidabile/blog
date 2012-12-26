@@ -3,7 +3,7 @@ layout: post
 title: "Rails acceptance tests coverage"
 date: 2012-11-24 23:52
 comments: true
-categories: [RSpec, Rails, Open-Source]
+categories: [RSpec, Rails]
 ---
 
 Most of our banking products share the same architecture. We use Rails as a REST application server and [Joosy](http://www.joosy.ws) application working at browser as a client. One of the greatest advantages we get is the ability to cover the whole Ruby implementation with the acceptance tests. We use **requests** specs that are [part of RSpec Rails](https://github.com/rspec/rspec-rails#request-specs) integration. However it’s easier said then done: our remote banking app-server for instance has near 500 routes to test. And the number of active routes grows constantly.

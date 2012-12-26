@@ -3,7 +3,7 @@ layout: post
 title: "Rails + REST: views nightmare"
 date: 2012-03-24 20:56
 comments: true
-categories: [Rails, REST, Presenter, Pattern, JSON]
+categories: [Rails, REST, Pattern, JSON]
 ---
 
 Rails is rapidly getting more and more popular as a comfortable platform for REST services. And it really is. We do Rails in this way for quite a long time already. There is however a real problem: **JSON views are unmanageable!**

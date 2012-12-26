@@ -3,7 +3,7 @@ layout: post
 title: "Conventions! I kill you!"
 date: 2012-04-08 23:31
 comments: true
-categories: [Management, Open-Source]
+categories: [Management]
 ---
 
 For the development speed and quality there are a lot of factors like motivation, management style and all that stuff. It is important indeed. But they are quite common. I’ve seen a lot of SCRUMified happy teams that spend years to create large but straightforward projects. Why is this happening over and over? The wrong points of motivation and incorrect tasks prioritization are the roots. But besides project organization these roots also have an inner reason: the conventions problem.

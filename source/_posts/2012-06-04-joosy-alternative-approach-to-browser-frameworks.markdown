@@ -3,7 +3,7 @@ layout: post
 title: "Joosy: alternative approach to browser frameworks"
 date: 2012-06-04 23:42
 comments: true
-categories: [Rails, REST, Open-Source, Joosy]
+categories: [Rails, REST, Joosy]
 ---
 
 ### Long story short

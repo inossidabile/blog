@@ -3,7 +3,7 @@ layout: post
 title: "Heimdallr: ORM field-level security"
 date: 2012-04-01 23:02
 comments: true
-categories: [Rails, ORM, Security, CanCan, Open-Source]
+categories: [Rails, Security, CanCan, Heimdallr]
 ---
 
 We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). `attr_acessible` is too weak. CanCan is too abstract (doesn't go down to fields).

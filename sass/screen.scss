@@ -84,6 +84,9 @@ html {
             padding-top: 1px;
             height: 15px;
             font-weight: bold;
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
           }
 
           .twitterBar {
