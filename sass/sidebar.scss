@@ -1,9 +1,9 @@
 td.layoutSidebar {
-  background: url('/images/part_sidebar.png') 0 0 scroll transparent repeat-y;
+  background: image-url('part_sidebar.png') 0 0 scroll transparent repeat-y;
 
   .sidebar {
     width: 308px;
-    background: url("/images/bg_sidebar.png") 0 0 transparent no-repeat;
+    background: image-url("bg_sidebar.png") 0 0 transparent no-repeat;
     overflow: hidden;
     color: white;
     vertical-align: top;
@@ -111,19 +111,19 @@ td.layoutSidebar {
 
           .joosy {
             padding-left: 80px;
-            background: url('/images/logos/joosy.png') no-repeat;
+            background: image-url('logos/joosy.png') no-repeat;
             background-position: 16px 18px;
           }
 
           .roundbank {
             padding-left: 80px;
-            background: url('/images/logos/roundbank.png') no-repeat;
+            background: image-url('logos/roundbank.png') no-repeat;
             background-position: 16px 13px;
           }
 
           .smartkiosk {
             padding-left: 80px;
-            background: url('/images/logos/smartkiosk.png') no-repeat;
+            background: image-url('logos/smartkiosk.png') no-repeat;
             background-position: 16px 6px;
           }
 
