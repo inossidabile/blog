@@ -46,7 +46,7 @@ layout: default
           <span>&rarr;</span>
         </div>
         <div class="comments">
-          <img src="images/comments.png">
+          <img src="{{ root_url }}/images/comments.png">
           <a href="{{ root_url }}{{ post.url }}#disqus_thread">Comments</a>
         </div>
       </div>
@@ -57,16 +57,17 @@ layout: default
   {% endif %}
   {% endif %}
   {% endfor %}
+  <div style="clear:both"></div>
   <div class="paginator">
-    {% if paginator.previous_page %}
-    <div class="button">
-      <img src="{{ root_url }}/images/left_arrow.png" alt="left_arrow">
-      <a href="#">Older entries</a>
-    </div>
-    {% endif %}
     {% if paginator.next_page %}
     <div class="button">
-      <a href="#">Newer entries</a>
+      <img src="{{ root_url }}/images/left_arrow.png" alt="left_arrow">
+      <a href="{{paginator.next_page}}">Older entries</a>
+    </div>
+    {% endif %}
+    {% if paginator.previous_page %}
+    <div class="button">
+      <a href="{{paginator.previous_page}}">Newer entries</a>
       <img src="{{ root_url }}/images/right_arrow.png" alt="right_arrow">
     </div>
     {% endif %}
