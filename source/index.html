@@ -28,8 +28,9 @@ layout: default
   {% else %}
   {% if forloop.index == 2 %}
   <ul class="older">
-    {% endif %}
-    <li>
+  {% endif %}
+    {% cycle '<ul>', '' %}
+    <li class="{% cycle 'odd', 'even' %}">
       <article>
         <h1>
           <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
@@ -50,6 +51,7 @@ layout: default
         </div>
       </div>
     </li>
+    {% cycle '', '</ul>' %}
     {% if forloop.last and forloop.index > 1 %}
   </ul>
   {% endif %}

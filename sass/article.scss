@@ -2,6 +2,7 @@ article {
   time {
     padding-top: 3px !important;
     padding-bottom: 5px;
+    background-position: 0px 2px !important;
   }
 
   a {
@@ -39,5 +40,42 @@ article {
     color: #707070;
     padding-top: 10px;
     line-height: 18px;
+  }
+
+  .highlight {
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    border: 1px solid #E5E5E5;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px #E5E5E5;
+
+    color: #939393;
+    font-size: 14px;
+    font-family: "courier-new", "Andale Mono",courier,monospace;
+
+    overflow-x: auto;
+    width: 500px;
+
+    table {
+      .gutter {
+        border-right: 1px solid #E5E5E5;
+        padding: 10px;
+      }
+      .code {
+        padding: 10px;
+      }
+    }
+  }
+
+  .highlight::-webkit-scrollbar {
+    height: .5em;
+    color: black;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .highlight::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px #E5E5E5; 
   }
 }

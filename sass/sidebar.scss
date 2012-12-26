@@ -6,7 +6,6 @@ td.layoutSidebar {
     background: url("/images/bg_sidebar.png") 0 0 transparent no-repeat;
     overflow: hidden;
     color: white;
-    display: inline-block;
     vertical-align: top;
 
     .content {
@@ -19,11 +18,6 @@ td.layoutSidebar {
         &:hover {
           text-decoration: none;
         }
-      }
-
-      p {
-        line-height: 20px;
-        padding-top: 15px;
       }
 
       h1 {
@@ -43,13 +37,26 @@ td.layoutSidebar {
         padding-bottom: 15px;
         border-bottom: 1px solid #F1A953;
         padding-left: 15px;
+
+        h1 {
+          a {
+            text-decoration: none;
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+
+        p {
+          line-height: 20px;
+          padding-top: 15px;
+        }
       }
 
       .follow {
         padding-top: 20px;
         padding-left: 15px;
         a {
-          display: inline-block;
           margin-right: 5px;
           margin-top: 10px;
           img {
@@ -60,43 +67,70 @@ td.layoutSidebar {
           }
         }
         h2 {
-          padding-bottom: 8px;
+          padding-bottom: 15px;
         }
       }
 
       .projects {
-        margin-top: 40px;
-        height: 240px;
-        width: 267px;
-        background: url("/images/round_border.png") 0 0 transparent no-repeat;
-        position: relative;
-        padding-top: 8px;
-
         h2 {
-          position: absolute;
-          top: -16px;
-          padding: 5px;
-          left: 11px;
+          width: 100%;
+          margin-top: 25px;
+          padding-left: 15px;
         }
 
-        a {
-          font-weight: bold;
-          font-family: Arial, 'Sans-serif';
-          text-decoration: none;
-          border-bottom: 1px white solid;
-        }
+        .list {
+          background-color: rgba(0,0,0,0.15);
+          margin-top: 14px;
+          width: 251px;
+          border: 1px solid #F1A953;
+          border-radius: 8px;
+          padding-bottom: 20px;
+          padding-right: 14px;
 
-        p {
-          padding-top: 3px;
-          font-size: 13px;
-        }
+          a {
+            font-weight: bold;
+            font-family: Arial, 'Sans-serif';
+            text-decoration: none;
+            border-bottom: 1px white solid;
+          }
 
-        .oneLine {
-          padding-left: 14px;
-          padding-top: 15px;
+          p {
+            padding-top: 3px;
+            font-size: 13px;
+            line-height: 15px;
+          }
 
-          a:hover {
-            border-bottom: 0px solid white;
+          .project {
+            padding-left: 14px;
+            padding-top: 15px;
+
+            a:hover {
+              border-bottom: 0px solid white;
+            }
+          }
+
+          .joosy {
+            padding-left: 80px;
+            background: url('/images/logos/joosy.png') no-repeat;
+            background-position: 16px 18px;
+          }
+
+          .roundbank {
+            padding-left: 80px;
+            background: url('/images/logos/roundbank.png') no-repeat;
+            background-position: 16px 13px;
+          }
+
+          .smartkiosk {
+            padding-left: 80px;
+            background: url('/images/logos/smartkiosk.png') no-repeat;
+            background-position: 16px 6px;
+          }
+
+          .heimdallr {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #F1A953;
           }
         }
       }

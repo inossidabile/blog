@@ -11,6 +11,9 @@
   <link rel="canonical" href="{{ canonical }}">
   <link href="{{ root_url }}/favicon.ico" rel="icon">
   <link href="{{ root_url }}/stylesheets/screen.css" rel="stylesheet" type="text/css">
+  <script src="{{ root_url }}/javascripts/modernizr.js"></script>
+  <script src="{{ root_url }}/javascripts/jquery.js"></script>
+  <script src="{{ root_url }}/javascripts/application.js"></script>
   <link href="{{ site.subscribe_rss }}" rel="alternate" title="{{ site.title }}" type="application/atom+xml">
   <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
 </head>
@@ -22,38 +25,47 @@
           <div class="sidebar">
             <div class="content">
               <div class="about">
-                <img src="/images/bs_ava.png" alt="Boris Staal">
-                <h1>Boris Staal</h1>
+                <a href="/"><img src="/images/bs_ava.png" alt="Boris Staal"></a>
+                <h1><a href="/">Boris Staal</a></h1>
                 <h2>About me</h2>
                 <p>
-                  I'm Boris Staal, managing geek ಠ_ಠ<br/> working at <a href="http://roundlake.ru">RoundLake</a>.
+                  I'm Boris Staal, managing geek ಠ_ಠ<br/> working at <a href="http://roundlake.ru">Round Lake</a>.
                   I do open-source and make ppl smile.
                 </p>
               </div>
               <div class="follow">
-                <h2>So follow up!</h2>
                 <a href="https://twitter.com/_inossidabile"><img src="/images/s_twitter.png" alt="Boris Staal"></a>
                 <a href="http://facebook.com/boris.staal"><img src="/images/s_facebook.png" alt="Boris Staal"></a>
                 <a href="http://github.com/inossidabile"><img src="/images/s_cat.png" alt="Boris Staal"></a>
                 <a href="skype://inossidabile."><img src="/images/s_skype.png" alt="Boris Staal"></a>
               </div>
               <div class="projects">
-                <h2>My projects</h2>
-                <div class="oneLine">
-                  <a href="#">Smartkiosk</a>
-                  <p>The best free phone number reverse</p>
-                </div>
-                <div class="oneLine">
-                  <a href="#">Roundbank</a>
-                  <p>The best free phone number reverse</p>
-                </div>
-                <div class="oneLine">
-                  <a href="#">Joosy</a>
-                  <p>The best free phone number reverse</p>
-                </div>
-                <div class="oneLine">
-                  <a href="#">WashOut</a>
-                  <p>The best free phone number reverse</p>
+                <h2>Projects I'm part of:</h2>
+                <div class="list">
+                  <div class="project joosy">
+                    <a href="http://joosy.ws">Joosy</a>
+                    <p>Rails-flavored browser applications framework</p>
+                  </div>
+                  <div class="project roundbank">
+                    <a href="https://github.com/roundbank">Roundbank</a>
+                    <p>Open-source internet banking platform</p>
+                  </div>
+                  <div class="project smartkiosk">
+                    <a href="https://github.com/smartkiosk">Smartkiosk</a>
+                    <p>Open-source kiosk platform</p>
+                  </div>
+                  <div class="project heimdallr">
+                    <a href="https://github.com/roundlake/heimdallr">Heimdallr</a>
+                    <p>Comfortable white-list security restrictions for an ActiveRecord objects on a field level</p>
+                  </div>
+                  <div class="project wash_out">
+                    <a href="https://github.com/inossidabile/wash_out">WashOut</a>
+                    <p>Rails 3 SOAP server library</p>
+                  </div>
+                  <div class="project codo">
+                    <a href="https://github.com/netzpirat/codo">Codo</a>
+                    <p>CoffeeScript API documentation generator</p>
+                  </div>
                 </div>
               </div>
             </div>

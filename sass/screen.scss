@@ -4,6 +4,7 @@
 @import 'archive';
 @import 'index';
 @import 'post';
+@import 'syntax';
 
 html {
   height: 100%;
@@ -52,8 +53,9 @@ html {
         }
 
         .footer {
+          clear: both;
           width: 100%;
-          height: 20px;
+          height: 40px;
         }
 
         .content {
@@ -128,62 +130,6 @@ html {
         }
       }
 
-    }
-
-
-
-
-    /*BLOG STYLES END*/
-
-    .codeBlock {
-      max-width: 98%;
-      margin-left: 2px;
-      margin-top: 15px;
-      margin-bottom: 15px;
-      border: 1px solid #E5E5E5;
-      border-radius: 5px;
-      box-shadow: 0 1px 2px #E5E5E5;
-      color: #939393;
-      table {
-        font-size: 14px;
-        font-family: "courier-new", "Andale Mono",courier,monospace;
-        color: #939393;
-      }
-      .bodyBlock {
-        padding: 20px 0px 20px 10px;
-        overflow: auto;
-      }
-      table td {
-        &:last-child div {
-          padding-bottom: 5px;
-        }
-        &:first-child div {
-          color: #C9C9C9;
-          width: 38px;
-          text-align: center;
-          padding-bottom: 5px;
-        }
-      }
-      .tableFooter {
-        padding: 10px 20px;
-        border-top: 1px solid #E5E5E5;
-        overflow: hidden;
-        font-size: 13px;
-        color: #707070;
-        .orangeRef {
-          color: #FF9E00;
-          &:hover {
-            text-decoration: none;
-          }
-        }
-        span {
-          float: right;
-          margin-right: 10px;
-        }
-        .viewRaw {
-          float: right;
-        }
-      }
     }
   }
 }
