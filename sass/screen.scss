@@ -1,10 +1,12 @@
-@import 'reset';
-@import 'article';
-@import 'sidebar';
-@import 'archive';
-@import 'index';
-@import 'post';
-@import 'syntax';
+@import "compass";
+
+@import "reset";
+@import "article";
+@import "sidebar";
+@import "archive";
+@import "index";
+@import "post";
+@import "syntax";
 
 html {
   height: 100%;
@@ -75,18 +77,19 @@ html {
 
           .twitterBar {
             margin-top: 20px;
-            ul {
-              width: 95%;
-              border: 1px solid #E5E5E5;
-              border-radius: 8px;
+            width: 95%;
+            border: 1px solid #E5E5E5;
+            @include border-radius(8px);
+            box-shadow: 0 1px 2px #E5E5E5;
 
-              box-shadow: 0 1px 2px #E5E5E5;
-              li {
+            table {
+              td {
                 padding: 9px;
-                display: inline-block;
                 vertical-align: middle;
+
                 &:last-child {
                   border-left: 1px solid #E5E5E5;
+                  line-height: 20px;
                 }
                 p {
                   padding: 0;
@@ -98,6 +101,9 @@ html {
                     text-decoration: none;
                   }
                 }
+                span {
+                  color: gray;
+                }
               }
             }
           }
@@ -105,7 +111,7 @@ html {
           .button {
             margin-top: 20px;
             border: 1px solid #E5E5E5;
-            border-radius: 5px;
+            @include border-radius(5px);
             width: 118px;
             padding: 8px 10px 10px 10px;
             a {

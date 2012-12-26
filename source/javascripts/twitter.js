@@ -1,7 +1,3 @@
-// JSON-P Twitter fetcher for Octopress
-// (c) Brandon Mathis // MIT License
-
-/* Sky Slavin, Ludopoli. MIT license.  * based on JavaScript Pretty Date * Copyright (c) 2008 John Resig (jquery.com) * Licensed under the MIT license.  */
 function prettyDate(time) {
   if (navigator.appName === 'Microsoft Internet Explorer') {
     return "<span>&infin;</span>"; // because IE date parsing isn't fun.
@@ -39,7 +35,18 @@ function prettyDate(time) {
     day_diff > 7 && Math.ceil(day_diff / 7) + say.weeks_ago;
 }
 
-function linkifyTweet(text, url) {
+function tweets(user, count, callback) {
+  count = parseInt(count, 10);
+  url   = "https://api.twitter.com/1/statuses/user_timeline/" + user + ".json?trim_user=true&count=" + count + "&include_entities=1&exclude_replies=1&callback=?"
+  $.getJSON(url, function(data) {
+    callback(data);
+  });
+}
+
+function prepareTweet(tweet) {
+  text = tweet.text;
+  url  = tweet.entities;
+
   // Linkify urls, usernames, hashtags
   text = text.replace(/(https?:\/\/)([\w\-:;?&=+.%#\/]+)/gi, '<a href="$1$2">$2</a>')
     .replace(/(^|\W)@(\w+)/g, '$1<a href="https://twitter.com/$2">@$2</a>')
@@ -54,25 +61,5 @@ function linkifyTweet(text, url) {
       text = text.replace(shortUrl, ">"+url[u].display_url);
     }
   }
-  return text
-}
-
-function showTwitterFeed(tweets, twitter_user) {
-  var timeline = document.getElementById('tweets'),
-      content = '';
-
-  for (var t in tweets) {
-    content += '<li>'+'<p>'+'<a href="https://twitter.com/'+twitter_user+'/status/'+tweets[t].id_str+'">'+prettyDate(tweets[t].created_at)+'</a>'+linkifyTweet(tweets[t].text.replace(/\n/g, '<br>'), tweets[t].entities.urls)+'</p>'+'</li>';
-  }
-  timeline.innerHTML = content;
-}
-
-function getTwitterFeed(user, count, replies) {
-  count = parseInt(count, 10);
-  $.ajax({
-      url: "https://api.twitter.com/1/statuses/user_timeline/" + user + ".json?trim_user=true&count=" + (count + 20) + "&include_entities=1&exclude_replies=" + (replies ? "0" : "1") + "&callback=?"
-    , type: 'jsonp'
-    , error: function (err) { $('#tweets li.loading').addClass('error').text("Twitter's busted"); }
-    , success: function(data) { showTwitterFeed(data.slice(0, count), user); }
-  })
+  return "<span>"+prettyDate(tweet.created_at) + " ago</span>: " + text
 }

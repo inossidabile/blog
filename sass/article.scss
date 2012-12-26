@@ -47,7 +47,7 @@ article {
     margin-bottom: 15px;
 
     border: 1px solid #E5E5E5;
-    border-radius: 5px;
+    @include border-radius(5px);
     box-shadow: 0 1px 2px #E5E5E5;
 
     color: #939393;
@@ -75,7 +75,7 @@ article {
   }
 
   .highlight::-webkit-scrollbar-thumb {
-    border-radius: 10px;
+    @include border-radius(10px);
     -webkit-box-shadow: inset 0 0 6px #E5E5E5; 
   }
 }
