@@ -5,176 +5,185 @@
 @import 'index';
 @import 'post';
 
-body {
-  font-family: Tahoma, Arial, 'Sans-serif';
-  font-size: 14px;
-  letter-spacing: 0.1px;
+html {
+  height: 100%;
 
-  .layoutTable td.layoutContent {
-    width: 100%;
-    vertical-align: top;
+  body {
+    font-family: Tahoma, Arial, 'Sans-serif';
+    font-size: 14px;
+    letter-spacing: 0.1px;
+    height: 100%;
 
-    .header {
-      padding: 20px 0 15px 20px;
-      border-bottom: 1px solid #E5E5E5;
-      ul {
-        li {
-          padding-left: 10px;
-          padding-right: 15px;
-          border-right: 1px solid #E5E5E5;
-          display: inline-block;
-          vertical-align: top;
-          &:last-child {
-            border: 0px solid black;
-          }
-        }
-        width: 190px;
-        a {
-          font-size: 20px;
-          color: #FF9E00;
-          font-weight: bold;
-          text-decoration: none;
-          letter-spacing: 0.2px;
-        }
-        li {
-          &.active a, a:hover {
-            color: #000000;
-          }
-        }
-      }
-    }
+    .layoutTable { 
+      height: 100%;
 
-    .footer {
-      width: 100%;
-      height: 20px;
-    }
+      td.layoutContent {
+        width: 100%;
+        vertical-align: top;
 
-    .content {
-      margin: 0 0 0 40px;
-
-      time {
-        background: url('/images/orange_clock.png') no-repeat;
-        padding-left: 20px;
-        display: block;
-        color: #9D9D9D;
-        font-size: 12px;
-        margin-top: 10px;
-        padding-top: 1px;
-        height: 15px;
-        font-weight: bold;
-      }
-
-      .twitterBar {
-        margin-top: 20px;
-        ul {
-          width: 95%;
-          border: 1px solid #E5E5E5;
-          border-radius: 8px;
-
-          box-shadow: 0 1px 2px #E5E5E5;
-          li {
-            padding: 9px;
-            display: inline-block;
-            vertical-align: middle;
-            &:last-child {
-              border-left: 1px solid #E5E5E5;
+        .header {
+          padding: 20px 0 15px 20px;
+          border-bottom: 1px solid #E5E5E5;
+          ul {
+            li {
+              padding-left: 10px;
+              padding-right: 15px;
+              border-right: 1px solid #E5E5E5;
+              display: inline-block;
+              vertical-align: top;
+              &:last-child {
+                border: 0px solid black;
+              }
             }
-            p {
-              padding: 0;
-              display: inline;
-            }
+            width: 190px;
             a {
-              color: #59A3C2;
-              &:hover {
-                text-decoration: none;
+              font-size: 20px;
+              color: #FF9E00;
+              font-weight: bold;
+              text-decoration: none;
+              letter-spacing: 0.2px;
+            }
+            li {
+              &.active a, a:hover {
+                color: #000000;
               }
             }
           }
         }
+
+        .footer {
+          width: 100%;
+          height: 20px;
+        }
+
+        .content {
+          margin: 0 0 0 40px;
+
+          time {
+            background: url('/images/orange_clock.png') no-repeat;
+            padding-left: 20px;
+            display: block;
+            color: #9D9D9D;
+            font-size: 12px;
+            margin-top: 10px;
+            padding-top: 1px;
+            height: 15px;
+            font-weight: bold;
+          }
+
+          .twitterBar {
+            margin-top: 20px;
+            ul {
+              width: 95%;
+              border: 1px solid #E5E5E5;
+              border-radius: 8px;
+
+              box-shadow: 0 1px 2px #E5E5E5;
+              li {
+                padding: 9px;
+                display: inline-block;
+                vertical-align: middle;
+                &:last-child {
+                  border-left: 1px solid #E5E5E5;
+                }
+                p {
+                  padding: 0;
+                  display: inline;
+                }
+                a {
+                  color: #59A3C2;
+                  &:hover {
+                    text-decoration: none;
+                  }
+                }
+              }
+            }
+          }
+
+          .button {
+            margin-top: 20px;
+            border: 1px solid #E5E5E5;
+            border-radius: 5px;
+            width: 118px;
+            padding: 8px 10px 10px 10px;
+            a {
+              text-decoration: none;
+              font-size: 12px;
+              font-weight: bold;
+              color: #FF9E00;
+              padding-left: 5px;
+            }
+            span {
+              text-decoration: none;
+              color: #FF9E00;
+            }
+            a:hover {
+              text-decoration: underline;
+            }
+            img {
+              position: relative;
+              top: -1px;
+            }
+          }
+        }
       }
 
-      .button {
-        margin-top: 20px;
-        border: 1px solid #E5E5E5;
-        border-radius: 5px;
-        width: 118px;
-        padding: 8px 10px 10px 10px;
-        a {
-          text-decoration: none;
-          font-size: 12px;
-          font-weight: bold;
+    }
+
+
+
+
+    /*BLOG STYLES END*/
+
+    .codeBlock {
+      max-width: 98%;
+      margin-left: 2px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #E5E5E5;
+      border-radius: 5px;
+      box-shadow: 0 1px 2px #E5E5E5;
+      color: #939393;
+      table {
+        font-size: 14px;
+        font-family: "courier-new", "Andale Mono",courier,monospace;
+        color: #939393;
+      }
+      .bodyBlock {
+        padding: 20px 0px 20px 10px;
+        overflow: auto;
+      }
+      table td {
+        &:last-child div {
+          padding-bottom: 5px;
+        }
+        &:first-child div {
+          color: #C9C9C9;
+          width: 38px;
+          text-align: center;
+          padding-bottom: 5px;
+        }
+      }
+      .tableFooter {
+        padding: 10px 20px;
+        border-top: 1px solid #E5E5E5;
+        overflow: hidden;
+        font-size: 13px;
+        color: #707070;
+        .orangeRef {
           color: #FF9E00;
-          padding-left: 5px;
+          &:hover {
+            text-decoration: none;
+          }
         }
         span {
-          text-decoration: none;
-          color: #FF9E00;
+          float: right;
+          margin-right: 10px;
         }
-        a:hover {
-          text-decoration: underline;
-        }
-        img {
-          position: relative;
-          top: -1px;
+        .viewRaw {
+          float: right;
         }
       }
-    }
-  }
-
-}
-
-
-
-
-/*BLOG STYLES END*/
-
-.codeBlock {
-  max-width: 98%;
-  margin-left: 2px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  border: 1px solid #E5E5E5;
-  border-radius: 5px;
-  box-shadow: 0 1px 2px #E5E5E5;
-  color: #939393;
-  table {
-    font-size: 14px;
-    font-family: "courier-new", "Andale Mono",courier,monospace;
-    color: #939393;
-  }
-  .bodyBlock {
-    padding: 20px 0px 20px 10px;
-    overflow: auto;
-  }
-  table td {
-    &:last-child div {
-      padding-bottom: 5px;
-    }
-    &:first-child div {
-      color: #C9C9C9;
-      width: 38px;
-      text-align: center;
-      padding-bottom: 5px;
-    }
-  }
-  .tableFooter {
-    padding: 10px 20px;
-    border-top: 1px solid #E5E5E5;
-    overflow: hidden;
-    font-size: 13px;
-    color: #707070;
-    .orangeRef {
-      color: #FF9E00;
-      &:hover {
-        text-decoration: none;
-      }
-    }
-    span {
-      float: right;
-      margin-right: 10px;
-    }
-    .viewRaw {
-      float: right;
     }
   }
 }
