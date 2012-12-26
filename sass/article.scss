@@ -49,6 +49,7 @@ article {
     -webkit-box-shadow: 2px 2px 3px #e0e0e0;
     @include border-radius(3px);
     border: 1px #b9b9b9 solid;
+    max-width: 100%;
   }
 
   blockquote {
