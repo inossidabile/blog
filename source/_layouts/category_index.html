@@ -17,7 +17,7 @@ title: Category
       {% endif %}
       <td>
         <a class="head" href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
-        <time>{{ post.date | date: "%b %d, %Y" }} | {{ post.categories | category_links }}</time>
+        <time>{{ post.date | date: "%b %d" }} | {{ post.categories | category_links }}</time>
       </td>
     </tr>
     {% endfor %}

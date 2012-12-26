@@ -1,4 +1,24 @@
+@import "compass";
+
 article {
+  ol {
+    list-style-type: decimal;
+
+    margin-top: 12px;
+    margin-left: 40px;
+    margin-bottom: 12px;
+    line-height: 1.5em;
+  }
+
+  ul {
+    list-style-type: circle;
+
+    margin-top: 12px;
+    margin-left: 40px;
+    margin-bottom: 12px;
+    line-height: 1.5em;
+  }
+
   time {
     padding-top: 3px !important;
     padding-bottom: 5px;
@@ -11,6 +31,40 @@ article {
     &:hover {
       text-decoration: none;
     }
+  }
+
+  code {
+    white-space: nowrap;
+    font-family: Consolas, "Liberation Mono", Courier, monospace;
+    padding: 0px 5px;
+    margin: 0 2px;
+    background-color: #f8f8f8;
+    border: 1px solid #eaeaea;
+    @include border-radius(3px);
+  }
+
+  img {
+    padding: 4px;
+    box-shadow: 2px 2px 3px #e0e0e0;
+    -webkit-box-shadow: 2px 2px 3px #e0e0e0;
+    @include border-radius(3px);
+    border: 1px #b9b9b9 solid;
+  }
+
+  blockquote {
+    margin-top: 10px;
+    margin-left: 50px;
+    padding-left: 15px;
+    border-left: 3px solid #ccc;
+    font-style: italic;
+
+    p {
+      padding-top: 0px;
+    }
+  }
+
+  s {
+    color: gray;
   }
 
   h1 {
@@ -36,10 +90,18 @@ article {
     padding-bottom: 3px;
   }
 
-  p {
+  h4 {
     color: #707070;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 15px;
+    padding-bottom: 3px;
+  }
+
+  p {
+    color: #434343;
     padding-top: 10px;
-    line-height: 18px;
+    line-height: 20px;
   }
 
   .highlight {
@@ -52,7 +114,7 @@ article {
 
     color: #939393;
     font-size: 14px;
-    font-family: "courier-new", "Andale Mono",courier,monospace;
+    font-family: Consolas, "Liberation Mono", Courier, monospace;
 
     overflow-x: auto;
     width: 500px;
@@ -65,6 +127,15 @@ article {
       .code {
         padding: 10px;
       }
+    }
+
+    code {
+      white-space: pre;
+      font-family: Consolas, "Liberation Mono", Courier, monospace;
+      padding: 0;
+      margin: 0;
+      background-color: inherit;
+      border: none;
     }
   }
 
