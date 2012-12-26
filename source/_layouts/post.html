@@ -3,24 +3,26 @@ layout: default
 single: true
 ---
 
-{% include disqus.html %}
-<div class="button">
+<div class="post">
+  <div class="button">
     <span>&larr;</span>
     <a href="/">Back to entries</a>
-</div>
-<h1 class="largeTitle">{{ page.title }}</h1>
-<div class="dateBlock">
-  <img src="/images/orange_clock.png">
-  <span class="date">{% include date.html %}{{ time }}</span>
+  </div>
+
+  <article>
+    <h1>{{ page.title }}</h1>
+    {% include date.html %}{{ time }}
+    {{ content }}
+  </article>
+
+  {% include disqus.html %}
+  {% if site.disqus_short_name and page.comments == true %}
+    <section class="comments">
+      <div id="disqus_thread" aria-live="polite"></div>
+    </section>
+  {% endif %}
 </div>
 
-{{ content }}
-
-{% if site.disqus_short_name and page.comments == true %}
-  <section class="comments">
-    <div id="disqus_thread" aria-live="polite"></div>
-  </section>
-{% endif %}
 <div class="codeBlock">
 <div class="bodyBlock">
   <table cellspacing="0" cellpadding="0">

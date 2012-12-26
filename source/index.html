@@ -3,66 +3,66 @@ layout: default
 ---
 
 {% include twitter.html %}
-{% for post in paginator.posts %}
-{% if forloop.first %}
-<h1 class="largeTitle">
-  <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
-</h1>
-<div class="dateBlock">
-  <img src="images/orange_clock.png">
-  <span class="date">{% include date.html %}{{ time }}</span>
-</div>
-<div class="medDark">
-{{ post.content | excerpt }}
-</div>
-<div class="readMore">
-  <a href="{{ root_url }}{{ post.url }}">Read more</a>
-  <span>&rarr;</span>
-</div>
-<div class="commentBlock">
-  <img src="images/comments.png">
-  <a href="{{ root_url }}{{ post.url }}#disqus_thread">Comments</a>
-</div>
-{% else %}
-{% if forloop.index == 2 %}
-<ul class="articles">
-{% endif %}
-  <li>
-    <h2>
+<div class="index">
+  {% for post in paginator.posts %}
+  {% if forloop.first %}
+  <article class="main">
+    <h1>
       <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
-    </h2>
-    <div class="dateBlock">
-      <img src="images/orange_clock.png">
-      <span class="date">{% include date.html %}{{ time }}</span>
-    </div>
-    <div class="medLight">
+    </h1>
+    {% include date.html %}{{ time }}
     {{ post.content | excerpt }}
-    </div>
-    <div class="readMore">
+  </article>
+  <div class="more">
+    <div class="read">
       <a href="{{ root_url }}{{ post.url }}">Read more</a>
       <span>&rarr;</span>
     </div>
-    <div class="commentBlock">
-      <img src="images/comments.png">
+    <div class="comments">
+      <img src="{{ root_url }}/images/comments.png">
       <a href="{{ root_url }}{{ post.url }}#disqus_thread">Comments</a>
     </div>
-  </li>
-{% if forloop.last and forloop.index > 1 %}
-</ul>
-{% endif %}
-{% endif %}
-{% endfor %}
-<div class="paginator">
-  {% if paginator.previous_page %}
-  <div class="button">
-    <img src="/images/left_arrow.png" alt="left_arrow">
-    <a href="#">Older entries</a>
   </div>
+  {% else %}
+  {% if forloop.index == 2 %}
+  <ul class="older">
+    {% endif %}
+    <li>
+      <article>
+        <h1>
+          <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
+        </h1>
+        {% include date.html %}{{ time }}
+        {{ post.content | excerpt }}
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="{{ root_url }}{{ post.url }}">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="images/comments.png">
+          <a href="{{ root_url }}{{ post.url }}#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    {% if forloop.last and forloop.index > 1 %}
+  </ul>
   {% endif %}
-  {% if paginator.next_page %}
-  <div class="button">
-    <a href="#">Newer entries</a>
-    <img src="/images/right_arrow.png" alt="right_arrow">
+  {% endif %}
+  {% endfor %}
+  <div class="paginator">
+    {% if paginator.previous_page %}
+    <div class="button">
+      <img src="/images/left_arrow.png" alt="left_arrow">
+      <a href="#">Older entries</a>
+    </div>
+    {% endif %}
+    {% if paginator.next_page %}
+    <div class="button">
+      <a href="#">Newer entries</a>
+      <img src="/images/right_arrow.png" alt="right_arrow">
+    </div>
+    {% endif %}
   </div>
-  {% endif %}
 </div>

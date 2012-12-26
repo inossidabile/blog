@@ -1,0 +1,13 @@
+.post {
+  width: 95%;
+
+  section.comments {
+    margin-top: 30px;
+    width: 95%;
+    padding-bottom: 50px;
+
+    #disqus_thread a {
+      color: #ff9e00 !important;
+    }
+  }
+}

@@ -13,84 +13,78 @@
   <link href="{{ root_url }}/stylesheets/screen.css" rel="stylesheet" type="text/css">
   <link href="{{ site.subscribe_rss }}" rel="alternate" title="{{site.title}}" type="application/atom+xml">
   <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container" >
-    <table class="layoutTable" cellspacing="0" cellpadding="0">
-      <tbody>
-        <tr>
-          <td class="backgroundScroll" >
-            <div class="sidebar">
-              <div class="sidebarWrap">
-                <div class="addSidePadding">
-                  <img src="/images/bs_ava.png" alt="Boris Staal">
-                  <h1>Boris Staal</h1>
-                  <h2>About me</h2>
-                  <p>
-                    I'm Boris Staal, managing geek ಠ_ಠ<br/> working at <a href="http://roundlake.ru">RoundLake</a>.
-                    I do open-source and make ppl smile.
-                  </p>
+  <table class="layoutTable" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr>
+        <td class="layoutSidebar" >
+          <div class="sidebar">
+            <div class="content">
+              <div class="about">
+                <img src="/images/bs_ava.png" alt="Boris Staal">
+                <h1>Boris Staal</h1>
+                <h2>About me</h2>
+                <p>
+                  I'm Boris Staal, managing geek ಠ_ಠ<br/> working at <a href="http://roundlake.ru">RoundLake</a>.
+                  I do open-source and make ppl smile.
+                </p>
+              </div>
+              <div class="follow">
+                <h2>So follow up!</h2>
+                <a href="https://twitter.com/_inossidabile"><img src="/images/s_twitter.png" alt="Boris Staal"></a>
+                <a href="http://facebook.com/boris.staal"><img src="/images/s_facebook.png" alt="Boris Staal"></a>
+                <a href="http://github.com/inossidabile"><img src="/images/s_cat.png" alt="Boris Staal"></a>
+                <a href="skype://inossidabile."><img src="/images/s_skype.png" alt="Boris Staal"></a>
+              </div>
+              <div class="projects">
+                <h2>My projects</h2>
+                <div class="oneLine">
+                  <a href="#">Smartkiosk</a>
+                  <p>The best free phone number reverse</p>
                 </div>
-                <div class="border"></div>
-                <div class="addSidePadding followMe">
-                  <h2>So follow up!</h2>
-                  <a href="https://twitter.com/_inossidabile"><img src="/images/s_twitter.png" alt="Boris Staal"></a>
-                  <a href="http://facebook.com/boris.staal"><img src="/images/s_facebook.png" alt="Boris Staal"></a>
-                  <a href="http://github.com/inossidabile"><img src="/images/s_cat.png" alt="Boris Staal"></a>
-                  <a href="skype://inossidabile."><img src="/images/s_skype.png" alt="Boris Staal"></a>
+                <div class="oneLine">
+                  <a href="#">Roundbank</a>
+                  <p>The best free phone number reverse</p>
                 </div>
-                <div class="myProjects">
-                  <h2 class="specialH2">My projects</h2>
-                  <div class="oneLine">
-                    <a href="#">Smartkiosk</a>
-                    <p>The best free phone number reverse</p>
-                  </div>
-                  <div class="oneLine">
-                    <a href="#">Roundbank</a>
-                    <p>The best free phone number reverse</p>
-                  </div>
-                  <div class="oneLine">
-                    <a href="#">Joosy</a>
-                    <p>The best free phone number reverse</p>
-                  </div>
-                  <div class="oneLine">
-                    <a href="#">WashOut</a>
-                    <p>The best free phone number reverse</p>
-                  </div>
+                <div class="oneLine">
+                  <a href="#">Joosy</a>
+                  <p>The best free phone number reverse</p>
+                </div>
+                <div class="oneLine">
+                  <a href="#">WashOut</a>
+                  <p>The best free phone number reverse</p>
                 </div>
               </div>
             </div>
-          </td>
-          <td>
-            <div class="main">
-              <div class="header">
-                <ul>
-                  <li 
-                    {% if page.url == "/index.html" %}
-                      class="active"
-                    {% endif %}
-                    >
-                    <a href="/">Blog</a>
-                  </li>
-                  <li
-                    {% if page.url == "/blog/archives/index.html" %}
-                      class="active"
-                    {% endif %}
-                    >
-                    <a href="{{ root_url }}/blog/archives">Archives</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="content">
-                {{ content | expand_urls: root_url }}
-              </div>
-                <div class="footer"></div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          </div>
+        </td>
+        <td class="layoutContent">
+          <div class="header">
+            <ul>
+              <li 
+                {% if page.url == "/index.html" %}
+                  class="active"
+                {% endif %}
+                >
+                <a href="/">Blog</a>
+              </li>
+              <li
+                {% if page.url == "/blog/archives/index.html" %}
+                  class="active"
+                {% endif %}
+                >
+                <a href="{{ root_url }}/blog/archives">Archives</a>
+              </li>
+            </ul>
+          </div>
+          <div class="content">
+            {{ content | expand_urls: root_url }}
+          </div>
+          <div class="footer"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>

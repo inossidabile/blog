@@ -1,0 +1,110 @@
+article.main {
+  p {
+    font-size: 16px;
+    color: #434343;
+    line-height: 19px;
+  }
+}
+
+.older {
+  article {
+    h1 {
+      color: #474747;
+      font-size: 24px;
+      font-weight: bold;
+      a {
+        color: #474747;
+        text-decoration: none;
+        &:hover {
+          color: #FF9E00;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+body {
+  .layoutTable td.layoutContent {
+    .content {
+
+      .index {
+        width: 95%;
+
+        .older {
+          li {
+            display: inline-block;
+            vertical-align: top;
+            width: 50%;
+            margin-top: 25px;
+          }
+
+          article {
+            width: 95%;
+          }
+        }
+
+        .more {
+          margin-top: 10px;
+
+          .read {
+            width: 85px;
+            padding: 5px 15px 5px 0;
+            border-right: 1px solid #E5E5E5;
+            display: inline-block;
+            margin-top: 10px;
+            a {
+              font-size: 12px !important;
+              padding-right: 5px;
+              color: #FF9E00 !important;
+              font-weight: normal !important;
+              width: auto !important;
+              cursor: pointer;
+              text-decoration: none;
+              display: inline !important;
+            }
+            span {
+              color: #FF9E00;
+              font-weight: normal;
+              text-decoration: none;
+            }
+            a:hover {
+              text-decoration: underline;
+            }
+            img {
+              position: relative;
+              top: -1px;
+            }
+          }
+
+          .comments {
+            width: 112px;
+            padding-left: 15px;
+            display: inline-block;
+            a {
+              font-size: 12px !important;
+              color: #9D9D9D !important;
+              padding-left: 5px;
+              cursor: pointer;
+              text-decoration: none !important;
+              display: inline !important;
+              font-weight: normal !important;
+              &:hover {
+                text-decoration: underline !important;
+              }
+            }
+            img {
+              position: relative;
+              top: 1px;
+            }
+          }
+        }
+
+        .paginator .button {
+          display: inline-block;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}

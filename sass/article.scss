@@ -1,0 +1,27 @@
+article {
+  time {
+    padding-top: 3px !important;
+    padding-bottom: 5px;
+  }
+
+  h1 {
+    color: #474747;
+    font-size: 36px;
+    font-weight: bold;
+    padding-top: 25px;
+    a {
+      color: #474747;
+      text-decoration: none;
+      &:hover {
+        color: #FF9E00;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  p {
+    padding-top: 10px;
+    line-height: 18px;
+    color: #707070;
+  }
+}

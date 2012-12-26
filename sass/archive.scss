@@ -1,0 +1,39 @@
+.content {
+  
+  .archiveTable {
+    td {
+      font-size: 24px;
+      font-weight: bold;
+      &:first-child {
+        color: #9D9D9D;
+      }
+      .year {
+        padding-top: 30px;
+        width: 145px;
+      }
+      &:last-child {
+        padding: 21px 0 15px 10px;
+        width: 100%;
+        border-bottom: 1px solid #E5E5E5;
+      }
+    }
+    a {
+      color: #474747;
+      font-size: 24px;
+      font-weight: bold;
+      text-decoration: none;
+      &:hover {
+        color: #FF9E00;
+        text-decoration: underline;
+      }
+    }
+    tr {
+      &:last-child td {
+        border-bottom: 0px solid #E5E5E5;
+      }
+      &.border {
+        border-bottom: 1px solid #E5E5E5;
+      }
+    }
+  }
+}

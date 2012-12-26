@@ -3,97 +3,22 @@ layout: default
 title: Blog Archive
 ---
 
-
 <table class="archiveTable" cellspacing="0" cellpadding="0">
   <tbody>
+    {% for post in site.posts reverse %}
     <tr>
-        <td>
-            <div class="year">2013</div>
-        </td>
-        <td>
-            <a href="#">Why I choose Jekyll/octopress Over Wordpress</a>
-            <div class="date">Sep 15th</div>
-        </td>
-    </tr>
-    <tr>
+      {% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
+      {% if year != this_year %}
+        {% assign year = this_year %}
+        <td><div class="year">{{ year }}</div></td>
+      {% else %}
         <td></td>
-        <td>
-            <a href="#">Email Notifications in Web Apps</a>
-            <div class="date">Aug 15th</div>
-        </td>
+      {% endif %}
+      <td>
+        <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
+        <time>{{ post.date | date: "%b %d" }}</time>
+      </td>
     </tr>
-    <tr>
-        <td></td>
-        <td>
-            <a href="#">iA Writer Needs Print Configuration</a>
-            <div class="date">Jun 15th</div>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <a href="#">Improvements For Instapaper</a>
-            <div class="date">May 15th</div>
-        </td>
-    </tr>
-    <tr class="border">
-        <td></td>
-        <td>
-            <a href="#">Textmate - Better Than Paper</a>
-            <div class="date">Feb 15th</div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="year">2012</div>
-        </td>
-        <td>
-            <a href="#">Why I choose Jekyll/octopress Over Wordpress</a>
-            <div class="date">Sep 15th</div>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <a href="#">Email Notifications in Web Apps</a>
-            <div class="date">Aug 15th</div>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <a href="#">iA Writer Needs Print Configuration</a>
-            <div class="date">Jun 15th</div>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <a href="#">Improvements For Instapaper</a>
-            <div class="date">May 15th</div>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            <a href="#">Textmate - Better Than Paper</a>
-            <div class="date">Feb 15th</div>
-        </td>
-    </tr>
+    {% endfor %}
   </tbody>
 </table>
-
- <div id="blog-archives">
--{% for post in site.posts reverse %}
--{% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
--{% unless year == this_year %}
--  {% assign year = this_year %}
-  <h2>{{ year }}</h2>
--{% endunless %}
-<article>
--  {% include archive_post.html %}
-</article>
--{% endfor %}
-</div>
-
-
