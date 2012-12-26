@@ -60,14 +60,14 @@ layout: default
   <div class="paginator">
     {% if paginator.previous_page %}
     <div class="button">
-      <img src="/images/left_arrow.png" alt="left_arrow">
+      <img src="{{ root_url }}/images/left_arrow.png" alt="left_arrow">
       <a href="#">Older entries</a>
     </div>
     {% endif %}
     {% if paginator.next_page %}
     <div class="button">
       <a href="#">Newer entries</a>
-      <img src="/images/right_arrow.png" alt="right_arrow">
+      <img src="{{ root_url }}/images/right_arrow.png" alt="right_arrow">
     </div>
     {% endif %}
   </div>

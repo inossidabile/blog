@@ -25,8 +25,8 @@
           <div class="sidebar">
             <div class="content">
               <div class="about">
-                <a href="/"><img src="/images/bs_ava.png" alt="Boris Staal"></a>
-                <h1><a href="/">Boris Staal</a></h1>
+                <a href="{{ root_url }}"><img src="/images/bs_ava.png" alt="Boris Staal"></a>
+                <h1><a href="{{ root_url }}">Boris Staal</a></h1>
                 <h2>About me</h2>
                 <p>
                   I'm Boris Staal, managing geek ಠ_ಠ<br/> working at <a href="http://roundlake.ru">Round Lake</a>.
@@ -79,7 +79,7 @@
                   class="active"
                 {% endif %}
                 >
-                <a href="/">Blog</a>
+                <a href="{{ root_url }}">Blog</a>
               </li>
               <li
                 {% if page.url == "/blog/archives/index.html" %}
