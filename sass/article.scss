@@ -4,6 +4,14 @@ article {
     padding-bottom: 5px;
   }
 
+  a {
+    color: #FF9E00;
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   h1 {
     color: #474747;
     font-size: 36px;

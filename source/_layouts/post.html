@@ -11,7 +11,7 @@ single: true
 
   <article>
     <h1>{{ page.title }}</h1>
-    {% include date.html %}{{ time }}
+    <time>{{ page.date | date: "%b %d, %Y" }} | {{ page.categories | category_links }}</time>
     {{ content }}
   </article>
 

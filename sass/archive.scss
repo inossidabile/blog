@@ -18,6 +18,13 @@
       }
     }
     a {
+      color: #FF9E00;
+      text-decoration: underline;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+    a.head {
       color: #474747;
       font-size: 24px;
       font-weight: bold;

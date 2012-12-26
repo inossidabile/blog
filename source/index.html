@@ -10,7 +10,9 @@ layout: default
     <h1>
       <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
     </h1>
-    {% include date.html %}{{ time }}
+    <time>
+      {{ post.date | date: "%b %d, %Y" }} | {{ post.categories | category_links }}
+    </time>
     {{ post.content | excerpt }}
   </article>
   <div class="more">
@@ -32,7 +34,9 @@ layout: default
         <h1>
           <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
         </h1>
-        {% include date.html %}{{ time }}
+        <time>
+          {{ post.date | date: "%b %d, %Y" }} | {{ post.categories | category_links }}
+        </time>
         {{ post.content | excerpt }}
       </article>
       <div class="more">
