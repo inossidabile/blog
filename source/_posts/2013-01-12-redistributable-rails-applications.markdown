@@ -14,7 +14,7 @@ Clever consumer will also want to store such a "deployment" in his own git repos
 
 Let me share my story first. I manage two banking products: Roundbank and Smartkiosk. They are Rails applications. Every time bank wants to deploy Roundbank-based internet banking I need a way to:
 
-  1. Get my core and using internal API create a nice new look that will match bank's design.
+  1. Get my core and create a nice new look that will match bank's design using internal API.
   2. Extend core with the transport methods that are required to integrate with bank's core banking platform.
   3. Support it.
 
@@ -124,7 +124,7 @@ Okay it might be a strange requirement. But did you never use it with the Bundle
 
 **You can not split gems for platforms**
 
-Roundbank can work at MRI and JRuby. And it uses slightly different set of gems for different platforms. What am I supposed to do with that? There are some workarounds that invoke proper dependencies of a particular platform from within compilation hooks – don't even try those. They will not work with Bundler well. They will stay ignored for `:path =>` inclusion and even `:git => ` inclusion. The worst thing is that new Ruby Gems 2.0 are ought to be released. And still no progress.
+Roundbank can work under MRI and JRuby. And it uses slightly different set of gems for different platforms. What am I supposed to do with that? There are some workarounds that invoke proper dependencies of a particular platform from within compilation hooks – don't even try those. They will not work with Bundler well. They will stay ignored for `:path =>` inclusion and even `:git => ` inclusion. The worst thing is that new Ruby Gems 2.0 are ought to be released. And still no progress.
 
 The best option I was able to come up with is to copy host project `Gemfile` to every descendant project. Put it to, say, `Gemfile.roundbank` and then require:
 
