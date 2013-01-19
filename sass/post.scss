@@ -7,5 +7,9 @@
     #disqus_thread a {
       color: #ff9e00 !important;
     }
+
+    #disqus_thread .dsq-commenter-bio {
+      display: none;
+    }
   }
 }
