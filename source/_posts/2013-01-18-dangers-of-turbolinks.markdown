@@ -26,7 +26,7 @@ It has pretty simple workaround that is already wrapped into a tiny gem called [
 
 #### Global scope does not get cleaned
 
-Turbolinks clames it reduces load time due to the fact browser doesn't have to reevaluate your assets. True. But not only assets remain. All the global scope saves a state.
+Turbolinks clames it reduces load time due to the fact browser doesn't have to reevaluate your assets. True. But not only assets remain. The whole global scope saves a state.
 
 Imagine we have a page with the script from previous example. Script is injected into the `body` tag. It could be i.e. some kind of external service inclusion. What happens in this case? It adds one more binding per each load. It evaluates one time for the first page, two times for second and so on. Bindings do not disappear automaticaly like before. You suddenly appear in a locked environment where nobody but you is responsible for page desctruction routines.
 
@@ -85,4 +85,4 @@ There is however small advantage that Turbolinks could give you – the ability 
 
 Turbolinks claim that it's the successor to pjax that seamlessly works out of box. As you can see – it's not even close to that. Real problems of Turbolinks are hidden deep inside. Existing MVC frameworks like Ember or Joosy address such problems – they may use different approaches but they face them. Turbolinks silently ignore it. And if it will ever try start fighting – it will turn into another MVC framework.
 
-Remember: with Turbolinks you might easily fix surface issues. But it's an iceberg so think twice.
+Remember: with Turbolinks you might easily fix surface issues. But it's an iceberg so think twice. You have to write your code in a very special way to work with that. You are likely to have issues with legacy code. And you get almost nothing for that.
