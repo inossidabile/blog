@@ -132,15 +132,35 @@ The best option I was able to come up with is to copy host project `Gemfile` to 
 eval_gemfile 'Gemfile.roundbank'
 ```
 
+##### 6. Transparent initialization
+
+During initial startup Rails relies on `Foo::Application` constant heavily. You might `grep` you code for that – it's everywhere. Rack setup, Environments, Initializers, .... But now that we are trying to run it in a very special way – it will fail. `Foo::Application` will not exist in inherited context. Instead of that we are supposed to configure the descendant.
+
+And here comes magic. During class initialization at `config/application.rb` your application instance is storead at `Rails.application` property. The final step required to make your application gem-compatible is to replace `Foo::Applicaton` with `Rails.application.class` everywhere. Here is the total list of locations you should check:
+
+```
+config.ru
+Rakefile
+config/environment.rb
+config/routes.rb
+config/environments/development.rb
+config/environments/production.rb
+config/environments/test.rb
+config/initializers/secret_token.rb
+config/initializers/session_store.rb
+```
+
+This replacement makes the code application-indepent. No matter what application runs it – it always uses proper instances.
+
 ##### Summary
 
-As soon as these 5 steps are done – you can pack your new gem and use it from any other Rails application. At the same time host application will remain runable from itself also.
+As soon as these 6 steps are done – you can pack your new gem and use it from any other Rails application. At the same time host application will remain runable from itself also.
 
 But why do all that steps manually if [Matrioshka](https://github.com/inossidabile/matrioshka/) can do that for you?
 
 ### Matrioshka
 
-I tested this approach at Roundbank and fell in love. To extend it to other products and ease 5th step I created the Matrioshka gem. It will do every described step for you within it's generator.
+I tested this approach at Roundbank and fell in love. To extend it to other products and automate the 5th step I created the Matrioshka gem. It will do everything for you with it's mighty generators.
 
 ##### Host Application (Gem)
 
