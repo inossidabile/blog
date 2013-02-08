@@ -1,11 +1,11 @@
 /*
 Syntax error: Undefined mixin 'border-radius'.
-        on line 86 of /Users/inossidabile/Sites/octopress/sass/sidebar.scss, in `border-radius'
-        from line 86 of /Users/inossidabile/Sites/octopress/sass/sidebar.scss
+        on line 86 of /Users/inossidabile/Sites/blog/sass/sidebar.scss, in `border-radius'
+        from line 86 of /Users/inossidabile/Sites/blog/sass/sidebar.scss
 
 Backtrace:
-/Users/inossidabile/Sites/octopress/sass/sidebar.scss:86:in `border-radius'
-/Users/inossidabile/Sites/octopress/sass/sidebar.scss:86
+/Users/inossidabile/Sites/blog/sass/sidebar.scss:86:in `border-radius'
+/Users/inossidabile/Sites/blog/sass/sidebar.scss:86
 /Users/inossidabile/.rvm/gems/ruby-1.9.3-p327/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:170:in `visit_mixin'
 /Users/inossidabile/.rvm/gems/ruby-1.9.3-p327/gems/sass-3.1.20/lib/sass/tree/visitors/base.rb:37:in `visit'
 /Users/inossidabile/.rvm/gems/ruby-1.9.3-p327/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:18:in `visit'
@@ -98,4 +98,4 @@ Backtrace:
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Syntax error: Undefined mixin 'border-radius'.\A         on line 86 of /Users/inossidabile/Sites/octopress/sass/sidebar.scss, in `border-radius'\A         from line 86 of /Users/inossidabile/Sites/octopress/sass/sidebar.scss"; }
+  content: "Syntax error: Undefined mixin 'border-radius'.\A         on line 86 of /Users/inossidabile/Sites/blog/sass/sidebar.scss, in `border-radius'\A         from line 86 of /Users/inossidabile/Sites/blog/sass/sidebar.scss"; }
