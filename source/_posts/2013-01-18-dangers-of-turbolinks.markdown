@@ -3,7 +3,7 @@ layout: post
 title: "Dangers of Turbolinks"
 date: 2013-01-18 21:35
 comments: true
-categories: Turbolinks, Rails
+categories: Turbolinks Rails
 ---
 
 Turbolinks! This "award-winning" technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let's see if it really is THAT bad. And what are the reasons if it is.
