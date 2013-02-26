@@ -2,6 +2,7 @@
 
 article {
   ol {
+    clear: both;
     list-style-type: decimal;
 
     margin-top: 12px;
@@ -50,6 +51,13 @@ article {
     @include border-radius(3px);
     border: 1px #b9b9b9 solid;
     max-width: 100%;
+
+    &.liquid {
+      float: left;
+      margin-top: 10px;
+      margin-right: 20px;
+      margin-bottom: 20px;
+    }
   }
 
   blockquote {
@@ -89,6 +97,7 @@ article {
     font-weight: bold;
     padding-top: 15px;
     padding-bottom: 3px;
+    clear: both;
   }
 
   h4 {
@@ -97,6 +106,7 @@ article {
     font-weight: bold;
     padding-top: 15px;
     padding-bottom: 3px;
+    clear: both;
   }
 
   h5 {
@@ -114,6 +124,7 @@ article {
   }
 
   .highlight {
+    clear: both;
     margin-top: 15px;
     margin-bottom: 15px;
 
