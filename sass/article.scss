@@ -58,6 +58,13 @@ article {
       margin-right: 20px;
       margin-bottom: 20px;
     }
+
+    &.icon {
+      box-shadow: none;
+      -webkit-box-shadow: none;
+      padding: 0px;
+      border: 0px;
+    }
   }
 
   blockquote {
@@ -168,5 +175,13 @@ article {
   .highlight::-webkit-scrollbar-thumb {
     @include border-radius(10px);
     -webkit-box-shadow: inset 0 0 6px #E5E5E5; 
+  }
+  
+  hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0px;
+    height: 1px;
+    background-color: gray;
   }
 }
