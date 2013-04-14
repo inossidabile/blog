@@ -38,11 +38,11 @@ To finalize the setup and run your box you should:
 
 ### The goal
 
-There is something more behind Rove than just a web interface. The interface itself is based on a small DSL that allows you to help us make the service better. Currently it consists of 12 recipes but we hope it's just a start. Rove sources are hosted at [Github](https://github.com/aderyabin/) and you are free to extend the whole service with new recipes by using [pull requests](https://github.com/aderyabin/hospice/pulls).
+There is something more behind Rove than just a web interface. The interface itself is based on a small DSL that allows you to help us make the service better. Currently it consists of 12 recipes but we hope it's just a start. Rove sources are hosted at [Github](https://github.com/aderyabin/) and you are free to extend the whole service with new recipes by using [pull requests](https://github.com/aderyabin/rove/pulls).
 
 That's said: Chef recipes' reality is a big mess at the moment. We hope to separate the wheat from the chaff. And if you can help &mdash; you are very very welcome.
 
-We have prepared a [nice introduction to the DSL at README](https://github.com/aderyabin/hospice#dsl-description). Duplicating it here would not make a lot of sense. Let met introduce you a real package to demonstrate how easy it is instead:
+We have prepared a [nice introduction to the DSL at README](https://github.com/aderyabin/rove#dsl-description). Duplicating it here would not make a lot of sense. Let met introduce you a real package to demonstrate how easy it is instead:
 
 ```ruby
 # :redis is an id of package
@@ -75,7 +75,7 @@ Rove.package :redis do
 end
 ```
 
-You can found another bunch of live samples here: [/packages](https://github.com/aderyabin/hospice/blob/master/packages/).
+You can found another bunch of live samples here: [/packages](https://github.com/aderyabin/rove/blob/master/packages/).
 
 ---
 
