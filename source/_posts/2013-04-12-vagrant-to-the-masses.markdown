@@ -28,7 +28,7 @@ Rove will generate a ZIP-archive containing two files: Vagrantfile and Cheffile.
 
 1. **Vagrantfile** is a main Vagrant configuration. Typically it is supposed to be placed at the root of your project. Just put it whenever you want your box root should be. Additional documentation can be found [here](http://docs.vagrantup.com/v2/vagrantfile/index.html).
 
-2. **Cheffile** describes sources of cookbooks we use to provision packages you demanded. It's used by [Librarian](https://github.com/applicationsonline/librarian) to download all the cookbooks you need including referenced dependencies. Unless you already have it install it using `gem install librarian` command.
+2. **Cheffile** describes sources of cookbooks we use to provision packages you demanded. It's used by [Librarian](https://github.com/applicationsonline/librarian) to download all the cookbooks you need including referenced dependencies. Unless you already have it install it using `gem install librarian-chef` command.
 
 To finalize the setup and run your box you should:
 
