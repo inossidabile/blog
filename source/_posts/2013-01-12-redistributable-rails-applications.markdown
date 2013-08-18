@@ -14,7 +14,7 @@ Clever consumer will also want to store such a "deployment" in his own git repos
 
 Let me share my story first. I manage two banking products: Roundbank and Smartkiosk. They are Rails applications. Every time bank wants to deploy Roundbank-based internet banking I need a way to:
 
-  1. Get my core and create a nice new look that will match bank's design using internal API.
+  1. Get application core and create a nice new look that will match bank's design using internal API.
   2. Extend core with the transport methods that are required to integrate with bank's core banking platform.
   3. Support it.
 
