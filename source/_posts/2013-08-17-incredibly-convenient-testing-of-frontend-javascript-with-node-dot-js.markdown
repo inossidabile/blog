@@ -114,7 +114,7 @@ We need to go deeper!.. This approach appeared to work even worse then before. S
 
 We simply have to make it work through some kind of an API and make it include Javascript files from some kind of storage that handles preprocessing (handles incredibly fast and efficiently by splitting code in atomic parts and recompiling only things that changed).
 
-In couple days me and [Toby](github.com/airportyh/) approved and introduced all the required API modifications. New version of **Testem** can:
+In couple days me and [Toby](https://github.com/airportyh/) approved and introduced all the required API modifications. New version of **Testem** can:
 
   * Accept configuration from API calls. Config file is not required anymore.
   * Accept hooks as JS functions (instead of bash strings that run X that runs Y that runs...)
