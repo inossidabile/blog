@@ -51,7 +51,7 @@ That's pretty much it. This is exactly how Javascript front-end testing works ba
 
 > Have you already automated tests that run in both, console and browsers? If you already know the pains and just want a cure &mdash; pass on to the Part 3.
 
-It's pretty easy to organize tests like its described in Part 1. It's a common way to solve the issue and there are tons of ready-made **Grunt** plug-ins for any framework no matter which one you use. Seriously, take a look at this for example:
+It's pretty easy to organize tests like its described in Part 1. It's a common way to solve the issue and there are tons of ready-made **Grunt** plug-ins for any framework no matter which one you use. Seriously, take a look at these for example:
 
   * [grunt-contrib-jasmine](https://github.com/gruntjs/grunt-contrib-jasmine) (I used this one before)
   * [grunt-mocha](https://github.com/kmiyashiro/grunt-mocha)
