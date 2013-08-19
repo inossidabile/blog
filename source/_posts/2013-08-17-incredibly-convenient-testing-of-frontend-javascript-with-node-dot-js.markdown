@@ -6,7 +6,7 @@ comments: true
 categories: [Testem, Node.js, Grunt, Mincer, Joosy]
 ---
 
-You do have automated testing for your front-end Javascript application / library / framework don't you? And tests work equally well at console, browsers and Travis aren't they? And you run them in every possible browser on each release (or even push) right? No? You might be doing it wrong. Let's see if can do something about it!
+You do have automated testing for your front-end Javascript application / library / framework don't you? And tests work equally well at console, browsers and Travis aren't they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let's see if can do something about it!
 
 This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here's the shortcut [https://github.com/inossidabile/grunt-contrib-testem](https://github.com/inossidabile/grunt-contrib-testem) if you are already bored so far ;).
 
@@ -71,15 +71,11 @@ Libraries happen to be big. And sometimes even huge. But even mid-sized librarie
 
 It means that before we actually test our code we have to bundle it. No probs you say, **Grunt** can hook tasks. We just make it run bundling task before the tests run. And now do you remember we have a development mode with **watch**? So we have to bundle code every single time we press Save in the editor and/or file changes. How long does it take to bundle your code once? ;)
 
-<img src="http://f.cl.ly/items/281M2x1m1A0z1b1z1l2V/Image%202013.08.18%205%3A00%3A59%20AM.png" style="height: 216px">
-
 With such approach **watch** really starts to drive crazy. It misses saves, crashes and every time you look at the console with the results of tests you have literally no idea &mdash; WHAT are you looking at. Are those results of the latest tests? Or is it bundling right now and the new run is yet to come? Did it even catch the last save? Finally you end up switching back to manual runs.
 
 #### CoffeeScript
 
 But even if you don't we are still not there yet. If your application is in CoffeeScript or another dialect, you probably use the same language for specs. So you have to compile them too. Now you have to compile both &mdash; your app and EVERY test file you have on EACH test run. Should I say there are can be MUCH more test files than application files? So how long did you say it takes to bundle your code?
-
-<img src="http://f.cl.ly/items/1F0h0G3A0F1C2k393C0Q/Image%202013.08.18%205%3A01%3A31%20AM.jpeg">
 
 Wait. Can't we only recompile files that actually changed? Not really. **watch** simply can't do that. And none of existing workarounds help with modern version unfortunately. The only thing that works (if you can call that _works_) is full recompilation on each change.
 
@@ -89,7 +85,7 @@ In the real life nobody is going to use your code in **PhantomJS**. From time to
 
 It's not a 100% of cases for sure. Not even 50% of them. Is that what you might be thinking. At least so did I before I experienced it for the first time. And the circle has closed.
 
-### Part 3. In that we meet Testem, Mincer and learn the way they integrate
+### Part 3. Testem, Mincer and the way they integrate
 
 [Testem](github.com/airportyh/testem/) is simply awesome. Really. It's so incredible I can't even describe what I felt when I tried it first. Just watch this:
 
