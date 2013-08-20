@@ -6,7 +6,7 @@ comments: true
 categories: [Testem, Node.js, Grunt, Mincer, Joosy]
 ---
 
-You do have automated testing for your front-end Javascript application / library / framework don't you? And tests work equally well at console, browsers and Travis aren't they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let's see if can do something about it!
+You do have automated testing for your front-end Javascript application / library / framework don't you? And tests work equally well at console, browsers and Travis aren't they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let's see if we can do something about it!
 
 This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here's the shortcut [https://github.com/inossidabile/grunt-contrib-testem](https://github.com/inossidabile/grunt-contrib-testem) if you are already bored so far ;).
 
