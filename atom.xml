@@ -1,0 +1,1735 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Staal Forge]]></title>
+  <link href="http://staal.io/atom.xml" rel="self"/>
+  <link href="http://staal.io/"/>
+  <updated>2013-11-07T22:42:14+07:00</updated>
+  <id>http://staal.io/</id>
+  <author>
+    <name><![CDATA[Boris Staal]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Incredibly convenient testing of front-end Javascript with Node.js]]></title>
+    <link href="http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/"/>
+    <updated>2013-08-17T23:28:00+07:00</updated>
+    <id>http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js</id>
+    <content type="html"><![CDATA[<p>You do have automated testing for your front-end Javascript application / library / framework don&#8217;t you? And tests work equally well at console, browsers and Travis aren&#8217;t they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let&#8217;s see if we can do something about it!</p>
+
+<p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here&#8217;s the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
+
+<!-- more -->
+
+
+<h3>Part 1. Introduction</h3>
+
+<blockquote><p>If you know what Jasmine, Mocha, PhantomJS and Grunt are, skip to Part 2.</p></blockquote>
+
+<p>When it comes to testing, the first question is &mdash; which framework are we going to use? There are numerous articles on the Internet that describe pros and cons of those. Read this for example: <a href="http://www.netmagazine.com/features/essential-javascript-top-five-testing-libraries">http://www.netmagazine.com/features/essential-javascript-top-five-testing-libraries</a>.</p>
+
+<p>I personally prefer <a href="http://pivotal.github.io/jasmine/">Jasmine</a> and <a href="http://visionmedia.github.io/mocha/">Mocha</a> (coupled with CoffeeScript and <a href="http://chaijs.com">Chai</a> they feel so much like RSpec). But it&#8217;s only a matter of taste in fact. Their capabilities are more or less equal.</p>
+
+<p>Let&#8217;s say we have a framework. Then we can manually create HTML file, include JS we want to test, open it in a browser and, well, test. It&#8217;s certainly a kind of automatic testing already but still so far away from something reasonable. And the first thing to think about is Continuous Integration. You can only run such tests manually and see the results with your eyes. No &#8220;on-commit runs&#8221;, no Travis integration. Sadness.</p>
+
+<h4>PhantomJS</h4>
+
+<p><a href="http://phantomjs.org">Phantom</a> is a thing that solves that. It&#8217;s a headless invisible browser that you can control programmatically. Like this for example: <a href="https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js">https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js</a>. <strong>Phantom</strong> will play the role of our eyes and hands &mdash; it will open a page, check the results and pass them back to a &#8220;script runner&#8221;. The &#8220;script runner&#8221; that can run on commit or at Travis.</p>
+
+<h4>Grunt</h4>
+
+<p><img src="http://gruntjs.com/img/grunt-logo.png" style="float: right; margin-left: 10px; height: 80px"></p>
+
+<p>And the &#8220;script runner&#8221; in its turn is <a href="http://gruntjs.com">Grunt</a>. Did you use <strong>Grunt</strong> before? <a href="http://gruntjs.com/getting-started">Go and try</a> if you did not &mdash; it&#8217;s incredible. <strong>Grunt</strong> comes with <a href="https://github.com/cowboy/jquery-tiny-pubsub/">sample project</a> showing its main features. And guess what? It has testing section! The sample project uses <a href="http://qunitjs.com">QUnit</a>. Here we see:</p>
+
+<ul>
+<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/test/tiny-pubsub.html">hand-made HTML testing playground</a></li>
+<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/test/tiny-pubsub_test.js">single test file</a></li>
+<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L80">external plug-in <strong>grunt-contrib-qunit</strong>&#8230;</a></li>
+<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L37-L39">&#8230;and its configuration</a></li>
+</ul>
+
+
+<p>Unlike this one, most of real projects do not keep HTML playground manually crafted. They use another (more powerful) <strong>Grunt</strong> plug-ins allowing to generate that on the fly. Combining all that we have a <strong>Grunt</strong> task that:</p>
+
+<ol>
+<li>generates page with test</li>
+<li>runs <strong>Phantom</strong></li>
+<li>grabs the result</li>
+<li>prints it to console</li>
+<li>exits with proper code (whether test succeeded)</li>
+</ol>
+
+
+<p>That&#8217;s pretty much it. This is exactly how Javascript front-end testing works basically. And it has some issues that you either experienced already or are going to experience.</p>
+
+<h3>Part 2. Basic stuff and issues</h3>
+
+<blockquote><p>Have you already automated tests that run in both, console and browsers? If you already know the pains and just want a cure &mdash; pass on to the Part 3.</p></blockquote>
+
+<p>It&#8217;s pretty easy to organize tests like its described in Part 1. It&#8217;s a common way to solve the issue and there are tons of ready-made <strong>Grunt</strong> plug-ins for any framework no matter which one you use. Seriously, take a look at these for example:</p>
+
+<ul>
+<li><a href="https://github.com/gruntjs/grunt-contrib-jasmine">grunt-contrib-jasmine</a> (I used this one before)</li>
+<li><a href="https://github.com/kmiyashiro/grunt-mocha">grunt-mocha</a></li>
+<li><a href="https://github.com/gruntjs/grunt-contrib-qunit">grunt-contrib-qunit</a></li>
+</ul>
+
+
+<p>Alright! Isn&#8217;t that simple? Install the plug-in, drop couple lines into a config, add proper runner to <code>.travis.yml</code>. That&#8217;s it. Flawless victory. Victory? Doh&#8230;</p>
+
+<h4>Development mode</h4>
+
+<p>Single runs are working now. But that&#8217;s just a start. To keep development process away from the &#8220;switch a window&#8221; game runners are supposed to watch modifications of the test files and restart tests automatically. Here comes <a href="https://github.com/gruntjs/grunt-contrib-watch">grunt-contrib-watch</a>! Right? Another entry to config and we are done &mdash; <strong>Grunt</strong> keeps process running and every time you save a file it runs test runner from scratch.</p>
+
+<p>In simple cases (if we forgive <strong>watch</strong> its bugginess) it saves indeed. Let&#8217;s just keep it in mind for now: we have the development mode and it utilizes <strong>watch</strong> internally.</p>
+
+<h4>Bundling</h4>
+
+<p>Libraries happen to be big. And sometimes even huge. But even mid-sized libraries typically use more then one file. And as you know front-end JS can&#8217;t bundle itself, something has to help it (and this &#8220;something&#8221; probably runs from <strong>Grunt</strong> as well).</p>
+
+<p>It means that before we actually test our code we have to bundle it. No probs you say, <strong>Grunt</strong> can hook tasks. We just make it run bundling task before the tests run. And now do you remember we have a development mode with <strong>watch</strong>? So we have to bundle code every single time we press Save in the editor and/or file changes. How long does it take to bundle your code once? ;)</p>
+
+<p>With such approach <strong>watch</strong> really starts to drive crazy. It misses saves, crashes and every time you look at the console with the results of tests you have literally no idea &mdash; WHAT are you looking at. Are those results of the latest tests? Or is it bundling right now and the new run is yet to come? Did it even catch the last save? Finally you end up switching back to manual runs.</p>
+
+<h4>CoffeeScript</h4>
+
+<p>But even if you don&#8217;t we are still not there yet. If your application is in CoffeeScript or another dialect, you probably use the same language for specs. So you have to compile them too. Now you have to compile both &mdash; your app and EVERY test file you have on EACH test run. Should I say there are can be MUCH more test files than application files? So how long did you say it takes to bundle your code?</p>
+
+<p>Wait. Can&#8217;t we only recompile files that actually changed? Not really. <strong>watch</strong> simply can&#8217;t do that. And none of existing workarounds help with modern version unfortunately. The only thing that works (if you can call that <em>works</em>) is full recompilation on each change.</p>
+
+<h4>Run with something else but Phantom</h4>
+
+<p>In the real life nobody is going to use your code in <strong>PhantomJS</strong>. From time to time you have to check it with real browsers anyway. To do that we should manually open HTML that was generated by runner in the browser we target. If you are unlucky enough to deal with things that behave differently in different browsers you get back to the start. To the &#8220;switch a window&#8221; game.</p>
+
+<p>It&#8217;s not a 100% of cases for sure. Not even 50% of them. Is that what you might be thinking. At least so did I before I experienced it for the first time. And the circle has closed.</p>
+
+<h3>Part 3. Testem, Mincer and the way they integrate</h3>
+
+<p><a href="github.com/airportyh/testem/">Testem</a> is simply awesome. Really. It&#8217;s so incredible I can&#8217;t even describe what I felt when I tried it first. Just watch this:</p>
+
+<iframe width="560" height="315" src="http://staal.io//www.youtube.com/embed/-1mjv4yk5JM" frameborder="0" allowfullscreen style="margin-top: 20px; margin-bottom: 20px;"></iframe>
+
+
+<p><strong>Testem</strong> completely removes the difference between headless console runs and real browsers. Things just get bundled into a big ecosystem with single large green &#8220;CHECK&#8221; button. And I was happy until I tried to use it with a real project&#8230;</p>
+
+<p>The marketing lies! Well&#8230; A little bit at least. <strong>Testem</strong> says it supports preprocessing. No it does not. I mean it does in some way &mdash; it allows you to run custom bash command before each test run and after that. It states it&#8217;s possible to do anything from command line. Well&#8230; Technically it is. It&#8217;s also technically possible to cross an ocean riding a dolphin.</p>
+
+<hr />
+
+<p>But I didn&#8217;t give up! Despite this limitation <strong>Testem</strong> still has a lot of stuff to support. At least we are going to solve the problem with manual browsers checking. This alone is a huge step forward. Yet another disappointment &mdash; <strong>Testem</strong> absolutely is (was!) not adapted for external programmatic integration. It&#8217;s all kinda selfish and independent. So I did this:</p>
+
+<p><strong>I wrote a Grunt task that was running Testem that was running bash script that was running Grunt that was compiling Coffee.</strong></p>
+
+<p>We need to go deeper!.. This approach appeared to work even worse then before. So I took scalpel and forked <strong>Testem</strong>.</p>
+
+<h4>Resulting solution</h4>
+
+<p><strong>Testem</strong> is perfect when it comes to:</p>
+
+<ol>
+<li>Support of different testing frameworks</li>
+<li>Headless runs using ready JS files</li>
+<li>Watching set of files to rerun tests automatically</li>
+<li>Integration with real browsers of your OS</li>
+</ol>
+
+
+<p>We simply have to make it work through some kind of an API and make it include Javascript files from some kind of storage that handles preprocessing (handles incredibly fast and efficiently by splitting code in atomic parts and recompiling only things that changed).</p>
+
+<p>In couple days me and <a href="https://github.com/airportyh/">Toby</a> approved and introduced all the required API modifications. New version of <strong>Testem</strong> can:</p>
+
+<ul>
+<li>Accept configuration from API calls. Config file is not required anymore.</li>
+<li>Accept hooks as JS functions (instead of bash strings that run X that runs Y that runs&#8230;)</li>
+<li>Pass data to hooks</li>
+<li>Run <code>on_change</code> event when <strong>Testem</strong> notices file modification</li>
+<li>Include JS from URLs not just paths</li>
+<li>Override forced process destruction in the end of tests</li>
+</ul>
+
+
+<p>And as a bonus new version supports Javascript configuration files (testem.js).</p>
+
+<p>Okay then. Here I come, storage. At 1.2 branch of <a href="http://joosy.ws">Joosy</a> we have adapted <a href="https://github.com/nodeca/mincer">Mincer</a> to manage internal dependencies. And that&#8217;s exactly the storage we need in fact. It suits us simply perfect. Here is the resulting workflow:</p>
+
+<p><img src="https://github-camo.global.ssl.fastly.net/800e21517caf421200ca027c0bd50da0a5b913f1/687474703a2f2f662e636c2e6c792f6974656d732f30513275327632633143316531333252334c33332f636c6f75642e706e67" style="float: left; margin-right: 40px;"></p>
+
+<ol style="clear: none;">
+  <li>Start <a href="http://www.senchalabs.org/connect/">connect.js</a> on the port X and serve Mincer middleware</li>
+  <li>Take a list of paths including paths to Coffee, CoCo (anything Mincer can handle), expand UNIX masks and build the resulting list of files that <b>Testem</b> should watch modifications for</li>
+  <li>Map list of files to the list of URLs: http://localhost:X/path</li>
+  <li>Pass watch and serve lists to <b>Testem</b> and run it.</li>
+</ol>
+
+
+
+
+<br style="clear: both">
+
+
+<p>As the result <strong>Testem</strong> watches modification of original files but it doesn&#8217;t include them directly. Instead it includes them through <strong>Mincer</strong> that is listening the neighbor port. And <strong>Mincer</strong> in its turn handles all compilations and caching.</p>
+
+<p>I have to say here that <strong>Mincer</strong> isn&#8217;t just fast. It&#8217;s incredibly smart when it comes to caching. You can rest assured that at any moment you get actual code for any file. But what&#8217;s really important it has nothing to do with <strong>Testem</strong>. Even if it takes a while to compile all your code (which happens on the first run) &mdash; it&#8217;s browser that waits. It makes <strong>Testem</strong> watcher feel relaxed and work well. It also means that at any time you open console &mdash; you can be sure you see the latest results. You&#8217;ll just see zero progress if it&#8217;s compiling right now.</p>
+
+<p>All this stuff is wrapped into a Grunt plug-in. All you have to do to start using it is to install <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> and list files you want to test at the config like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span>
+</span><span class='line'>  <span class="nv">testem:</span>
+</span><span class='line'>    <span class="nv">basic:</span>
+</span><span class='line'>      <span class="nv">src: </span><span class="p">[</span>
+</span><span class='line'>        <span class="s">&#39;bower_components/jquery/jquery.js&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;spec/spec_helper.coffee&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;app/**/*.coffee&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s">&#39;spec/**/*_spec.coffee&#39;</span>
+</span><span class='line'>      <span class="p">]</span>
+</span><span class='line'>      <span class="nv">options:</span>
+</span><span class='line'>        <span class="c1"># Run 8 browsers at parallel</span>
+</span><span class='line'>        <span class="nv">parallel: </span><span class="mi">8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://f.cl.ly/items/0p3P3G0P2t2Y2g0O0G0e/Image%202013.08.18%205%3A00%3A15%20AM.gif" style="float: left; margin-right: 20px;"></p>
+
+<p>And this time it is finally likely to work well. In my case it made me run out of issues with front-end tests completely. I even had to start enjoying this process in fact. What about you?</p>
+
+<hr />
+
+<p>Please send kudos to incredible authors of <strong>Testem</strong> and <strong>Mincer</strong>: <a href="http://github.com/airportyh/">Toby Ho</a>, <a href="https://github.com/puzrin">Vitaly Puzrin</a> and <a href="https://github.com/ixti">Alex Zapparov</a>. Not only they created something valuable but also keep maintaining it so well. I had a chance to interact closely with both of projects. They really deserve it :).</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Protector!]]></title>
+    <link href="http://staal.io/blog/2013/06/04/the-protector/"/>
+    <updated>2013-06-04T22:00:00+07:00</updated>
+    <id>http://staal.io/blog/2013/06/04/the-protector</id>
+    <content type="html"><![CDATA[<p>More than a year ago me and <a href="http://whitequark.org/">Peter Zotov</a> released <a href="https://github.com/inossidabile/heimdallr">Heimdallr</a> – gem allowing to control models&#8217; security using shiny DSL. It was an extraction from a huge API backend project where it was used to consolidate access control, ease testing and DRY controllers.</p>
+
+<p>Heimdallr was a proof-of-concept release and while I really like DSL part I never had a chance to seriously use it anywhere else. It appeared to be <strong>way</strong> too paranoid, difficult, slow and sometimes even buggy – it was so stubborn it didn&#8217;t feel Ruby way at all. But what&#8217;s even worse – it was incompatible with almost anything trying to work with ActiveRecord besides really basic interaction. Even with things like <a href="https://github.com/amatsuda/kaminari">Kaminari</a>.</p>
+
+<p>Heimdallr as a proof-of-concept could afford having technical issues. And what&#8217;s good about having technical issues is that usually they can be solved. So I decided to make a Ruby-way clone of Heimdallr propagating the same idea (with similar DSL) but with really different implementation base and ideology.</p>
+
+<p>And the first thing I fixed was the name: meet <a href="https://github.com/inossidabile/protector">Protector</a>.</p>
+
+<!-- more -->
+
+
+<h3>Usage</h3>
+
+<p><strong>This post is not meant to describe how to use Protector – instead it&#8217;s here to explain possible use-cases and future possibilities. If you are after the API and general description, please refer to <a href="https://github.com/inossidabile/protector#protector">its README</a>.</strong></p>
+
+<h3>Evolution</h3>
+
+<p>If you ever used Heimdallr before you might be interested in particular differences. So here are the key changes that make Protector totally another story:</p>
+
+<ul>
+<li>Unlike Heimdallr that was trying to act as a duck-type compatible proxy, Protector works as an extension. It carefully modifies ORM from inside and theoretically should not affect any other gems.</li>
+<li>Heimdallr was trying to protect a model like a black box. Protector is after persistence process. It doesn&#8217;t interrupt attributes modification but instead injects creation and updation security validations.</li>
+<li>Protector trusts you a bit more. Heimdallr puts hands on everything even custom SQL queries. Protector doesn&#8217;t act that agressive – it only works at object level.</li>
+</ul>
+
+
+<p>And the improvements that I always wanted to have at Heimdallr:</p>
+
+<ul>
+<li>It has support for several adapters! There are only two of them for the moment – AR and Sequel. But two beats one. And I&#8217;m after Mongoid and DataMapper as well.</li>
+<li>It supports custom actions. Besides basic <code>readable?</code>, <code>updateable?</code>, etc actions it lets you to define your own.</li>
+<li>It works well with both strategies of eager loading (yay yay).</li>
+<li>It has perf tests! ^_^</li>
+</ul>
+
+
+<h3>The reason</h3>
+
+<p>We have <code>CanCan</code> and we have <code>Strong Parameters</code>. Why would we need Protector then? Well, there are several reasons why.</p>
+
+<h4>Comfort</h4>
+
+<p>Unlike <code>CanCan</code> and <code>Strong Parameters</code>, Protector is model-based. And therefore is easily and directly accessible from any part of your software where you use models. You can use it at controllers, queues, tests and even console in straightforward and handsome way. You can achieve close behavior with <code>Ability</code>, but you have to think about proper includes and additional entities which is not always good. Even if we reduce it by 3 LoC – okay, why not?</p>
+
+<h4>Centralized security management</h4>
+
+<p>Another and probably the most important thing is that since we are working on model level – we can manage fields. <code>CanCan</code> operates with entities and you are supposed to manage fields on your own. Here comes <code>Strong Parameters</code> functionality but it&#8217;s heavily bound to controllers (at least if you use it in comfortable way). So you get your security scope smeared. With Protector you get all your security logic at one place. Easily-readable. Easily-testable. Easily-maintainable. At all levels.</p>
+
+<p>Rails and most of Ruby web apps are Data-centric. We are used to the fact that it&#8217;s models&#8217; duty to control data integrity. Could one consider security restrictions being a part of the integrity? I believe the answer is yes. And Protector gives you a way to implement that layer of integrity check seamlessly.</p>
+
+<h4>DRYing your code</h4>
+
+<p>Initial reason for Heimdallr to appear was not clarifying security restrictions though. It was an additional task. We required this kind of domain description to DRY the code. As I mentioned previously it was an extraction from a big Rails-based JSON API backend. Typically such backends mostly consist of basic CRUD implementations. And with Protector this code can be mostly inherited from base controller. It requires even less code comparing to things like <code>Inherited Resources</code> or (again) <code>CanCan</code>.</p>
+
+<h4>Accessible rules reflections</h4>
+
+<p>Another bonus you get having centralized security management is having security reflections for every model (or even data source relation). It&#8217;s not that noticeable for classic web applications but it hits when you come to APIs. Especially when it comes to Hypermedia APIs. Having ability to predict what exactly can be accessible and manageable for particular client might be saving.</p>
+
+<h3>Roadmap</h3>
+
+<p>I&#8217;m approaching three main goals at the moment: more adapters, better controllers, wider DSL.</p>
+
+<h4>Adapters</h4>
+
+<p>Additionally to AR and Sequel I&#8217;m after Mongoid and DataMapper. However three days before I finished the first implementation of Protector, the DataMapper team has announced that DataMapper 2 has been renamed to ROM. I&#8217;m not quite sure if somebody might want to use it with the first version of DataMapper so I guess it will be delayed until the arrival of ROM.</p>
+
+<h4>Controllers automation</h4>
+
+<p>Heimdallr was packed with CanCan-like controllers extension called <a href="https://github.com/inossidabile/heimdallr-resource/">Heimdallr::Resource</a>. Protector will get the same. And again I&#8217;m not completely sure if it will try to mimic <code>CanCan</code> like Heimdallr::Resource did. But it will greatly reduce the size of controllers for sure.</p>
+
+<h4>DSL extensions</h4>
+
+<p>Protector gives you basic points of control over CRUD. But as long as we work with both, instances and scopes, we can extend the possibilities. For example one thing I&#8217;m thinking about is the <code>limit</code> rule that could control maximum per-query selection limit.</p>
+
+<p>The balance is very important here – Data-centric design is often the most suitable pattern for web application but it doesn&#8217;t make models the only member of the orchestra: models are already claimed for being too heavy. So this point will be developed with caution.</p>
+
+<h3>Post Scriptum</h3>
+
+<p>I&#8217;m currently migrating the initial service that Heimdallr was extracted from to Protector. It&#8217;s not production-tested yet but it&#8217;s approaching it. It has performance tests and it&#8217;s 99% covered with specs. If you like the idea – try it and let me know if it works for you.</p>
+
+<p>Thank you! :bow:</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Vagrant to the masses!]]></title>
+    <link href="http://staal.io/blog/2013/04/12/vagrant-to-the-masses/"/>
+    <updated>2013-04-12T21:06:00+07:00</updated>
+    <id>http://staal.io/blog/2013/04/12/vagrant-to-the-masses</id>
+    <content type="html"><![CDATA[<p>If you ever tried to unify development environments across project teams you probably heard of <a href="http://vagrantup.com/">Vagrant</a>. It integrates into a development process like a charm and works flawlessly. The chances that you stay with that as soon as you won an epic fight against provisioning are pretty high.</p>
+
+<p><strong>But unfortunately the chances to win provisioning are not high at all.</strong></p>
+
+<blockquote><p>There are two feature-rich options for provisioning: Chef and Puppet. Hereinafter I will intend Chef (as the most popular option) whenever I say &#8220;provisioning&#8221;.</p></blockquote>
+
+<p>Setting up a virtual environment with Chef is NOT an easy task. Chef lacks centralized repository of recipes and this results into a huge mess. There are at least ten Redis recipes with different configurations for example. Top 5 Google results are outdated and will not even start. So while in general Chef is a great piece of technology, you better be a qualified DevOps with a set of ready and tested recipes to navigate nicely in its world.</p>
+
+<p>What&#8217;s for us as developers? Recently I had a chance to help with the development of something that sorts naughty provisioning out. On behalf of its author, Andrey Deryabin, let me present you <strong><a href="http://rove.io">Rove</a></strong> &mdash; the Vagrant configuration service.</p>
+
+<!-- more -->
+
+
+<h3>How to use</h3>
+
+<p>We&#8217;ve gathered some working recipes for typical configurations and wraped them into a visual interface. Use a form to select packages you need, fill in required options and, ta-dam, you have a new and shiny environment.</p>
+
+<p><img src="http://f.cl.ly/items/2z19450w3u1O1Y14011c/hospice.png" alt="Rove" /></p>
+
+<p>Rove will generate a ZIP-archive containing two files: Vagrantfile and Cheffile.</p>
+
+<ol>
+<li><p><strong>Vagrantfile</strong> is a main Vagrant configuration. Typically it is supposed to be placed at the root of your project. Just put it whenever you want your box root should be. Additional documentation can be found <a href="http://docs.vagrantup.com/v2/vagrantfile/index.html">here</a>.</p></li>
+<li><p><strong>Cheffile</strong> describes sources of cookbooks we use to provision packages you demanded. It&#8217;s used by <a href="https://github.com/applicationsonline/librarian">Librarian</a> to download all the cookbooks you need including referenced dependencies. Unless you already have it install it using <code>gem install librarian-chef</code> command.</p></li>
+</ol>
+
+
+<p>To finalize the setup and run your box you should:</p>
+
+<ul>
+<li>put both of files to the root of your project (it will be the root of a virtual box)</li>
+<li>run <code>librarian-chef install</code> to grab required cookbooks</li>
+<li>run <code>vagrant up</code> to download, provision and start your brand new box environment.</li>
+</ul>
+
+
+<h3>The goal</h3>
+
+<p>There is something more behind Rove than just a web interface. The interface itself is based on a small DSL that allows you to help us make the service better. Currently it consists of 12 recipes but we hope it&#8217;s just a start. Rove sources are hosted at <a href="https://github.com/aderyabin/">Github</a> and you are free to extend the whole service with new recipes by using <a href="https://github.com/aderyabin/rove/pulls">pull requests</a>.</p>
+
+<p>That&#8217;s said: Chef recipes&#8217; reality is a big mess at the moment. We hope to separate the wheat from the chaff. And if you can help &mdash; you are very very welcome.</p>
+
+<p>We have prepared a <a href="https://github.com/aderyabin/rove#dsl-description">nice introduction to the DSL at README</a>. Duplicating it here would not make a lot of sense. Let met introduce you a real package to demonstrate how easy it is instead:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># :redis is an id of package</span>
+</span><span class='line'><span class="c1"># It will also set default title to &#39;Redis&#39;</span>
+</span><span class='line'><span class="no">Rove</span><span class="o">.</span><span class="n">package</span> <span class="ss">:redis</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># Let&#39;s assign it to the proper category</span>
+</span><span class='line'>  <span class="n">category</span> <span class="s1">&#39;Databases&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># And activate required cookbook and recipe</span>
+</span><span class='line'>  <span class="n">cookbook</span> <span class="s1">&#39;redis&#39;</span><span class="p">,</span> <span class="n">github</span><span class="p">:</span> <span class="s1">&#39;ctrabold/chef-redis&#39;</span>
+</span><span class='line'>  <span class="n">recipe</span> <span class="s1">&#39;redis&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># This is a typical configuration option</span>
+</span><span class='line'>  <span class="c1"># It will appear as a textual input field within web interface</span>
+</span><span class='line'>  <span class="n">input</span> <span class="ss">:bind</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1"># And as a required value it has to have a default value</span>
+</span><span class='line'>    <span class="n">default</span> <span class="s1">&#39;127.0.0.1&#39;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1"># This block will influence resulting provisioning config</span>
+</span><span class='line'>    <span class="c1"># All the hashes returning from `config` methods will be merged deeply</span>
+</span><span class='line'>    <span class="n">config</span> <span class="p">{</span><span class="o">|</span><span class="n">value</span><span class="o">|</span> <span class="p">{</span><span class="n">redis</span><span class="p">:</span> <span class="p">{</span><span class="n">bind</span><span class="p">:</span> <span class="n">value</span><span class="p">}}}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">input</span> <span class="ss">:port</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">default</span> <span class="s1">&#39;6379&#39;</span>
+</span><span class='line'>    <span class="n">config</span> <span class="p">{</span><span class="o">|</span><span class="n">value</span><span class="o">|</span> <span class="p">{</span><span class="n">redis</span><span class="p">:</span> <span class="p">{</span><span class="n">port</span><span class="p">:</span> <span class="n">value</span><span class="p">}}}</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can found another bunch of live samples here: <a href="https://github.com/aderyabin/rove/blob/master/packages/">/packages</a>.</p>
+
+<hr />
+
+<p>Personally I&#8217;m pretty excited about Rove. It&#8217;s something that made Vagrant affordable for me &mdash; I don&#8217;t have to spend days seeking for a proper recipe anymore. And I really hope Rove will get a chance to save a bit of your time too <img class="icon" src="https://a248.e.akamai.net/assets.github.com/images/icons/emoji/bow.png" height="20" />.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Mastering ActiveAdmin]]></title>
+    <link href="http://staal.io/blog/2013/02/26/mastering-activeadmin/"/>
+    <updated>2013-02-26T01:06:00+07:00</updated>
+    <id>http://staal.io/blog/2013/02/26/mastering-activeadmin</id>
+    <content type="html"><![CDATA[<p>Did you know ActiveAdmin was awesome?</p>
+
+<p>For the last 6 months I tried adapting ActiveAdmin to three projects with pretty different goals. And it was a great success for each of them. However everything comes with a price. ActiveAdmin has excellent DSL but it lacks architectural quality and feature-richness (mainly due to extremely slow development progress).</p>
+
+<p>The main goal of this post is to share my vision of administration frameworks potential we could expect. While ActiveAdmin in my opinion is the first one that finally felt the ground.</p>
+
+<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I&#8217;ll keep it short addressing main of them. After &#8220;why I think AA is the true way&#8221; introduction I&#8217;ll do a bit of interface nit-picking. And that&#8217;s probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
+
+<!-- more -->
+
+
+<h4>So why I think AA is a perfect start</h4>
+
+<p>Here are some facts that I would like to set as a baseline:</p>
+
+<ul>
+<li>Sometimes admin interfaces might look very special. But most of them are okay to have typical layout.</li>
+<li>Most of admin sections are very likely to be CRUD-based (+ filters).</li>
+<li>You still need custom pages and custom actions for something very important and special.</li>
+<li>Admin sections can be based on domain entities (which are not always 1-1 to models).</li>
+<li>Interface features can be based on users&#8217; preferences (that sometimes overlap automation defaults).</li>
+</ul>
+
+
+<p>The important thing to get is that Administration Panel is a totally <strong>separate application</strong>. It concludes your domain business logic into typical administration workflow. So the only thing required to make a perfect tool is to isolate domain-level modifications from basic trunk.</p>
+
+<p>So the correctly formulated task would be:</p>
+
+<blockquote><p>We need a tool that allows us to comfortably describe differentiations of our particular process from the default one. And the default one should be at its best.</p></blockquote>
+
+<p>It might sound trivially but most of competitors solve other issues creating their-own-problem-solvers. What can we extract of our formulation? Since our main goal is to describe deviation of one strict business-process we need a small language that works in terms of this business process. Forget configs. Forget class monkey-patching. We need to talk with it using process-specific language.</p>
+
+<p><strong>And this is exactly what AA does.</strong> Unlike everything else. Yes I do really believe ActiveAdmin is the only available tool that at least formulated the goal correctly.</p>
+
+<p>Okay, to the solution. Ruby is a perfect language to express such a DSL. In fact having tiny DSLs for particular task is so Rubyish. And so awesome. What&#8217;s more awesome is that AA uses popular gems exposing those DSLs within it&#8217;s own. So there are not so many things you should learn about new specific language – most of them are already very likely to be familiar.</p>
+
+<p>Unfortunately this is where the success stops. Correct formulation leads to correct paper solution (at least visually). But the quality and the result depend on implementation heavily. At the moment I&#8217;m writing this AA does not follow it&#8217;s own conventions within it&#8217;s architecture which is sad&#8230; But you are reading this to go deeper right? Let&#8217;s try to change something about it or find another way out.</p>
+
+<h3>In reality things go wild</h3>
+
+<p>One of the worst parts of ActiveAdmin is the way it is supported. We all are in debt of open-source. And especially those strong people that lead projects like ActiveAdmin. But this particular task requires constant attention to make a perfect brilliant from a rough diamond. Did you remember I told the default process had to be at its best?</p>
+
+<p>I&#8217;ve gathered all the recipes described below into one repo: <a href="https://github.com/inossidabile/mastering_aa">https://github.com/inossidabile/mastering_aa</a>. Download and start it go live. Note that sometimes I intentionally put patches to the places that are not semantically suitable for them (like <code>config/initializers/active_admin</code> folder) to ease grouping. Consider regrouping of that code for a real project.</p>
+
+<h4>Respect internationalization!</h4>
+
+<p>I18n and ActiveAdmin are old enemies. Main roots of that go deep into architectural bugs (and we&#8217;ll discuss that later). But first thing you want to monkey-patch after AA inclusion is this: <a href="https://github.com/gregbell/active_admin/issues/1832">https://github.com/gregbell/active_admin/issues/1832</a>. Without this patch AA will break <code>has_many</code> forms for models having UTF-8 localization.</p>
+
+<p>Here&#8217;s how to fix it: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_form_builder_has_many.rb">config/initializers/active_admin/fix_form_builder_has_many.rb</a></p>
+
+<h4>Chosen</h4>
+
+<p><img src="http://f.cl.ly/items/31270T3Z3w3Y3D1K311D/chosen.png" alt="Chosen" /></p>
+
+<p>ActiveAdmin is pretty stylish isn&#8217;t it? Suddenly is not when it comes to controls. AA has incredible amount of interface mistakes connected to controls. We are going to fix some of them and the first overall step is to include a <code>Chosen</code> library. What&#8217;s funny - Chosen when integrated properly looks like it was initially meant for this design. It improves usability and looks so perfect. I have no idea what makes AA team ignore this fact.</p>
+
+<p>Here are the files required to integrate it as well:</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/Gemfile#L17">Gemfile</a> – include chosen assets gem</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin/chosen.js.coffee">app/assets/javascripts/active_admin/chosen.js.coffee</a> – simple script that will enable Chosen for all selects we intentionally marked</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin.js#L2-L3">app/assets/javascripts/active_admin.js</a> – include our script and Chosen itself</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/chosen.css.scss">app/assets/stylesheets/active_admin/chosen.css.scss</a> – let&#8217;s style our inputs a bit</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L13-L14">app/assets/stylesheets/active_admin.css.scss</a> - include our new styles and Chosen styles</li>
+</ol>
+
+
+<p>That&#8217;s it. The only thing that is left is to mark required selects with <code>chosen</code> HTML class. There are several ways to do that. You can add <code>:input_html_options =&gt; { :class =&gt; 'chosen' }</code> to every select you write. Or you can patch input generation class. I really like Chosen look (and also I&#8217;m so lazy) so the latter is definitely a way I recommend: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/chosen.rb">config/initializers/active_admin/chosen.rb</a>.</p>
+
+<h4>Numeric range filter</h4>
+
+<p><img src="http://f.cl.ly/items/2l40221S3N0L3E0O3F1w/numeric_range.png" class="liquid" /></p>
+
+<p>ActiveAdmin offers &#8220;more/less/equal number&#8221; comparison filter for numeric fields. This is not something you should live with. It might be more or less useful for ID navigation but come on! That&#8217;s not like people are used to navigate through numbers.</p>
+
+<p>The more typical interface is a range. If you want &#8220;more then&#8221; you fill in the left field. Otherwise you fill the right one. And what&#8217;s more important you can find values that are in between.</p>
+
+<p>ActiveAdmin has similar interface for dates but still no luck for numbers. Let&#8217;s fix it:</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/filter_numeric_range_input.rb">config/initializers/active_admin/filter_numeric_range_input.rb</a> – filter implementation</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/numeric_range.css.scss">app/assets/stylesheets/active_admin/numeric_range.css.scss</a> - nifty styling</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L15">ap/assets/stylesheets/active_admin.css.scss</a> – include our new styles</li>
+</ol>
+
+
+<p>Now you can use it this way:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveAdmin</span><span class="o">.</span><span class="n">register</span> <span class="no">Foobar</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">filter</span> <span class="ss">:id</span>
+</span><span class='line'>  <span class="n">filter</span> <span class="ss">:priority</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:numeric_range</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Multiple selects</h4>
+
+<p><img src="http://f.cl.ly/items/1P35390h3Q1n1i3j1B3m/multiple_selects.png" class="liquid" /></p>
+
+<p>Another serious issue with controls of ActiveAdmin are check boxes. Creating and styling multiple selections (and especially multiple select filters) is a huge pain. It&#8217;s more or less affordable for cases with 5-6 elements to choose from. But hey, it&#8217;s not how things work again.</p>
+
+<p>Fortunately we are already saved by Chosen and it&#8217;s incredible multiple select mode (see the screenshot – it does rock hard). Note that Chosen has in-line search that allows you to navigate through associations so easily. Even through hundreds of them.</p>
+
+<p>Within your forms you can use <code>:input_html_options =&gt; {:multiple =&gt; true}</code> but filters require some magic to start working. I have this magic for you:</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/filter_multiple_select_input.rb">config/initializers/active_admin/filter_multiple_select_input.rb</a></li>
+</ol>
+
+
+<p>And now:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveAdmin</span><span class="o">.</span><span class="n">register</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">filter</span> <span class="ss">:id</span>
+</span><span class='line'>  <span class="n">filter</span> <span class="ss">:kind</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:multiple_select</span><span class="p">,</span> <span class="ss">:collection</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;first&#39;</span><span class="p">,</span> <span class="s1">&#39;second&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Sorting</h4>
+
+<p><img src="http://f.cl.ly/items/2Z2q38150h0j2m281y3m/sorting.png" class="liquid" /></p>
+
+<p>You can often find perfect ideas and pull requests among long-lasting and rejected AA issues. Adding ability to sort <code>has_many</code> entries is definitely one of them. Here is my variation of the same feature. It makes any form aware of nested children sorting. And also adds tiny styling like proper cursor and additional icon for the nested fields header.</p>
+
+<p>Internaly it makes use of jQuery <code>.sortable</code> and therefore does not need any external libraries or frameworks.</p>
+
+<p>Add <code>:sortable</code> key to your <code>f.has_many</code> call like in the following example. You can use any field to sort: they will receive ascending integers of the final order as values on submit.</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/sortable_forms.rb">config/initializers/active_admin/sortable_forms.rb</a> – the patch itself</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/sortable_forms.css.scss">app/assets/stylesheets/active_admin/sortable_forms.css.scss</a> – a bit of styles</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L16">app/assets/stylesheets/active_admin.css.scss</a> – don&#8217;t forget to include new styles</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin/sortable_forms.js.coffee">app/assets/javascripts/acitve_admin/sortable_forms.js.coffee</a> – and a pinch of Javascript</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">form</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">f</span><span class="o">.</span><span class="n">inputs</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">input</span> <span class="ss">:title</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">has_many</span> <span class="ss">:foobars</span><span class="p">,</span> <span class="ss">:sortable</span> <span class="o">=&gt;</span> <span class="ss">:priority</span> <span class="k">do</span> <span class="o">|</span><span class="n">ff</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">ff</span><span class="o">.</span><span class="n">input</span> <span class="ss">:title</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">f</span><span class="o">.</span><span class="n">actions</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>DateTime searches</h4>
+
+<p>To finalize our hackety session let&#8217;s improve the way AA seeks through <code>datetime</code> fields. The filter itself looks like a range. And a range is supposed to contain the value of right field by default. But what happens if date was given and the column is of a <code>datetime</code> type? It cuts it to <code>00:00:00</code>. And the last day does not get included into the result set. This annoyed me long enough to patch it the following way:</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_resource_controller.rb">config/initializers/active_admin/fix_resource_controller.rb</a></li>
+</ol>
+
+
+<h3>Bad luck of architecture</h3>
+
+<p>Alright wasn&#8217;t that fun? Now let&#8217;s get serious and talk about something that can&#8217;t be fixed/extended so easily and fast. There are several things about ActiveAdmin that are totally wrong.</p>
+
+<h4>Rails integration</h4>
+
+<p>The way ActiveAdmin bootstraps is a huge failure. I&#8217;ll concentrate on two particular parts of this process and leave the rest to your imagination.</p>
+
+<h5>ActiveAdmin requires and caches content of <code>register</code> blocks</h5>
+
+<p>And that breaks I18n support for a devastating number of DSL entries. Let&#8217;s assume you have the following page:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveAdmin</span><span class="o">.</span><span class="n">register</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">menu</span> <span class="ss">:parent</span> <span class="o">=&gt;</span> <span class="no">I18n</span><span class="o">.</span><span class="n">t</span><span class="p">(</span><span class="s1">&#39;admin.menu.foo&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>menu</code> call will only occur on bootstrap. And we are not done yet: it&#8217;s going to occur <strong>before</strong> configuration evaluation. So no matter what locale you setup at <code>application.rb</code> – it will always use <code>:en</code>. And if only <code>menu</code> was the only one&#8230; There are some attempts to fix the issue at master at the moment but they cure symptoms and not the source.</p>
+
+<p>A really long time has passed since this fundamental issue was raised. Up until now authors were solving it adding more and more places where you can use <code>proc</code> instead of fixed value. But it still can&#8217;t be used anywhere.</p>
+
+<p>At the moment the only proper solution to get around this is to add the following hack into your AA initialization code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveAdmin</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="no">I18n</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="ss">:ru</span>
+</span><span class='line'>  <span class="no">I18n</span><span class="o">.</span><span class="n">load_path</span> <span class="o">+=</span> <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;../../locales/**/*.yml&quot;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span><span class="o">]</span>
+</span><span class='line'>  <span class="no">I18n</span><span class="o">.</span><span class="n">reload!</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But! The real problem is that there is no way to change locale on the fly. Even you hack AA to force correct locale usage like described above it will get cached. No mater what locale you set afterwards it will still output Russian names. At the same time forms blocks that evaluate dynamically will get binded to current locale. So you better don&#8217;t even try setting locale dynamically. And that&#8217;s really really sad.</p>
+
+<h5>ActiveAdmin uses it&#8217;s own require cycle</h5>
+
+<p>For some reason that&#8217;s not quite clear to me (probably historical one) AA hacks Rails integration to not use Engine Eager Loading (tm). So every time you are in development mode it duplicates Rails behavior reloading <code>admin/</code> on its own. It breaks <code>Engine</code> API and self-extending capabilities.</p>
+
+<p>This leads to one very unpleasant specificity – it&#8217;s no so easy to split parts of your Admin Panel into subgems. I mean we all love Rails engines right? It&#8217;s a great way to decompose stuff. And you can&#8217;t use that with ActiveAdmin for no sensible reason. That&#8217;s sad again.</p>
+
+<p>I met this weird problem working on Matrioshka and had to hardcode workaround: <a href="https://github.com/inossidabile/matrioshka/blob/master/lib/generators/matrioshka/templates/engine.rb#L17-L20">matrioshka/lib/generators/matrioshka/templats/engine.rb</a>. This is a bad way to achieve modularity but at least an existing one.</p>
+
+<h4>ARBRE buffers</h4>
+
+<p>AA does not generally follow MVC and this is win. MVC is not a holy grail: describing Administration Workflow does not require MVC in most cases. To make mixtures of logic and representation readable it introduces ARBRE – HTML Ruby DSL. Yay! It&#8217;s a really nice move.</p>
+
+<p>But (I hate this word)! I mentioned earlier that ActiveAdmin plays role of meta DSL. It wraps existing gems like Formtastic and exposes them where possible. Unfortunately they don&#8217;t play nice together. ARBRE and Formtatstic for example use encapsulated buffers and injecting blocks of one into another often leads to a VERY unpredictable result. Same goes to Rails helpers. Mixing those 3 together is a nightmare.</p>
+
+<p>This is the first issue that can&#8217;t be solved with a fast patch. It&#8217;s just something you should consider if you start doing your own ActiveAdmin implementation.</p>
+
+<h4>Gems isolation and update rate</h4>
+
+<p>ActiveAdmin is a Rails Engine (at least mostly). It means it works within your project namespace and you get all the gems it uses internally as a present. Doesn&#8217;t look like a problem until you get in conflict. ActiveAdmin does not work with fresh CoffeeScript (1.5.0) and jQuery. If you used them – you are in trouble. Same goes to any other gem it uses and there are enough of them.</p>
+
+<p>I can see three strategies that could be used to reduce the harm of such conflicts or eliminate it completely.</p>
+
+<ol>
+<li>Update often – watching dependencies is a duty for contributors and it has to be done. At the moment ActiveAdmin is bound to a <code>metasearch</code> gem that is deprecated for a year. Year! That&#8217;s not so good :(.</li>
+<li>Keep most of integrations in separate gems. Meta DSL should have points of integration that could be used by others to swap <code>Kaminari</code> and <code>will_paginate</code>. Or at least used to modify integration plug-in separately from the huge DSL core.</li>
+<li>Do not tie to Rails the way everybody do that. Jump off the train: using <code>Engine</code> is not a right way to integrate with admin part. Being a Rack Middleware gives so much more flexibility.</li>
+</ol>
+
+
+<p>Combination of modularity and possibility to create a real isolation could save us. But current implementation is on the other shore.</p>
+
+<h4>Heavy framework ties</h4>
+
+<p>The last thing I want to discuss is the integration level. We all know it&#8217;s evil to tie entities. But ActiveAdmin is all about ties. It ties you to Rails, ActiveRecord, zillions of gems, etc. And I&#8217;m a real fan of being framework-agnostic. I believe that we finally came pretty close to the epoch where it&#8217;s Ruby what we call a framework. It has Rake as transport part, Tilt as views, Sprockets as assets etc. Rails/Sinatra/&#8230; are just controllers and skeleton. Why would you bind to them explicitly for the god sake?</p>
+
+<p>I did already propose switching to Rack-level integration to solve gems isolation issue. This and proper modularity could make it absolutely agnostic to frameworks. Not from the start of course. But it&#8217;s freedom degree will be more then enough to achieve that in nearest future. Current AA implementation makes it close to impossible.</p>
+
+<p>There is one downside in that though. It&#8217;s very likely for a common administration panel to have one or two specific scenarios that require working with controllers and native low-level MVC. Currently you just get down to Rails when you need it. If we use Rack – in theory you can end up with having different type of controllers among one application.</p>
+
+<p>But (this is the positive one)! I&#8217;ve already encouraged you to consider your administration panel a separate application and I still do. I can&#8217;t see anything <em>that</em> bad in having Sinatra controllers for your administration panel while having Rails controllers for the other parts of your site. It&#8217;s probably a matter of taste and habit.</p>
+
+<h3>Hero! Come and save me!</h3>
+
+<p>ActiveAdmin DSL is incredible. But architectural approaches it relies on dispell magic. I constantly hear (and see) another attempt to create <strong>NEW AND AWESOME ADMINISTRATION AUTO PANEL</strong>. Okay folks. You want to make world a better place? Me too. Get ActiveAdmin DSL. Get Sinatra and Rack. Get this article. Mix it up and give us ActiveAdmin 2.</p>
+
+<p>We really need it!</p>
+
+<p>P.S. If you are seriously considering to start such a project in MIT – I&#8217;m in.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dangers of Turbolinks]]></title>
+    <link href="http://staal.io/blog/2013/01/18/dangers-of-turbolinks/"/>
+    <updated>2013-01-18T21:35:00+07:00</updated>
+    <id>http://staal.io/blog/2013/01/18/dangers-of-turbolinks</id>
+    <content type="html"><![CDATA[<p>Turbolinks! This &#8220;award-winning&#8221; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&#8217;s see if it really is THAT bad. And what are the reasons if it is.</p>
+
+<h3>Part 1. Well-known problems</h3>
+
+<h4>Document ready event</h4>
+
+<p>Problems don&#8217;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&#8217;s <code>ready</code> event.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span> <span class="o">-&gt;</span> <span class="nx">alert</span> <span class="s">&#39;123&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This code runs only during direct page loads. Turbolinks fetcher ignores it.</p>
+
+<!-- more -->
+
+
+<p>It has pretty simple workaround that is already wrapped into a tiny gem called <a href="https://github.com/kossnocorp/jquery.turbolinks">jquery-turbolinks</a>. It solves this problem for the particular jQuery framework (and same can be done same way for any other). Okay. This solution looks transparent. But is it?</p>
+
+<h4>Global scope does not get cleaned</h4>
+
+<p>Turbolinks clames it reduces load time due to the fact browser doesn&#8217;t have to reevaluate your assets. True. But not only assets remain. The whole global scope saves a state.</p>
+
+<p>Imagine we have a page with the script from previous example. Script is injected into the <code>body</code> tag. It could be i.e. some kind of external service inclusion. What happens in this case? It adds one more binding per each load. It evaluates one time for the first page, two times for second and so on. Bindings do not disappear automaticaly like before. You suddenly appear in a locked environment where nobody but you is responsible for page desctruction routines.</p>
+
+<p>There is one sad but real rule: frontend developers do not write idempotent code. They never care.</p>
+
+<h3>Part 2. Going deeper</h3>
+
+<h4>Global scope does not get cleaned 2</h4>
+
+<p>The worst side-effect of this behavior however is not in bindings. They are easily catchable in particular case of <code>ready</code> event. Let&#8217;s see what happens if we have heavy backbone application instead that <code>alert</code> script. Backbone applications are likely to use <code>window</code> as a global namespace to store reachable instances.</p>
+
+<p>We have 2 pages <strong>A</strong> and <strong>B</strong>. <strong>A</strong> is the text-only welcome page. <strong>B</strong> is the page that bootstraps backbone applicaton and therefore links it to particular DOM node. Backbone has:</p>
+
+<ul>
+<li>4 structured views</li>
+<li>1 collection</li>
+<li>1 model</li>
+</ul>
+
+
+<p>The collection gets cached to <code>window</code> namespace to be shared between views:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nv">collection: </span><span class="o">-&gt;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">AppView</span><span class="p">.</span><span class="nx">currentCollection</span> <span class="o">||=</span> <span class="k">new</span> <span class="nx">AppCollection</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So we load page <strong>B</strong>. Backbone bootstraps, creates the collection and works seamlesly. Until you go to page <strong>A</strong> and back. What happens in this case? We get <em>new</em> Backbone app. And the <em>old</em> collection. With the state it was left at.</p>
+
+<p>Then things go worse. Imagine it was not a collection that was stored this way. Imagine it was a model or view. And they had bindings to DOM events. As you might forecast – they remain alive. But not the DOM they were binded to. Another point of failure.</p>
+
+<h4>Intervals and Timeouts</h4>
+
+<p>Global page scope includes a lot of different entities you might never think of. Another two popular functions that can raise issues are <code>setInterval</code> and <code>setTimeout</code>. The problem is mostly the same – whenever you reload a page, timers disappear. But not with Turbolinks. All the intervals will live forever until you stop them manually. Try starting your interval inside a particular page and watch their number growing. Welcome to time ghetto buddy!</p>
+
+<h3>Part 3. Something you might not even think about</h3>
+
+<p>I&#8217;ve started studying Turbolinks from reviews. So actually when I got to it&#8217;s source I was already aware of the described issues. The reason was simple – as an author of browser framework I already faced them at Joosy. And had to solve each of them at the framework level. But there&#8217;s one thing at sources that shocked me like a lightning bolt.</p>
+
+<p><strong>Turbolinks store DOM trees of last 10 loaded pages.</strong></p>
+
+<p>Javascript does not have a way to directly erase an object once it was created. Engine automatically destroys all instances that are not referenced from anywhere. There are two things that make it awkward:</p>
+
+<ul>
+<li>It&#8217;s Javascript. Oppa-lambda-style.</li>
+<li>Nobody ever cares</li>
+</ul>
+
+
+<p>It&#8217;s incredibly easy to drain all the RAM out of client with a large application. But it&#8217;s affordable and, well, we can live with that since all that stuff is dead as soon as we reload a page. But thanks to Turbolinks it&#8217;s no more!</p>
+
+<p>Let me explain. Your large JS application is likely to be a huge graph that&#8217;s INCREDIBLY linked. It&#8217;s very typical for a JS app to have mostly atomic unload. In theory even with Turbolinks, as soon as we drop the page out and load the next one we are supposed to detach the application. Dereferenced application gets collected and our RAM is free again! But Turbolinks save DOM. And DOM has bindings. And bindings reference you application. So big parts of your application survive at page reload. Therefore in practice there&#8217;s a HUGE chance that Turbolinks will boost RAM usage up to 10 times.</p>
+
+<p>But&#8230; It&#8217;s not the worst again! Turbolinks don&#8217;t just store 10 last pages. They are stored for a reason. As soon as you go back – it restores your DOM. Therefore restoring your application parts. Now your application is likely to be broken – remember your botstrap has already been exectued several time for next pages. But some of bindings remain alive. How do you even debug that for god sake?</p>
+
+<h3>What do you need it for?</h3>
+
+<p>Most of critics additionaly claim Turbolinks is pretty useless. It&#8217;s up to you to decide: <a href="https://github.com/steveklabnik/turbolinks_test">https://github.com/steveklabnik/turbolinks_test</a>.</p>
+
+<p>There is however small advantage that Turbolinks could give you – the ability to controll page switch animation. Unfortunately it doesn&#8217;t have required hooks. If you need animation – you should go use full-stack browser framework.</p>
+
+<h3>Turbolinks is the silent killer</h3>
+
+<p>Turbolinks claim that it&#8217;s the successor to pjax that seamlessly works out of box. As you can see – it&#8217;s not even close to that. Real problems of Turbolinks are hidden deep inside. Existing MVC frameworks like Ember or Joosy address such problems – they may use different approaches but they face them. Turbolinks silently ignore it. And if it will ever try start fighting – it will turn into another MVC framework.</p>
+
+<p>Remember: with Turbolinks you might easily fix surface issues. But it&#8217;s an iceberg so think twice. You have to write your code in a very special way to work with that. You are likely to have issues with legacy code. And you get almost nothing for that.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Redistributable Rails applications]]></title>
+    <link href="http://staal.io/blog/2013/01/12/redistributable-rails-applications/"/>
+    <updated>2013-01-12T22:48:00+07:00</updated>
+    <id>http://staal.io/blog/2013/01/12/redistributable-rails-applications</id>
+    <content type="html"><![CDATA[<p>Imagine you have a large Rails application that you are going to distribute. That&#8217;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
+
+<p>Clever consumer will also want to store such a &#8220;deployment&#8221; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
+
+<p><strong>How do you achieve that?</strong></p>
+
+<p>Let me share my story first. I manage two banking products: Roundbank and Smartkiosk. They are Rails applications. Every time bank wants to deploy Roundbank-based internet banking I need a way to:</p>
+
+<ol>
+<li>Get application core and create a nice new look that will match bank&#8217;s design using internal API.</li>
+<li>Extend core with the transport methods that are required to integrate with bank&#8217;s core banking platform.</li>
+<li>Support it.</li>
+</ol>
+
+
+<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that&#8217;s involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but&#8230; damn! So provocative! You remember he&#8217;s not supposed to change anything right?</p>
+
+<!-- more -->
+
+
+<h3>Gems</h3>
+
+<p>The solution to the dependency management is wide-known – Ruby Gems. Gems have nice versioning system that will solve the issue. You have a Rails application – can it be a gem at the same time? Answer is yes.</p>
+
+<p>I wrote <a href="http://github.com/inossidabile/matrioshka/tree/master/lib/generators/matrioshka/templates">a tiny gem called Matrioshka</a>. It contains the set of generators that will make everything on your behalf. Following sections will describe it&#8217;s internals. You can skip it safely to the end of the article to read about gem itself.</p>
+
+<p>So what exactly do we need to allow another Rails application include the whole application as a gem?</p>
+
+<h5>1. gemspec, init.rb</h5>
+
+<p>Every gem starts with a gemspec and initialization routines. You will need the following files: <code>$application.gemspec</code>, <code>lib/$application.rb</code> and <code>init.rb</code>. Here is what Roundbank contains (patched a bit :):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">lib</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;../lib&#39;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span>
+</span><span class='line'><span class="vg">$LOAD_PATH</span><span class="o">.</span><span class="n">unshift</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span> <span class="k">unless</span> <span class="vg">$LOAD_PATH</span><span class="o">.</span><span class="n">include?</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span>
+</span><span class='line'><span class="nb">require</span> <span class="s1">&#39;roundbank&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">Gem</span><span class="o">::</span><span class="no">Specification</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">gem</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">name</span>          <span class="o">=</span> <span class="s1">&#39;roundbank&#39;</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">version</span>       <span class="o">=</span> <span class="no">Roundbank</span><span class="o">::</span><span class="no">VERSION</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">authors</span>       <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;&#39;</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">email</span>         <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;&#39;</span><span class="o">]</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">description</span>   <span class="o">=</span> <span class="sx">%q{Write a gem description}</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">summary</span>       <span class="o">=</span> <span class="sx">%q{Write a gem summary}</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">homepage</span>      <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">files</span>         <span class="o">=</span> <span class="sb">`git ls-files`</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="vg">$/</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">executables</span>   <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">grep</span><span class="p">(</span><span class="sr">%r{^bin/}</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">{</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="no">File</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">test_files</span>    <span class="o">=</span> <span class="n">gem</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">grep</span><span class="p">(</span><span class="sr">%r{^(test|spec|features)/}</span><span class="p">)</span>
+</span><span class='line'>  <span class="n">gem</span><span class="o">.</span><span class="n">require_paths</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;lib&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">module</span> <span class="nn">Roundbank</span>
+</span><span class='line'>  <span class="no">VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;roundbank&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>2. Models/Controllers</h5>
+
+<p>Rails has out-of-box solution called Rails Engines. All you have to do is to extend your <code>lib/$application.rb</code> a bit.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;rails/engine&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Roundbank</span>
+</span><span class='line'>  <span class="no">VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Engine</span> <span class="o">&lt;</span> <span class="o">::</span><span class="no">Rails</span><span class="o">::</span><span class="no">Engine</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Rails Engines system was created to make Rails applications extendible by gems. But it&#8217;s abilities are underestimated. It will even run <code>config/initializers</code> and <code>config/environments</code> for you. In fact it will transparently include most of your project with just the following code.</p>
+
+<h5>3. I18n, autoload_path, migrations</h5>
+
+<p>Mot of your project. Excluding some options. We need to help it a bit with a clever initializer.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;rails/engine&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">module</span> <span class="nn">Roundbank</span>
+</span><span class='line'>  <span class="no">VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">class</span> <span class="nc">Engine</span> <span class="o">&lt;</span> <span class="o">::</span><span class="no">Rails</span><span class="o">::</span><span class="no">Engine</span>
+</span><span class='line'>    <span class="n">initializer</span> <span class="s1">&#39;matrioshka&#39;</span><span class="p">,</span> <span class="ss">:before</span> <span class="o">=&gt;</span> <span class="ss">:set_autoload_paths</span> <span class="k">do</span> <span class="o">|</span><span class="n">app</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">app</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span>
+</span><span class='line'>        <span class="n">config</span><span class="o">.</span><span class="n">i18n</span><span class="o">.</span><span class="n">load_path</span> <span class="o">+=</span> <span class="no">Dir</span><span class="o">[</span><span class="no">Roundbank</span><span class="o">::</span><span class="no">Engine</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">*</span><span class="sx">%w(config locales *.{rb,yml})</span><span class="p">)</span><span class="o">.</span><span class="n">to_s</span><span class="o">]</span>
+</span><span class='line'>        <span class="n">config</span><span class="o">.</span><span class="n">autoload_paths</span> <span class="o">+=</span> <span class="sx">%W(</span><span class="si">#{</span><span class="no">Roundbank</span><span class="o">::</span><span class="no">Engine</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span> <span class="s1">&#39;lib&#39;</span><span class="si">}</span><span class="sx">)</span>
+</span><span class='line'>        <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">[</span><span class="s1">&#39;db/migrate&#39;</span><span class="o">]</span> <span class="o">+=</span> <span class="no">Roundbank</span><span class="o">::</span><span class="no">Engine</span><span class="o">.</span><span class="n">paths</span><span class="o">[</span><span class="s1">&#39;db/migrate&#39;</span><span class="o">].</span><span class="n">existent</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will proxy your locales, autoloadable pathes and even migrations! Note that there is popular approach to copy migrations from gems. Two words: NO WAY. Described initializer will allow you to seamlessly run migrations from both sources. They will stay ordered.</p>
+
+<h5>4. Seeds</h5>
+
+<p>Seeds are not handled by Rails Engines too. And moreover you can&#8217;t improve your situation from within your gem. However all you need to do is to extend <code>db/seeds.rb</code> of descendant project with the following line:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">load</span> <span class="no">Roundbank</span><span class="o">::</span><span class="no">Engine</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">*</span><span class="sx">%w(db seeds.rb)</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>5. Gemfile</h5>
+
+<p>This is the worst part. Ruby Gems are great. However some parts of it do not hold water.</p>
+
+<p><strong>You can not use gems from git</strong></p>
+
+<p>Okay it might be a strange requirement. But did you never use it with the Bundler itself? It&#8217;s extremely comfortable and useful. Are you ready to abandon it? I am not.</p>
+
+<p><strong>You can not split gems for platforms</strong></p>
+
+<p>Roundbank can work under MRI and JRuby. And it uses slightly different set of gems for different platforms. What am I supposed to do with that? There are some workarounds that invoke proper dependencies of a particular platform from within compilation hooks – don&#8217;t even try those. They will not work with Bundler well. They will stay ignored for <code>:path =&gt;</code> inclusion and even <code>:git =&gt;</code> inclusion. The worst thing is that new Ruby Gems 2.0 are ought to be released. And still no progress.</p>
+
+<p>The best option I was able to come up with is to copy host project <code>Gemfile</code> to every descendant project. Put it to, say, <code>Gemfile.roundbank</code> and then require:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">eval_gemfile</span> <span class="s1">&#39;Gemfile.roundbank&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>6. Transparent initialization</h5>
+
+<p>During initial startup Rails relies on <code>Foo::Application</code> constant heavily. You might <code>grep</code> you code for that – it&#8217;s everywhere. Rack setup, Environments, Initializers, &#8230;. But now that we are trying to run it in a very special way – it will fail. <code>Foo::Application</code> will not exist in inherited context. Instead of that we are supposed to configure the descendant.</p>
+
+<p>And here comes magic. During class initialization at <code>config/application.rb</code> your application instance is storead at <code>Rails.application</code> property. The final step required to make your application gem-compatible is to replace <code>Foo::Applicaton</code> with <code>Rails.application.class</code> everywhere. Here is the total list of locations you should check:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">config</span><span class="o">.</span><span class="n">ru</span>
+</span><span class='line'><span class="no">Rakefile</span>
+</span><span class='line'><span class="n">config</span><span class="o">/</span><span class="n">environment</span><span class="o">.</span><span class="n">rb</span>
+</span><span class='line'><span class="n">config</span><span class="o">/</span><span class="n">routes</span><span class="o">.</span><span class="n">rb</span>
+</span><span class='line'><span class="n">config</span><span class="o">/</span><span class="n">environments</span><span class="o">/</span><span class="n">development</span><span class="o">.</span><span class="n">rb</span>
+</span><span class='line'><span class="n">config</span><span class="o">/</span><span class="n">environments</span><span class="o">/</span><span class="n">production</span><span class="o">.</span><span class="n">rb</span>
+</span><span class='line'><span class="n">config</span><span class="o">/</span><span class="n">environments</span><span class="o">/</span><span class="nb">test</span><span class="o">.</span><span class="n">rb</span>
+</span><span class='line'><span class="n">config</span><span class="o">/</span><span class="n">initializers</span><span class="o">/</span><span class="n">secret_token</span><span class="o">.</span><span class="n">rb</span>
+</span><span class='line'><span class="n">config</span><span class="o">/</span><span class="n">initializers</span><span class="o">/</span><span class="n">session_store</span><span class="o">.</span><span class="n">rb</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This replacement makes the code application-indepent. No matter what application runs it – it always uses proper instances.</p>
+
+<h5>Summary</h5>
+
+<p>As soon as these 6 steps are done – you can pack your new gem and use it from any other Rails application. At the same time host application will remain runable from itself also.</p>
+
+<p>But why do all that steps manually if <a href="https://github.com/inossidabile/matrioshka/">Matrioshka</a> can do that for you?</p>
+
+<h3>Matrioshka</h3>
+
+<p>I tested this approach at Roundbank and fell in love. To extend it to other products and automate the 5th step I created the Matrioshka gem. It will do everything for you with it&#8217;s mighty generators.</p>
+
+<h5>Host Application (Gem)</h5>
+
+<p>Inject the following to your host application Gemfile:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;matrioshka&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Run Matrioshka install generator</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rails g matrioshka:install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It will generate all the required additions and patches. For a typical application they will just work. However you probably should edit <code>$application.gemspec</code> to set proper meta information for your future gem.</p>
+
+<h5>Client Application (Consumer)</h5>
+
+<p>As soon as your gem is ready to rumble we can procceed to the consumer. Let&#8217;s make it work within a new rails application:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rails new marakash
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Add your application gem to the new Gemfile:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;$application&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Run <code>bundle install</code> and then</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>rake <span class="nv">$application</span>:link
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ta-dam. You are done here. Time to party hard!</p>
+
+<p>Love.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails acceptance tests coverage]]></title>
+    <link href="http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage/"/>
+    <updated>2012-11-24T23:52:00+07:00</updated>
+    <id>http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage</id>
+    <content type="html"><![CDATA[<p>Most of our banking products share the same architecture. We use Rails as a REST application server and <a href="http://www.joosy.ws">Joosy</a> application working at browser as a client. One of the greatest advantages we get is the ability to cover the whole Ruby implementation with the acceptance tests. We use <strong>requests</strong> specs that are <a href="https://github.com/rspec/rspec-rails#request-specs">part of RSpec Rails</a> integration. However it’s easier said then done: our remote banking app-server for instance has near 500 routes to test. And the number of active routes grows constantly.</p>
+
+<p>Managing such a great amount of routes is a real pain no matter how good you organize your specs. To solve that my colleague <a href="http://twitter.com/ImGearHead">Andrew</a> prepared a small rspec plugin handling exactly this task: counting what’s tested on your behalf.  We spent several days playing with it and increasing it’s functionality. Join us and have some fun with the <a href="https://github.com/inossidabile/rspec-routes_coverage">rspec-routes_coverage</a> gem.</p>
+
+<h3>Usage</h3>
+
+<p>Plugin will add the following stats to your basic RSpec output:</p>
+
+<p><img src="http://f.cl.ly/items/3F0G0l1J250j0a392m1O/rspec.png" alt="" /></p>
+
+<!-- more -->
+
+
+<p>First line is for the total number of routes you consider “actual”. By default gem will harvest all the routes your application possess. As soon as you don’t want to test some of them you can use the following code to improve the situation:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">routes_coverage</span><span class="o">.</span><span class="n">exclude_namespaces</span> <span class="o">=</span> <span class="sx">%w(back)</span>
+</span><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">routes_coverage</span><span class="o">.</span><span class="n">exclude_routes</span> <span class="o">=</span> <span class="o">[</span>
+</span><span class='line'>    <span class="sr">/^\/$/</span><span class="p">,</span>
+</span><span class='line'>    <span class="sr">/^POST \/sessions/</span>
+</span><span class='line'>  <span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Second line is for the number of “manually-marked-as-tested” routes. At first sight it may seem that as soon as your route got a request it can be considered tested. But sometimes it’s not. To give you some control over the situation plugin introduces the <code>describe_request</code> helper. Use it instead of RSpec’s <code>describe</code> passing in the route you want to mark as checked. Here is the tiny sample:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">describe</span> <span class="no">ItemsController</span> <span class="k">do</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">describe_request</span> <span class="ss">:index</span><span class="p">,</span> <span class="n">request_path</span><span class="p">:</span> <span class="s1">&#39;/items&#39;</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="s1">&#39;GET&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s1">&#39;lists items&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">get</span> <span class="s1">&#39;/items&#39;</span>
+</span><span class='line'>      <span class="c1"># ...</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># another style:</span>
+</span><span class='line'>  <span class="n">describe_request</span> <span class="s1">&#39;GET /items/:id&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s1">&#39;shows item&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="n">get</span> <span class="s2">&quot;/items/</span><span class="si">#{</span><span class="no">Item</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'>      <span class="c1"># ...</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The third line contains the counter of routes that received at least one HTTP request.</p>
+
+<p>And the final line shows you the amount of routes that were not tested in any way. So get ‘em and test ‘em!</p>
+
+<h3>Verbosity</h3>
+
+<p>The default output (see the screenshot) will appear at any RSpec call to provide the basic summary. However you definitely require the ability to list routes of each category. To go deeper use the <code>LIST_ROUTES_COVERAGE=true</code> option. Also you can use the Rake helper that we prepared for you:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>rake spec:requests:coverage
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Workflow</h3>
+
+<p>The resulting workflow could look the following way:</p>
+
+<ul>
+<li>Include Gem</li>
+<li>Exclude useless routes</li>
+<li>Write tests using list of pending routes to cover it all</li>
+<li>Wrap your tests into describe_request blocks to mark specs as manually checked</li>
+<li>Start “green acceptance” party</li>
+</ul>
+
+
+<p>Enjoy! :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Joosy: alternative approach to browser frameworks]]></title>
+    <link href="http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/"/>
+    <updated>2012-06-04T23:42:00+07:00</updated>
+    <id>http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks</id>
+    <content type="html"><![CDATA[<h3>Long story short</h3>
+
+<p>We created a new JS framework that doesn’t clone anything existing but uses slightly different approach. Joosy we call it.</p>
+
+<ul>
+<li><a href="http://www.joosy.ws">Joosy website</a></li>
+<li><a href="http://guides.joosy.ws/guides/basics/getting-started.html">Getting started guide</a></li>
+<li><a href="https://github.com/joosy/joosy">Github Repo</a></li>
+</ul>
+
+
+<h3>Real introduction</h3>
+
+<p>Ourdays even a lazy and his grandmother is doing his own JS MVC framework. The reason is simple: we really need it. The problem, on the other side, is that everyone is just cloning Backbone. There is also Knockout and Ember that went a different way. Still not enough to satisfy sophisticated audience. The problems are different. Some may dislike Handlebars. The others won’t fit general API. It’s a matter of taste after all. The options are always good if you choose between something different.</p>
+
+<!-- more -->
+
+
+<p>Half of year ago during some of new projects we started a tiny experiment. We took generally another approach to this problem: to consider JS Framework an extension to your backend. It should not be abstracted but exactly the opposite: binded to the server side as tightly as possible. It should replace your backend’s view layer. And be the View, just a View. What you usually call “model” is just a data set binded to the template. And JS logic is simply an extension to the template that makes it sophisticated but doesn’t make it a standalone application. We used Rails as a backend.</p>
+
+<p>To make it real we had to implement all the common things Rails people are used to and properly extend them with the abilities that Rails lack. Better organization of code, new conventions for statefull environment and so on. With that we’ve reproduced forms, helpers and even the HAML everything working right in your browser.</p>
+
+<p>Now that the time has passed and some of that projects are in production, we are ready to release this experiment as a mature feature-rich framework. Called “<a href="http://www.joosy.ws/">Joosy</a>”.</p>
+
+<p>Joosy is based on View terms. Pages, Layouts, Helpers and templates. Inside, it uses <a href="http://coffeescript.org">CoffeScript</a> possibilities massively. To make Coffee better, Joosy includes awesome <a href="http://sugarjs.com">Sugar.JS</a> library that feels like ActiveSupport. So you have better language that is sweetened.</p>
+
+<p>Joosy has everything you are used to within another frameworks but with slightly another sause. It has routing, “models” with identity map, nice structure and much more. Like ActiveSupport, ActiveResource-compatible interface, background generators, preloaders, etc.</p>
+
+<p>The practice shown: it’s very easy to jump in if you are used to Rails. It either does what other claims to do: it definitely saves your time. So no matter if you need this or not, please read through “<a href="http://guides.joosy.ws/guides/basics/getting-started.html">Getting Started</a>” guide. At least we have something new to offer and it won’t be dull. And then, maybe, you’ll find a great use for it :).</p>
+
+<p>Feel free to ask any questions at Stack Overflow using <code>joosy</code> tag. I will be there :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Conventions! I kill you!]]></title>
+    <link href="http://staal.io/blog/2012/04/08/conventions-i-kill-you/"/>
+    <updated>2012-04-08T23:31:00+07:00</updated>
+    <id>http://staal.io/blog/2012/04/08/conventions-i-kill-you</id>
+    <content type="html"><![CDATA[<p>For the development speed and quality there are a lot of factors like motivation, management style and all that stuff. It is important indeed. But they are quite common. I’ve seen a lot of SCRUMified happy teams that spend years to create large but straightforward projects. Why is this happening over and over? The wrong points of motivation and incorrect tasks prioritization are the roots. But besides project organization these roots also have an inner reason: the conventions problem.</p>
+
+<p>To take a long story short, here are three rules I encourage you follow:</p>
+
+<ul>
+<li>If you have the requirement for a project-level convention, run away, you are doing something wrong.</li>
+<li>All the things you can not solve with the existing tools and conventions should be turned into libraries and released publicly.</li>
+<li>Release should be fair. It should be available on GitHub and you should notify the community about what you did.</li>
+</ul>
+
+
+<p>The years of “keep your code reusable” paradigm make this sound so trivially. But there’s a great difference between just organizing your code into reusable blocks (inner project conventions) and creating the open-source libraries with public promotion. The latter is the key to success.</p>
+
+<!-- more -->
+
+
+<p>For the years new projects start from the same thing: we come up with coding style conventions and basic rules about how we are going to do what we have to do. Modern times improved that approach bringing us a ready set of conventions from your framework or even language. Let’s take the Rails framework as a baseline since it is well known for its “conventions over configuration” propaganda. So it appeared that conventions help you avoid thinking and concentrate on development.</p>
+
+<p>Great! Now we start quickly and go deep into the problem we solve. While the project grows we meet the problem that framework doesn’t address. We search for extensions and what happens if there’s nothing that can help us? No probs, we address it ourselves and create new inner project “convention”. Yay! Code is DRY and everyone’s happy.</p>
+
+<p>I tell you something provocative but that won’t allow your project turn into a mess.</p>
+
+<h4>If you have the requirement for a project-level convention, run away, you are doing something wrong.</h4>
+
+<p>No matter how motivated and experienced your team is, the conventions of a project will never match conventions of a framework or its’ extensions. The reason is simple: there’s no community pressure. The deadline is scary. We come up with concessions and do only something we have a reason to do. There’s totally no need in updating conventions description. They just work. Everyone on the team is familiar. There’s nothing that can harm. But…</p>
+
+<ol>
+<li>Newcomers. The project team can change. The worst part is not even the fact newcomers will spend time trying to learn your custom conventions. The problem is that they can get them wrong. If your convention is not documented and covered with samples enough people will distort it.</li>
+<li>Project went to a hold/slow/support state. And you start another one. And suddenly discover you need something similar. You just need to adapt it a bit. The chances you don’t remember your own solution well enough are very high. The chances you’ll need to modify it a bit to adapt are even higher. Together with convention distortion this leads to the only option: fork it.</li>
+</ol>
+
+
+<p>Fork will break the main idea, the code portability and independency. And it will greatly increase support costs. So to avoid ending up like this we can add another rule:</p>
+
+<h4>All the things you can not solve with the existing tools and conventions should be turned into libraries and released publicly.</h4>
+
+<p>Sit, relax and try to come up with a solution to your problem like it was typical. Forget about your project. Library is your project for now. You should try to address problems that are out your project’s problem but are neighbors of that.</p>
+
+<p>As soon as you encourage this rule your development process will be split into two parts:</p>
+
+<ul>
+<li>Thinking part. You decide which dependencies you need. If you don’t have some of them you spend time creating them as external dependencies.</li>
+<li>NEVER decide on anything inside a project. If you don’t have a ready answer, you go to Thinking Part.</li>
+</ul>
+
+
+<p>But the quality of the solution you get is just a first step. The main problem is still the lack of motivation to provide the support and develop your solution properly. Here comes the open-source.</p>
+
+<h4>Release should be fair. It should be available on GitHub and you should notify the community about what you did.</h4>
+
+<p>If you were not able to find the correct solution among existing you are 100% to not be alone. Help people and they will help you back. With the pressure to keep your library organized.</p>
+
+<p>Open-Source miracle is greatly underestimated in large companies. The classical benefits are the brand popularization and community cooperation. And the truth is that you get those only for successful libraries that are required by a large amount of people. Which simply is not true for a typical problem you address within your projects day-to-day. However open-sourcing has another incredible benefit, it pushes your team to care. Even 2 or 3 other consumers of your library will make your team work on it, support it and make it fresh, easy to learn and use in new projects.</p>
+
+<p>So you should not only perceive your problem as a separate from your project. You should release it to a GitHub and shout everywhere: “I did a cute thing! This is no more a problem!”. Sometimes people will poke you into a nicer alternative which is good too: you still can drop your bicycle and use the right solution inside your project.</p>
+
+<h3>So what do you finally get?</h3>
+
+<p>You get a set of nicely described libraries/framework dependencies which address exact problems. Newcomers can easily learn those and you can reuse it completely (no cheating) inside your new projects.</p>
+
+<p>On the other side you get slim and VERY simple projects that only consist of a project-level business-logic. They are so easy and cheap to maintain.</p>
+
+<p>Your people grow their names and experience. No training can replace live experience with community. And you should know your organization is just your team. Always.</p>
+
+<p>I really like pictures. So I drawn this thing:</p>
+
+<p><img src="http://media.tumblr.com/tumblr_m25z70HE9e1r9yc7i.png" alt="" /></p>
+
+<p>Print it out and pin to your wall. I will make you one step closer to a great maintainable result among projects you create.</p>
+
+<h3>P.S. Following this rules we’ve created:</h3>
+
+<ul>
+<li><a href="https://github.com/inossidabile/wash_out">WashOut</a> (116 followers)</li>
+<li><a href="https://github.com/roundlake/heimdallr">Heimdallr</a> (76 followers)</li>
+<li><a href="https://github.com/inossidabile/styx">Styx</a> (17 followers)</li>
+<li><a href="https://github.com/inossidabile/hashbang">Hashbang</a> (15 followers)</li>
+<li><a href="https://github.com/joosy/joosy">Joosy</a> (276 followers)</li>
+</ul>
+
+
+<p>Every project on this list got at least on issue. Half of them even got pull request. Even the simplest and craziest ideas appear to be required by society. Be the part of it, don’t miss your chance.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Heimdallr: ORM field-level security]]></title>
+    <link href="http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security/"/>
+    <updated>2012-04-01T23:02:00+07:00</updated>
+    <id>http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security</id>
+    <content type="html"><![CDATA[<p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn&#8217;t go down to fields).</p>
+
+<p>We’ve figured out something awesome to solve this issue. Meet <a href="https://github.com/roundlake/heimdallr/">Heimdallr</a> and it’s extension <a href="https://github.com/roundlake/heimdallr-resource">Heimdallr::Resource</a>. They will bring you a peace and security.</p>
+
+<h3>Heimdallr</h3>
+
+<p>Let’s start from the deeper problem investigation though. Large part of Rails projects equates security to a REST restriction. The bigger projects sometimes fall down to a model to keep code DRY. And to keep your controllers/actions number from getting wild you may fall down to fields.</p>
+
+<p><img src="http://media.tumblr.com/tumblr_m1tdm3wF8m1r9yc7i.png" alt="" /></p>
+
+<!-- more -->
+
+
+<p>For properly designed RESTful applications, 1st and 2nd levels are same. So we are left with:</p>
+
+<ol>
+<li>Entity access level</li>
+<li>Entity fields separate restrictions</li>
+</ol>
+
+
+<p>Field-level management gets more and more important while your application grows. And Github’s discreditation is a great example of what you can get if you go “fields? Who cares?..” way.</p>
+
+<p>To take a long story short, here’s what <code>Heimdallr</code> allows to define inside a model:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Article</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Heimdallr</span><span class="o">::</span><span class="no">Model</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:owner</span><span class="p">,</span> <span class="ss">:class_name</span> <span class="o">=&gt;</span> <span class="s1">&#39;User&#39;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">restrict</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="p">,</span> <span class="n">record</span><span class="o">|</span>
+</span><span class='line'>    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">admin?</span>
+</span><span class='line'>      <span class="c1"># Administrator or owner can do everything</span>
+</span><span class='line'>      <span class="n">scope</span> <span class="ss">:fetch</span>
+</span><span class='line'>      <span class="n">scope</span> <span class="ss">:delete</span>
+</span><span class='line'>      <span class="n">can</span> <span class="o">[</span><span class="ss">:view</span><span class="p">,</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:update</span><span class="o">]</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>      <span class="c1"># Other users can view only their own or non-classified articles...</span>
+</span><span class='line'>      <span class="n">scope</span> <span class="ss">:fetch</span><span class="p">,</span>  <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">where</span><span class="p">(</span><span class="s1">&#39;owner_id = ? or secrecy_level &lt; ?&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>      <span class="n">scope</span> <span class="ss">:delete</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">where</span><span class="p">(</span><span class="s1">&#39;owner_id = ?&#39;</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1"># ... and see all fields except the actual security level</span>
+</span><span class='line'>      <span class="c1"># (through owners can see everything)...</span>
+</span><span class='line'>      <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">try</span><span class="p">(</span><span class="ss">:owner</span><span class="p">)</span> <span class="o">==</span> <span class="n">user</span>
+</span><span class='line'>        <span class="n">can</span> <span class="ss">:view</span>
+</span><span class='line'>        <span class="n">can</span> <span class="ss">:update</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>          <span class="n">secrecy_level</span><span class="p">:</span> <span class="p">{</span> <span class="n">inclusion</span><span class="p">:</span> <span class="p">{</span> <span class="k">in</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>      <span class="k">else</span>
+</span><span class='line'>        <span class="n">can</span>    <span class="ss">:view</span>
+</span><span class='line'>        <span class="n">cannot</span> <span class="ss">:view</span><span class="p">,</span> <span class="o">[</span><span class="ss">:secrecy_level</span><span class="o">]</span>
+</span><span class='line'>      <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1"># ... and can create them with certain restrictions.</span>
+</span><span class='line'>      <span class="n">can</span> <span class="ss">:create</span><span class="p">,</span> <span class="sx">%w(content)</span>
+</span><span class='line'>      <span class="n">can</span> <span class="ss">:create</span><span class="p">,</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">owner_id</span><span class="p">:</span>      <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+</span><span class='line'>        <span class="n">secrecy_level</span><span class="p">:</span> <span class="p">{</span> <span class="n">inclusion</span><span class="p">:</span> <span class="p">{</span> <span class="k">in</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">4</span> <span class="p">}</span> <span class="p">}</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Using straightforward DSL inside your models you define both, model and field-level restrictions. <code>Heimdallr</code> will extend all required models with <code>.restrict</code> method. It will wrap your model class into the Proxy that can be used in a default manner.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Article</span><span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:typical</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that an entity (second) parameter is not always available during evaluation. Therefore <strong>all the checks depending on inner fields state should be wrapped with</strong> <code>.try(:field)</code>.</p>
+
+<p>These restrictions can be used anywhere in your project. Not only in your controllers. And that’s damn important. If you try to get anything that is protected – you get an exception. This makes the behavior predictable. But it’s so uncomfortable for the views!</p>
+
+<p>To avoid this <code>Heimdallr</code> has two restriction strategies. By default it will follow the first one, explicit strategy that raises an exception. However this is how you can switch:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">article</span> <span class="o">=</span> <span class="no">Article</span><span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+</span><span class='line'><span class="n">article</span><span class="o">.</span><span class="n">protected_thing</span> <span class="c1"># exception!</span>
+</span><span class='line'>
+</span><span class='line'><span class="vi">@article</span> <span class="o">=</span> <span class="n">article</span><span class="o">.</span><span class="n">implicit</span>
+</span><span class='line'><span class="vi">@article</span><span class="o">.</span><span class="n">protected_thing</span> <span class="c1"># =&gt; nil</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>CanCan</h3>
+
+<p>For the most Rails projects the Security term is often an alias for the CanCan gem. While CanCan was really an epoch and it still is superb it has some problems:</p>
+
+<ul>
+<li>CanCan was designed to interfere with models as least as possible. It proposes architecture where you get your REST implementation protected but models are plain and unrestricted. By itself this plan is sometimes good and sometimes not. The fact is that it can not get to fields whatever you do.</li>
+<li>1.x branch is dead and unsupported. It has some awful bugs for complex cases with namespaces and 2.x takes so much time to appear.</li>
+</ul>
+
+
+<p>We’ve started <code>Heimdallr</code> as a tool to maintain security on a model level but it appeared that we have enough info to restrict controller among our DSL. So it took just a few moment to come up with <code>Heimdallr::Resource</code>.</p>
+
+<p>The resource part of <code>Heimdallr</code> mimics CanCan as much as possible. You still get your <code>load_and_authorize filter</code> and this is how it works:</p>
+
+<ul>
+<li>If you don’t have your :create scope defined (and therefore can not create any entity) you are considered to not be able to request new and create.</li>
+<li>If you don’t have your :update scope, you can not request edit and update.</li>
+<li>Same goes for :destroy scope.</li>
+<li>Inside your actions you get protected entities so you can’t forget explicit restrict call.</li>
+</ul>
+
+
+<p>Here is the example:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">ArticlesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="no">Heimdallr</span><span class="o">::</span><span class="no">Resource</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">load_and_authorize_resource</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># or set the name explicitly:</span>
+</span><span class='line'>  <span class="c1">#</span>
+</span><span class='line'>  <span class="c1"># load_and_authorize_resource :resource =&gt; :article</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1"># if nested:</span>
+</span><span class='line'>  <span class="c1">#</span>
+</span><span class='line'>  <span class="c1"># routes.rb:</span>
+</span><span class='line'>  <span class="c1">#   resources :categories do</span>
+</span><span class='line'>  <span class="c1">#     resources :articles</span>
+</span><span class='line'>  <span class="c1">#   end</span>
+</span><span class='line'>  <span class="c1">#</span>
+</span><span class='line'>  <span class="c1"># load_and_authorize_resource :through =&gt; :category</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">index</span>
+</span><span class='line'>    <span class="c1"># @articles is loaded and restricted here</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">create</span>
+</span><span class='line'>    <span class="c1"># @article is loaded and restricted here</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>REST API Providers</h3>
+
+<p>I’ve started my narrative from the roots of these gems, the restriction sync between client applications and server-side REST-based APIs. Let me tell you a bit about conventions we came up with.</p>
+
+<p>Imagine you have simple role-based CRUD interface that you want to implement on a browser side. You have index/create/update/destroy REST endpoint. Restrictions give us following questions:</p>
+
+<ul>
+<li>Which entities am I able to get through index?</li>
+<li>Which entities of those are modifiable?</li>
+<li>Which entities of those are destroyable?</li>
+<li>Am I able to create a new entity?</li>
+<li>Which fields am I able to modify for one of those entities I’m able to edit?</li>
+<li>Which fields am I able to fill while creating a new entity if I’m able to?</li>
+</ul>
+
+
+<p>The first question is already addressed by <code>Heimdallr</code> itself. You get your scope and you simply can’t get anything besides what you are allowed to.</p>
+
+<p>To get further with 2nd and 3d we should use meta-magic provided by <code>Heimdallr</code> proxy:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">{</span><span class="n">modifiable</span><span class="p">:</span> <span class="vi">@model</span><span class="o">.</span><span class="n">modifiable?</span><span class="p">,</span> <span class="n">destroyable</span><span class="p">:</span> <span class="vi">@model</span><span class="o">.</span><span class="n">destroyable?</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>@model</code> is supposed to be resricted. Add this fields to your serialization and you know the capabilities of current user.</p>
+
+<h4>Am I able to create? And which fields?</h4>
+
+<p><code>new</code> method is a rare guest among REST APIs. And it’s a perfect place to determine if we are able to create entity and how exactly. Here is the code to list fields we can modify:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Article</span><span class="o">.</span><span class="n">restrictions</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span><span class="o">.</span><span class="n">allowed_fields</span><span class="o">[</span><span class="ss">:create</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Within <code>Heimdallr::Resource</code> you’ll get restriction error if you can not create it at all. <code>Heimdallr</code> either defines <code>.creatable?</code> method so you can pass it on too.</p>
+
+<h4>Which fields am I able to update</h4>
+
+<p>The idea behind modification is quite the same. Just use <code>edit</code> method and <code>:update</code> keyword to retrieve fields that are accessible.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Article</span><span class="o">.</span><span class="n">restrictions</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span><span class="o">.</span><span class="n">allowed_fields</span><span class="o">[</span><span class="ss">:update</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Summary</h3>
+
+<p>Using <code>Heimdallr</code> and <code>Heimdallr::Resource</code> you can get your application protected quite well with no boilerplate. And what’s not really hot: you get amazing magic for your REST APIs. So use it and be happy. Remember, Homakov is <a href="http://homakov.blogspot.com/2012/03/egor-stop-hacking-gh.html">watching you</a>!</p>
+
+<p>ಠ_ಠ</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails + REST: views nightmare]]></title>
+    <link href="http://staal.io/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/"/>
+    <updated>2012-03-24T20:56:00+07:00</updated>
+    <id>http://staal.io/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare</id>
+    <content type="html"><![CDATA[<p>Rails is rapidly getting more and more popular as a comfortable platform for REST services. And it really is. We do Rails in this way for quite a long time already. There is however a real problem: <strong>JSON views are unmanageable!</strong></p>
+
+<p>At first it may look like everything’s just fine. All you need is <s>love</s> <code>.to_json</code> or <a href="https://github.com/nesquena/rabl">RABL</a> is some particular cases. But then things go wild. And you start switching JSON Builders one after another.</p>
+
+<h3>The problem</h3>
+
+<p>Let’s say you have a banking service. That’s like 30 models. Each has extended CRUD endpoint (extensions are maybe 3 or 4 methods per endpoint). Each model has like 10 or 12 fields which are quite common to be large strings. And off course all that stuff is insanely linked up to like 4 or 5 levels of <code>belongs_to</code>.</p>
+
+<p>The another thing to remember is that in real life your JSON entities are not just dumps of your ActiveRecord attributes. Two very common things are conditions (whether an attribute should appear) and custom methods.</p>
+
+<p><strong>The problem is that consumer often wants unique set of fields for EVERY method among EVERY endpoint. Set of relations&#8217; fields can differ too!</strong></p>
+
+<!-- more -->
+
+
+<p>Imagine that, you have <code>Post</code> and <code>Comment</code> CRUDs. Every CRUD has 5 methods and potentially different field sets to otput. That&#8217;s already 10. Also when you otput <code>Post</code> you might want to inline serialized <code>Comment</code> relation. This will give you even more potential field sets for <code>Comment</code>. Imagine potential number of field sets for deeply nested entity. And every different field set has its own conditions and custom methods. We gonna die, aren&#8217;t we?</p>
+
+<h3>Life with pain</h3>
+
+<p>The first thing we came with to was to leave the RABL alone. It looks fun and effective at first but you simply can not do anything complex and custom enough with that. And in real life RABL did not really go far away from basic <code>.to_json</code>. It&#8217;s a pitty but when it comes to serialization straight declaration is the best declaration. And RABL was built upon magic.</p>
+
+<p>We’ve tried a lot of different builders and finally stopped with <a href="http://github.com/rails/jbuilder">Jbuilder</a>. It’s both straightforward and allows boilerplate-less.</p>
+
+<p>But the nightmare hasn’t gone. What do you do to keep your view DRY? Use partials, right. In a very short term that gave us 10-15 partials for each model. That’s <strong>30 models * 15 partials = 450 files</strong> at your <code>app/views</code> folder. Unmanageable. Again.</p>
+
+<h3>The Presenter pattern</h3>
+
+<p>Another approach to solve this problem with better organization is the Presenter pattern. Since our views are just ruby code it’s a good step forward to fulfill it with OOP.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># example taken from http://quickleft.com/blog/presenters-as-a-solution-to-asjson-woes-in-rails-apis</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Api</span><span class="o">::</span><span class="no">V1</span><span class="o">::</span><span class="no">ResourcePresenter</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kp">attr_reader</span> <span class="ss">:resource</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span> <span class="n">resource</span> <span class="p">)</span>
+</span><span class='line'>    <span class="vi">@resource</span> <span class="o">=</span> <span class="n">resource</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">as_json</span><span class="p">(</span> <span class="n">include_root</span> <span class="o">=</span> <span class="kp">false</span> <span class="p">)</span>
+</span><span class='line'>    <span class="n">data_hash</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>      <span class="ss">:attr1</span> <span class="o">=&gt;</span> <span class="vi">@resource</span><span class="o">.</span><span class="n">attr1</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:attr2</span> <span class="o">=&gt;</span> <span class="vi">@resource</span><span class="o">.</span><span class="n">attr2</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">data_hash</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:resource</span> <span class="o">=&gt;</span> <span class="n">data_hash</span> <span class="p">}</span> <span class="k">if</span> <span class="n">include_root</span>
+</span><span class='line'>    <span class="n">data_hash</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So we reduced the number of files and grouped similar sets into the one method with parameters. It&#8217;s 1-1 number of models presenters declaring sets of fields. Time to refactor around with <a href="https://github.com/jcasimir/draper">Draper</a> gem. With help of Draper, our code turns into:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># app/decorators/article_decorator.rb</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">ArticleDecorator</span> <span class="o">&lt;</span> <span class="no">ApplicationDecorator</span>
+</span><span class='line'>  <span class="n">decorates</span> <span class="ss">:article</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">the_very_important_fields_set</span><span class="p">(</span> <span class="n">include_root</span> <span class="o">=</span> <span class="kp">false</span> <span class="p">)</span>
+</span><span class='line'>    <span class="n">data_hash</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>      <span class="ss">:attr1</span> <span class="o">=&gt;</span> <span class="n">att1</span><span class="p">,</span>
+</span><span class='line'>      <span class="ss">:attr2</span> <span class="o">=&gt;</span> <span class="n">attr2</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="n">data_hash</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:resource</span> <span class="o">=&gt;</span> <span class="n">data_hash</span> <span class="p">}</span> <span class="k">if</span> <span class="n">include_root</span>
+</span><span class='line'>    <span class="n">data_hash</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But now again we stuck into the DRY problem that was initially solved by JSON builders. It should be noted that we don’t really need to work with hashes internally. We can build our response from a set of strings using Jbuilder internally at our presenters.</p>
+
+<p>At the moment I write this Jbuilder does not allow us to inject raw JSON string into response. There is another approach to get the required result though. There is a <a href="https://github.com/rails/jbuilder/pull/23">nice fork</a> (pull request was approved so this is expected to be supported by Jbuilder very soon).</p>
+
+<p>With help of this fork we can turn our presenter into following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1"># app/decorators/article_decorator.rb</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">ArticleDecorator</span> <span class="o">&lt;</span> <span class="no">ApplicationDecorator</span>
+</span><span class='line'>  <span class="n">decorates</span> <span class="ss">:article</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">the_very_important_fields_set</span><span class="p">(</span> <span class="n">include_root</span> <span class="o">=</span> <span class="kp">false</span> <span class="p">)</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="no">Jbuilder</span><span class="o">.</span><span class="n">encode</span> <span class="k">do</span> <span class="o">|</span><span class="n">j</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">j</span><span class="o">.</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="ss">:attr1</span><span class="p">,</span> <span class="ss">:attr2</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:resource</span> <span class="o">=&gt;</span> <span class="n">data</span> <span class="p">}</span> <span class="k">if</span> <span class="n">include_root</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">another_set</span>
+</span><span class='line'>    <span class="no">Jbuilder</span><span class="o">.</span><span class="n">encode</span> <span class="k">do</span> <span class="o">|</span><span class="n">j</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">j</span><span class="o">.</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="ss">:attr1</span><span class="p">,</span> <span class="ss">:attr2</span><span class="p">,</span> <span class="ss">:attr3</span><span class="p">)</span>
+</span><span class='line'>      <span class="n">j</span><span class="o">.</span><span class="n">cards</span> <span class="n">card</span><span class="o">.</span><span class="n">basic_fields</span><span class="p">(</span><span class="ss">:include_transactions</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So here is the final look:</p>
+
+<p><img src="http://media.tumblr.com/tumblr_m1ebls2GWl1r9yc7i.png" alt="" /></p>
+
+<p>This strategy is expensive and useless for small services. But as soon as you start operating massive entities and large amounts of custom methods – this is the way. It makes your REST providers exact (serving minimum required amount fields), DRY and supportable.</p>
+
+<h3>Keep on reading</h3>
+
+<p>You can find some real-life experience within this post: <a href="http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice">http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice</a>. If you think it&#8217;s worth trying, keep on reading :).</p>
+]]></content>
+  </entry>
+  
+</feed>

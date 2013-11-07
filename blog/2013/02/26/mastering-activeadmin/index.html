@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Boris Staal">
+  
+  <meta name="description" content="&larr; Back to entries Mastering ActiveAdmin Feb 26, 2013 | ActiveAdmin, Rails Did you know ActiveAdmin was awesome? For the last 6 months I tried &hellip;">
+  
+  
+  <link rel="canonical" href="http://staal.io/blog/2013/02/26/mastering-activeadmin/">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr.js"></script>
+  <script src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/application.js"></script>
+  <link href="/atom.xml" rel="alternate" title="Staal Forge" type="application/atom+xml">
+  <title>Mastering ActiveAdmin - Staal Forge</title>
+</head>
+<body>
+  <table class="layoutTable" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr>
+        <td class="layoutSidebar" >
+          <div class="sidebar">
+            <div class="content">
+              <div class="about">
+                <a href="/"><img src="/images/bs_ava.png" alt="Boris Staal"></a>
+                <h1><a href="/">Boris Staal</a></h1>
+                <h2>About me</h2>
+                <p>
+                  I'm Boris Staal, the enterpreneur geek ಠ_ಠ.
+                  I do open-source and make ppl smile ^_^.
+                </p>
+              </div>
+              <div class="follow">
+                <a href="https://twitter.com/_inossidabile"><img src="/images/s_twitter.png" alt="Boris Staal"></a>
+                <a href="http://facebook.com/boris.staal"><img src="/images/s_facebook.png" alt="Boris Staal"></a>
+                <a href="http://github.com/inossidabile"><img src="/images/s_cat.png" alt="Boris Staal"></a>
+                <a href="skype://inossidabile."><img src="/images/s_skype.png" alt="Boris Staal"></a>
+              </div>
+              <div class="projects">
+                <h2>Projects I'm part of:</h2>
+                <div class="list">
+                  <div class="project joosy">
+                    <a href="http://joosy.ws">Joosy</a>
+                    <p>Rails-flavored browser applications framework</p>
+                  </div>
+                  <div class="project roundbank">
+                    <a href="https://github.com/roundbank">Roundbank</a>
+                    <p>Open-source internet banking platform</p>
+                  </div>
+                  <div class="project smartkiosk">
+                    <a href="https://github.com/smartkiosk">Smartkiosk</a>
+                    <p>Open-source kiosk platform</p>
+                  </div>
+                  <div class="project rove">
+                    <a href="http://rove.io">Rove.io</a>
+                    <p>Service that allows you to pregenerate typical Vagrant builds</p>
+                  </div>
+                  <div class="project heimdallr">
+                    <a href="https://github.com/roundlake/heimdallr">Protector</a>
+                    <p>Comfortable white-list security restrictions for ORMs on a field level</p>
+                  </div>
+                  <div class="project wash_out">
+                    <a href="https://github.com/inossidabile/wash_out">WashOut</a>
+                    <p>Rails 3 SOAP server library</p>
+                  </div>
+                  <div class="project codo">
+                    <a href="https://github.com/coffeedoc/codo">Codo</a>
+                    <p>CoffeeScript API documentation generator</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="layoutContent">
+          <div class="header">
+            <ul>
+              <li 
+                
+                >
+                <a href="/">Blog</a>
+              </li>
+              <li
+                
+                >
+                <a href="/blog/archives">Archives</a>
+              </li>
+            </ul>
+          </div>
+          <div class="content">
+            <div class="post">
+  <div class="button">
+    <span>&larr;</span>
+    <a href="/">Back to entries</a>
+  </div>
+
+  <article>
+    <h1>Mastering ActiveAdmin</h1>
+    <time>Feb 26, 2013 | <a class='category' href='/blog/categories/activeadmin/'>ActiveAdmin</a>, <a class='category' href='/blog/categories/rails/'>Rails</a></time>
+    <p>Did you know ActiveAdmin was awesome?</p>
+
+<p>For the last 6 months I tried adapting ActiveAdmin to three projects with pretty different goals. And it was a great success for each of them. However everything comes with a price. ActiveAdmin has excellent DSL but it lacks architectural quality and feature-richness (mainly due to extremely slow development progress).</p>
+
+<p>The main goal of this post is to share my vision of administration frameworks potential we could expect. While ActiveAdmin in my opinion is the first one that finally felt the ground.</p>
+
+<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I&#8217;ll keep it short addressing main of them. After &#8220;why I think AA is the true way&#8221; introduction I&#8217;ll do a bit of interface nit-picking. And that&#8217;s probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
+
+<!-- more -->
+
+
+<h4>So why I think AA is a perfect start</h4>
+
+<p>Here are some facts that I would like to set as a baseline:</p>
+
+<ul>
+<li>Sometimes admin interfaces might look very special. But most of them are okay to have typical layout.</li>
+<li>Most of admin sections are very likely to be CRUD-based (+ filters).</li>
+<li>You still need custom pages and custom actions for something very important and special.</li>
+<li>Admin sections can be based on domain entities (which are not always 1-1 to models).</li>
+<li>Interface features can be based on users&#8217; preferences (that sometimes overlap automation defaults).</li>
+</ul>
+
+
+<p>The important thing to get is that Administration Panel is a totally <strong>separate application</strong>. It concludes your domain business logic into typical administration workflow. So the only thing required to make a perfect tool is to isolate domain-level modifications from basic trunk.</p>
+
+<p>So the correctly formulated task would be:</p>
+
+<blockquote><p>We need a tool that allows us to comfortably describe differentiations of our particular process from the default one. And the default one should be at its best.</p></blockquote>
+
+<p>It might sound trivially but most of competitors solve other issues creating their-own-problem-solvers. What can we extract of our formulation? Since our main goal is to describe deviation of one strict business-process we need a small language that works in terms of this business process. Forget configs. Forget class monkey-patching. We need to talk with it using process-specific language.</p>
+
+<p><strong>And this is exactly what AA does.</strong> Unlike everything else. Yes I do really believe ActiveAdmin is the only available tool that at least formulated the goal correctly.</p>
+
+<p>Okay, to the solution. Ruby is a perfect language to express such a DSL. In fact having tiny DSLs for particular task is so Rubyish. And so awesome. What&#8217;s more awesome is that AA uses popular gems exposing those DSLs within it&#8217;s own. So there are not so many things you should learn about new specific language – most of them are already very likely to be familiar.</p>
+
+<p>Unfortunately this is where the success stops. Correct formulation leads to correct paper solution (at least visually). But the quality and the result depend on implementation heavily. At the moment I&#8217;m writing this AA does not follow it&#8217;s own conventions within it&#8217;s architecture which is sad&#8230; But you are reading this to go deeper right? Let&#8217;s try to change something about it or find another way out.</p>
+
+<h3>In reality things go wild</h3>
+
+<p>One of the worst parts of ActiveAdmin is the way it is supported. We all are in debt of open-source. And especially those strong people that lead projects like ActiveAdmin. But this particular task requires constant attention to make a perfect brilliant from a rough diamond. Did you remember I told the default process had to be at its best?</p>
+
+<p>I&#8217;ve gathered all the recipes described below into one repo: <a href="https://github.com/inossidabile/mastering_aa">https://github.com/inossidabile/mastering_aa</a>. Download and start it go live. Note that sometimes I intentionally put patches to the places that are not semantically suitable for them (like <code>config/initializers/active_admin</code> folder) to ease grouping. Consider regrouping of that code for a real project.</p>
+
+<h4>Respect internationalization!</h4>
+
+<p>I18n and ActiveAdmin are old enemies. Main roots of that go deep into architectural bugs (and we&#8217;ll discuss that later). But first thing you want to monkey-patch after AA inclusion is this: <a href="https://github.com/gregbell/active_admin/issues/1832">https://github.com/gregbell/active_admin/issues/1832</a>. Without this patch AA will break <code>has_many</code> forms for models having UTF-8 localization.</p>
+
+<p>Here&#8217;s how to fix it: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_form_builder_has_many.rb">config/initializers/active_admin/fix_form_builder_has_many.rb</a></p>
+
+<h4>Chosen</h4>
+
+<p><img src="http://f.cl.ly/items/31270T3Z3w3Y3D1K311D/chosen.png" alt="Chosen" /></p>
+
+<p>ActiveAdmin is pretty stylish isn&#8217;t it? Suddenly is not when it comes to controls. AA has incredible amount of interface mistakes connected to controls. We are going to fix some of them and the first overall step is to include a <code>Chosen</code> library. What&#8217;s funny - Chosen when integrated properly looks like it was initially meant for this design. It improves usability and looks so perfect. I have no idea what makes AA team ignore this fact.</p>
+
+<p>Here are the files required to integrate it as well:</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/Gemfile#L17">Gemfile</a> – include chosen assets gem</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin/chosen.js.coffee">app/assets/javascripts/active_admin/chosen.js.coffee</a> – simple script that will enable Chosen for all selects we intentionally marked</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin.js#L2-L3">app/assets/javascripts/active_admin.js</a> – include our script and Chosen itself</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/chosen.css.scss">app/assets/stylesheets/active_admin/chosen.css.scss</a> – let&#8217;s style our inputs a bit</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L13-L14">app/assets/stylesheets/active_admin.css.scss</a> - include our new styles and Chosen styles</li>
+</ol>
+
+
+<p>That&#8217;s it. The only thing that is left is to mark required selects with <code>chosen</code> HTML class. There are several ways to do that. You can add <code>:input_html_options =&gt; { :class =&gt; 'chosen' }</code> to every select you write. Or you can patch input generation class. I really like Chosen look (and also I&#8217;m so lazy) so the latter is definitely a way I recommend: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/chosen.rb">config/initializers/active_admin/chosen.rb</a>.</p>
+
+<h4>Numeric range filter</h4>
+
+<p><img src="http://f.cl.ly/items/2l40221S3N0L3E0O3F1w/numeric_range.png" class="liquid" /></p>
+
+<p>ActiveAdmin offers &#8220;more/less/equal number&#8221; comparison filter for numeric fields. This is not something you should live with. It might be more or less useful for ID navigation but come on! That&#8217;s not like people are used to navigate through numbers.</p>
+
+<p>The more typical interface is a range. If you want &#8220;more then&#8221; you fill in the left field. Otherwise you fill the right one. And what&#8217;s more important you can find values that are in between.</p>
+
+<p>ActiveAdmin has similar interface for dates but still no luck for numbers. Let&#8217;s fix it:</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/filter_numeric_range_input.rb">config/initializers/active_admin/filter_numeric_range_input.rb</a> – filter implementation</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/numeric_range.css.scss">app/assets/stylesheets/active_admin/numeric_range.css.scss</a> - nifty styling</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L15">ap/assets/stylesheets/active_admin.css.scss</a> – include our new styles</li>
+</ol>
+
+
+<p>Now you can use it this way:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveAdmin</span><span class="o">.</span><span class="n">register</span> <span class="no">Foobar</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">filter</span> <span class="ss">:id</span>
+</span><span class='line'>  <span class="n">filter</span> <span class="ss">:priority</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:numeric_range</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Multiple selects</h4>
+
+<p><img src="http://f.cl.ly/items/1P35390h3Q1n1i3j1B3m/multiple_selects.png" class="liquid" /></p>
+
+<p>Another serious issue with controls of ActiveAdmin are check boxes. Creating and styling multiple selections (and especially multiple select filters) is a huge pain. It&#8217;s more or less affordable for cases with 5-6 elements to choose from. But hey, it&#8217;s not how things work again.</p>
+
+<p>Fortunately we are already saved by Chosen and it&#8217;s incredible multiple select mode (see the screenshot – it does rock hard). Note that Chosen has in-line search that allows you to navigate through associations so easily. Even through hundreds of them.</p>
+
+<p>Within your forms you can use <code>:input_html_options =&gt; {:multiple =&gt; true}</code> but filters require some magic to start working. I have this magic for you:</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/filter_multiple_select_input.rb">config/initializers/active_admin/filter_multiple_select_input.rb</a></li>
+</ol>
+
+
+<p>And now:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveAdmin</span><span class="o">.</span><span class="n">register</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">filter</span> <span class="ss">:id</span>
+</span><span class='line'>  <span class="n">filter</span> <span class="ss">:kind</span><span class="p">,</span> <span class="ss">:as</span> <span class="o">=&gt;</span> <span class="ss">:multiple_select</span><span class="p">,</span> <span class="ss">:collection</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;first&#39;</span><span class="p">,</span> <span class="s1">&#39;second&#39;</span><span class="o">]</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Sorting</h4>
+
+<p><img src="http://f.cl.ly/items/2Z2q38150h0j2m281y3m/sorting.png" class="liquid" /></p>
+
+<p>You can often find perfect ideas and pull requests among long-lasting and rejected AA issues. Adding ability to sort <code>has_many</code> entries is definitely one of them. Here is my variation of the same feature. It makes any form aware of nested children sorting. And also adds tiny styling like proper cursor and additional icon for the nested fields header.</p>
+
+<p>Internaly it makes use of jQuery <code>.sortable</code> and therefore does not need any external libraries or frameworks.</p>
+
+<p>Add <code>:sortable</code> key to your <code>f.has_many</code> call like in the following example. You can use any field to sort: they will receive ascending integers of the final order as values on submit.</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/sortable_forms.rb">config/initializers/active_admin/sortable_forms.rb</a> – the patch itself</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/sortable_forms.css.scss">app/assets/stylesheets/active_admin/sortable_forms.css.scss</a> – a bit of styles</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L16">app/assets/stylesheets/active_admin.css.scss</a> – don&#8217;t forget to include new styles</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin/sortable_forms.js.coffee">app/assets/javascripts/acitve_admin/sortable_forms.js.coffee</a> – and a pinch of Javascript</li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">form</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">f</span><span class="o">.</span><span class="n">inputs</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">input</span> <span class="ss">:title</span>
+</span><span class='line'>    <span class="n">f</span><span class="o">.</span><span class="n">has_many</span> <span class="ss">:foobars</span><span class="p">,</span> <span class="ss">:sortable</span> <span class="o">=&gt;</span> <span class="ss">:priority</span> <span class="k">do</span> <span class="o">|</span><span class="n">ff</span><span class="o">|</span>
+</span><span class='line'>      <span class="n">ff</span><span class="o">.</span><span class="n">input</span> <span class="ss">:title</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>  <span class="n">f</span><span class="o">.</span><span class="n">actions</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>DateTime searches</h4>
+
+<p>To finalize our hackety session let&#8217;s improve the way AA seeks through <code>datetime</code> fields. The filter itself looks like a range. And a range is supposed to contain the value of right field by default. But what happens if date was given and the column is of a <code>datetime</code> type? It cuts it to <code>00:00:00</code>. And the last day does not get included into the result set. This annoyed me long enough to patch it the following way:</p>
+
+<ol>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_resource_controller.rb">config/initializers/active_admin/fix_resource_controller.rb</a></li>
+</ol>
+
+
+<h3>Bad luck of architecture</h3>
+
+<p>Alright wasn&#8217;t that fun? Now let&#8217;s get serious and talk about something that can&#8217;t be fixed/extended so easily and fast. There are several things about ActiveAdmin that are totally wrong.</p>
+
+<h4>Rails integration</h4>
+
+<p>The way ActiveAdmin bootstraps is a huge failure. I&#8217;ll concentrate on two particular parts of this process and leave the rest to your imagination.</p>
+
+<h5>ActiveAdmin requires and caches content of <code>register</code> blocks</h5>
+
+<p>And that breaks I18n support for a devastating number of DSL entries. Let&#8217;s assume you have the following page:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveAdmin</span><span class="o">.</span><span class="n">register</span> <span class="no">Foo</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">menu</span> <span class="ss">:parent</span> <span class="o">=&gt;</span> <span class="no">I18n</span><span class="o">.</span><span class="n">t</span><span class="p">(</span><span class="s1">&#39;admin.menu.foo&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>menu</code> call will only occur on bootstrap. And we are not done yet: it&#8217;s going to occur <strong>before</strong> configuration evaluation. So no matter what locale you setup at <code>application.rb</code> – it will always use <code>:en</code>. And if only <code>menu</code> was the only one&#8230; There are some attempts to fix the issue at master at the moment but they cure symptoms and not the source.</p>
+
+<p>A really long time has passed since this fundamental issue was raised. Up until now authors were solving it adding more and more places where you can use <code>proc</code> instead of fixed value. But it still can&#8217;t be used anywhere.</p>
+
+<p>At the moment the only proper solution to get around this is to add the following hack into your AA initialization code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">ActiveAdmin</span><span class="o">.</span><span class="n">setup</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+</span><span class='line'>  <span class="no">I18n</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="ss">:ru</span>
+</span><span class='line'>  <span class="no">I18n</span><span class="o">.</span><span class="n">load_path</span> <span class="o">+=</span> <span class="no">Dir</span><span class="o">[</span><span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s2">&quot;../../locales/**/*.yml&quot;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span><span class="o">]</span>
+</span><span class='line'>  <span class="no">I18n</span><span class="o">.</span><span class="n">reload!</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But! The real problem is that there is no way to change locale on the fly. Even you hack AA to force correct locale usage like described above it will get cached. No mater what locale you set afterwards it will still output Russian names. At the same time forms blocks that evaluate dynamically will get binded to current locale. So you better don&#8217;t even try setting locale dynamically. And that&#8217;s really really sad.</p>
+
+<h5>ActiveAdmin uses it&#8217;s own require cycle</h5>
+
+<p>For some reason that&#8217;s not quite clear to me (probably historical one) AA hacks Rails integration to not use Engine Eager Loading (tm). So every time you are in development mode it duplicates Rails behavior reloading <code>admin/</code> on its own. It breaks <code>Engine</code> API and self-extending capabilities.</p>
+
+<p>This leads to one very unpleasant specificity – it&#8217;s no so easy to split parts of your Admin Panel into subgems. I mean we all love Rails engines right? It&#8217;s a great way to decompose stuff. And you can&#8217;t use that with ActiveAdmin for no sensible reason. That&#8217;s sad again.</p>
+
+<p>I met this weird problem working on Matrioshka and had to hardcode workaround: <a href="https://github.com/inossidabile/matrioshka/blob/master/lib/generators/matrioshka/templates/engine.rb#L17-L20">matrioshka/lib/generators/matrioshka/templats/engine.rb</a>. This is a bad way to achieve modularity but at least an existing one.</p>
+
+<h4>ARBRE buffers</h4>
+
+<p>AA does not generally follow MVC and this is win. MVC is not a holy grail: describing Administration Workflow does not require MVC in most cases. To make mixtures of logic and representation readable it introduces ARBRE – HTML Ruby DSL. Yay! It&#8217;s a really nice move.</p>
+
+<p>But (I hate this word)! I mentioned earlier that ActiveAdmin plays role of meta DSL. It wraps existing gems like Formtastic and exposes them where possible. Unfortunately they don&#8217;t play nice together. ARBRE and Formtatstic for example use encapsulated buffers and injecting blocks of one into another often leads to a VERY unpredictable result. Same goes to Rails helpers. Mixing those 3 together is a nightmare.</p>
+
+<p>This is the first issue that can&#8217;t be solved with a fast patch. It&#8217;s just something you should consider if you start doing your own ActiveAdmin implementation.</p>
+
+<h4>Gems isolation and update rate</h4>
+
+<p>ActiveAdmin is a Rails Engine (at least mostly). It means it works within your project namespace and you get all the gems it uses internally as a present. Doesn&#8217;t look like a problem until you get in conflict. ActiveAdmin does not work with fresh CoffeeScript (1.5.0) and jQuery. If you used them – you are in trouble. Same goes to any other gem it uses and there are enough of them.</p>
+
+<p>I can see three strategies that could be used to reduce the harm of such conflicts or eliminate it completely.</p>
+
+<ol>
+<li>Update often – watching dependencies is a duty for contributors and it has to be done. At the moment ActiveAdmin is bound to a <code>metasearch</code> gem that is deprecated for a year. Year! That&#8217;s not so good :(.</li>
+<li>Keep most of integrations in separate gems. Meta DSL should have points of integration that could be used by others to swap <code>Kaminari</code> and <code>will_paginate</code>. Or at least used to modify integration plug-in separately from the huge DSL core.</li>
+<li>Do not tie to Rails the way everybody do that. Jump off the train: using <code>Engine</code> is not a right way to integrate with admin part. Being a Rack Middleware gives so much more flexibility.</li>
+</ol>
+
+
+<p>Combination of modularity and possibility to create a real isolation could save us. But current implementation is on the other shore.</p>
+
+<h4>Heavy framework ties</h4>
+
+<p>The last thing I want to discuss is the integration level. We all know it&#8217;s evil to tie entities. But ActiveAdmin is all about ties. It ties you to Rails, ActiveRecord, zillions of gems, etc. And I&#8217;m a real fan of being framework-agnostic. I believe that we finally came pretty close to the epoch where it&#8217;s Ruby what we call a framework. It has Rake as transport part, Tilt as views, Sprockets as assets etc. Rails/Sinatra/&#8230; are just controllers and skeleton. Why would you bind to them explicitly for the god sake?</p>
+
+<p>I did already propose switching to Rack-level integration to solve gems isolation issue. This and proper modularity could make it absolutely agnostic to frameworks. Not from the start of course. But it&#8217;s freedom degree will be more then enough to achieve that in nearest future. Current AA implementation makes it close to impossible.</p>
+
+<p>There is one downside in that though. It&#8217;s very likely for a common administration panel to have one or two specific scenarios that require working with controllers and native low-level MVC. Currently you just get down to Rails when you need it. If we use Rack – in theory you can end up with having different type of controllers among one application.</p>
+
+<p>But (this is the positive one)! I&#8217;ve already encouraged you to consider your administration panel a separate application and I still do. I can&#8217;t see anything <em>that</em> bad in having Sinatra controllers for your administration panel while having Rails controllers for the other parts of your site. It&#8217;s probably a matter of taste and habit.</p>
+
+<h3>Hero! Come and save me!</h3>
+
+<p>ActiveAdmin DSL is incredible. But architectural approaches it relies on dispell magic. I constantly hear (and see) another attempt to create <strong>NEW AND AWESOME ADMINISTRATION AUTO PANEL</strong>. Okay folks. You want to make world a better place? Me too. Get ActiveAdmin DSL. Get Sinatra and Rack. Get this article. Mix it up and give us ActiveAdmin 2.</p>
+
+<p>We really need it!</p>
+
+<p>P.S. If you are seriously considering to start such a project in MIT – I&#8217;m in.</p>
+
+  </article>
+
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'staalforge';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://staal.io/blog/2013/02/26/mastering-activeadmin/';
+        var disqus_url = 'http://staal.io/blog/2013/02/26/mastering-activeadmin/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+  
+    <section class="comments">
+      <div id="disqus_thread" aria-live="polite"></div>
+    </section>
+  
+</div>
+
+          </div>
+          <div class="footer">
+            Powered by <a href="http://octopress.org">Octopress</a>; Hosted at <a href="https://github.com/inossidabile/blog">Github</a>; Stay tuned :)
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <script type="text/javascript">
+  var _gauges = _gauges || [];
+  (function() {
+    var t   = document.createElement('script');
+    t.type  = 'text/javascript';
+    t.async = true;
+    t.id    = 'gauges-tracker';
+    t.setAttribute('data-site-id', '4f707c6c613f5d6d0000003f');
+    t.src = '//secure.gaug.es/track.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(t, s);
+  })();
+  </script>
+</body>
+</html>

@@ -1,1 +1,533 @@
-My Octopress Page is coming soon &hellip;
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Boris Staal">
+  
+  <meta name="description" content="Last tweet was supposed to be here but Twitter blocked anonymous API requests ;( Incredibly convenient testing of front-end Javascript with Node.js &hellip;">
+  
+  
+  <link rel="canonical" href="http://staal.io/">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr.js"></script>
+  <script src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/application.js"></script>
+  <link href="/atom.xml" rel="alternate" title="Staal Forge" type="application/atom+xml">
+  <title>Staal Forge</title>
+</head>
+<body>
+  <table class="layoutTable" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr>
+        <td class="layoutSidebar" >
+          <div class="sidebar">
+            <div class="content">
+              <div class="about">
+                <a href="/"><img src="/images/bs_ava.png" alt="Boris Staal"></a>
+                <h1><a href="/">Boris Staal</a></h1>
+                <h2>About me</h2>
+                <p>
+                  I'm Boris Staal, the enterpreneur geek ಠ_ಠ.
+                  I do open-source and make ppl smile ^_^.
+                </p>
+              </div>
+              <div class="follow">
+                <a href="https://twitter.com/_inossidabile"><img src="/images/s_twitter.png" alt="Boris Staal"></a>
+                <a href="http://facebook.com/boris.staal"><img src="/images/s_facebook.png" alt="Boris Staal"></a>
+                <a href="http://github.com/inossidabile"><img src="/images/s_cat.png" alt="Boris Staal"></a>
+                <a href="skype://inossidabile."><img src="/images/s_skype.png" alt="Boris Staal"></a>
+              </div>
+              <div class="projects">
+                <h2>Projects I'm part of:</h2>
+                <div class="list">
+                  <div class="project joosy">
+                    <a href="http://joosy.ws">Joosy</a>
+                    <p>Rails-flavored browser applications framework</p>
+                  </div>
+                  <div class="project roundbank">
+                    <a href="https://github.com/roundbank">Roundbank</a>
+                    <p>Open-source internet banking platform</p>
+                  </div>
+                  <div class="project smartkiosk">
+                    <a href="https://github.com/smartkiosk">Smartkiosk</a>
+                    <p>Open-source kiosk platform</p>
+                  </div>
+                  <div class="project rove">
+                    <a href="http://rove.io">Rove.io</a>
+                    <p>Service that allows you to pregenerate typical Vagrant builds</p>
+                  </div>
+                  <div class="project heimdallr">
+                    <a href="https://github.com/roundlake/heimdallr">Protector</a>
+                    <p>Comfortable white-list security restrictions for ORMs on a field level</p>
+                  </div>
+                  <div class="project wash_out">
+                    <a href="https://github.com/inossidabile/wash_out">WashOut</a>
+                    <p>Rails 3 SOAP server library</p>
+                  </div>
+                  <div class="project codo">
+                    <a href="https://github.com/coffeedoc/codo">Codo</a>
+                    <p>CoffeeScript API documentation generator</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="layoutContent">
+          <div class="header">
+            <ul>
+              <li 
+                
+                  class="active"
+                
+                >
+                <a href="/">Blog</a>
+              </li>
+              <li
+                
+                >
+                <a href="/blog/archives">Archives</a>
+              </li>
+            </ul>
+          </div>
+          <div class="content">
+            <div class="twitterBar">
+  <table>
+    <tr>
+      <td>
+        <a href="http://twitter.com/_inossidabile">
+          <img src="/images/twitter.png" alt="twitter">
+        </a>
+      </td>
+      <td id="tweet">
+        <a href="http://twitter.com/_inossidabile">Last tweet</a> was supposed to be here but Twitter blocked anonymous API requests ;(
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="index">
+  
+  
+  <article class="main">
+    <h1>
+      <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/">Incredibly convenient testing of front-end Javascript with Node.js</a>
+    </h1>
+    <time>
+      Aug 17, 2013 | <a class='category' href='/blog/categories/grunt/'>Grunt</a>, <a class='category' href='/blog/categories/joosy/'>Joosy</a>, <a class='category' href='/blog/categories/mincer/'>Mincer</a>, <a class='category' href='/blog/categories/node-js/'>Node.js</a>, <a class='category' href='/blog/categories/testem/'>Testem</a>
+    </time>
+    <p>You do have automated testing for your front-end Javascript application / library / framework don&#8217;t you? And tests work equally well at console, browsers and Travis aren&#8217;t they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let&#8217;s see if we can do something about it!</p>
+
+<p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here&#8217;s the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
+
+
+  </article>
+  <div class="more">
+    <div class="read">
+      <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/">Read more</a>
+      <span>&rarr;</span>
+    </div>
+    <div class="comments">
+      <img src="/images/comments.png">
+      <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/#disqus_thread">Comments</a>
+    </div>
+  </div>
+  
+  
+  
+  
+  <div class="olders">
+  
+    <ul class="olders">
+    <li class="older odd">
+      <article>
+        <h1>
+          <a href="/blog/2013/06/04/the-protector/">The Protector!</a>
+        </h1>
+        <time>
+          Jun 04, 2013 | <a class='category' href='/blog/categories/activerecord/'>ActiveRecord</a>, <a class='category' href='/blog/categories/heimdallr/'>Heimdallr</a>, <a class='category' href='/blog/categories/orm/'>ORM</a>, <a class='category' href='/blog/categories/security/'>Security</a>, <a class='category' href='/blog/categories/sequel/'>Sequel</a>
+        </time>
+        <p>More than a year ago me and <a href="http://whitequark.org/">Peter Zotov</a> released <a href="https://github.com/inossidabile/heimdallr">Heimdallr</a> – gem allowing to control models&#8217; security using shiny DSL. It was an extraction from a huge API backend project where it was used to consolidate access control, ease testing and DRY controllers.</p>
+
+<p>Heimdallr was a proof-of-concept release and while I really like DSL part I never had a chance to seriously use it anywhere else. It appeared to be <strong>way</strong> too paranoid, difficult, slow and sometimes even buggy – it was so stubborn it didn&#8217;t feel Ruby way at all. But what&#8217;s even worse – it was incompatible with almost anything trying to work with ActiveRecord besides really basic interaction. Even with things like <a href="https://github.com/amatsuda/kaminari">Kaminari</a>.</p>
+
+<p>Heimdallr as a proof-of-concept could afford having technical issues. And what&#8217;s good about having technical issues is that usually they can be solved. So I decided to make a Ruby-way clone of Heimdallr propagating the same idea (with similar DSL) but with really different implementation base and ideology.</p>
+
+<p>And the first thing I fixed was the name: meet <a href="https://github.com/inossidabile/protector">Protector</a>.</p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2013/06/04/the-protector/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2013/06/04/the-protector/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    
+    
+  
+  
+  
+  
+    
+    <li class="older even">
+      <article>
+        <h1>
+          <a href="/blog/2013/04/12/vagrant-to-the-masses/">Vagrant to the masses!</a>
+        </h1>
+        <time>
+          Apr 12, 2013 | <a class='category' href='/blog/categories/hospice/'>Hospice</a>, <a class='category' href='/blog/categories/rove/'>Rove</a>, <a class='category' href='/blog/categories/sinatra/'>Sinatra</a>, <a class='category' href='/blog/categories/vagrant/'>Vagrant</a>
+        </time>
+        <p>If you ever tried to unify development environments across project teams you probably heard of <a href="http://vagrantup.com/">Vagrant</a>. It integrates into a development process like a charm and works flawlessly. The chances that you stay with that as soon as you won an epic fight against provisioning are pretty high.</p>
+
+<p><strong>But unfortunately the chances to win provisioning are not high at all.</strong></p>
+
+<blockquote><p>There are two feature-rich options for provisioning: Chef and Puppet. Hereinafter I will intend Chef (as the most popular option) whenever I say &#8220;provisioning&#8221;.</p></blockquote>
+
+<p>Setting up a virtual environment with Chef is NOT an easy task. Chef lacks centralized repository of recipes and this results into a huge mess. There are at least ten Redis recipes with different configurations for example. Top 5 Google results are outdated and will not even start. So while in general Chef is a great piece of technology, you better be a qualified DevOps with a set of ready and tested recipes to navigate nicely in its world.</p>
+
+<p>What&#8217;s for us as developers? Recently I had a chance to help with the development of something that sorts naughty provisioning out. On behalf of its author, Andrey Deryabin, let me present you <strong><a href="http://rove.io">Rove</a></strong> &mdash; the Vagrant configuration service.</p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2013/04/12/vagrant-to-the-masses/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2013/04/12/vagrant-to-the-masses/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    </ul>
+    
+  
+  
+  
+  
+    <ul class="olders">
+    <li class="older odd">
+      <article>
+        <h1>
+          <a href="/blog/2013/02/26/mastering-activeadmin/">Mastering ActiveAdmin</a>
+        </h1>
+        <time>
+          Feb 26, 2013 | <a class='category' href='/blog/categories/activeadmin/'>ActiveAdmin</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>
+        </time>
+        <p>Did you know ActiveAdmin was awesome?</p>
+
+<p>For the last 6 months I tried adapting ActiveAdmin to three projects with pretty different goals. And it was a great success for each of them. However everything comes with a price. ActiveAdmin has excellent DSL but it lacks architectural quality and feature-richness (mainly due to extremely slow development progress).</p>
+
+<p>The main goal of this post is to share my vision of administration frameworks potential we could expect. While ActiveAdmin in my opinion is the first one that finally felt the ground.</p>
+
+<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I&#8217;ll keep it short addressing main of them. After &#8220;why I think AA is the true way&#8221; introduction I&#8217;ll do a bit of interface nit-picking. And that&#8217;s probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2013/02/26/mastering-activeadmin/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2013/02/26/mastering-activeadmin/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    
+    
+  
+  
+  
+  
+    
+    <li class="older even">
+      <article>
+        <h1>
+          <a href="/blog/2013/01/18/dangers-of-turbolinks/">Dangers of Turbolinks</a>
+        </h1>
+        <time>
+          Jan 18, 2013 | <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/turbolinks/'>Turbolinks</a>
+        </time>
+        <p>Turbolinks! This &#8220;award-winning&#8221; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&#8217;s see if it really is THAT bad. And what are the reasons if it is.</p>
+
+<h3>Part 1. Well-known problems</h3>
+
+<h4>Document ready event</h4>
+
+<p>Problems don&#8217;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&#8217;s <code>ready</code> event.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span> <span class="o">-&gt;</span> <span class="nx">alert</span> <span class="s">&#39;123&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This code runs only during direct page loads. Turbolinks fetcher ignores it.</p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2013/01/18/dangers-of-turbolinks/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2013/01/18/dangers-of-turbolinks/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    </ul>
+    
+  
+  
+  
+  
+    <ul class="olders">
+    <li class="older odd">
+      <article>
+        <h1>
+          <a href="/blog/2013/01/12/redistributable-rails-applications/">Redistributable Rails applications</a>
+        </h1>
+        <time>
+          Jan 12, 2013 | <a class='category' href='/blog/categories/matrioshka/'>Matrioshka</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>
+        </time>
+        <p>Imagine you have a large Rails application that you are going to distribute. That&#8217;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
+
+<p>Clever consumer will also want to store such a &#8220;deployment&#8221; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
+
+<p><strong>How do you achieve that?</strong></p>
+
+<p>Let me share my story first. I manage two banking products: Roundbank and Smartkiosk. They are Rails applications. Every time bank wants to deploy Roundbank-based internet banking I need a way to:</p>
+
+<ol>
+<li>Get application core and create a nice new look that will match bank&#8217;s design using internal API.</li>
+<li>Extend core with the transport methods that are required to integrate with bank&#8217;s core banking platform.</li>
+<li>Support it.</li>
+</ol>
+
+
+<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that&#8217;s involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but&#8230; damn! So provocative! You remember he&#8217;s not supposed to change anything right?</p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2013/01/12/redistributable-rails-applications/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2013/01/12/redistributable-rails-applications/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    
+    
+  
+  
+  
+  
+    
+    <li class="older even">
+      <article>
+        <h1>
+          <a href="/blog/2012/11/24/rails-acceptance-tests-coverage/">Rails acceptance tests coverage</a>
+        </h1>
+        <time>
+          Nov 24, 2012 | <a class='category' href='/blog/categories/rspec/'>RSpec</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>
+        </time>
+        <p>Most of our banking products share the same architecture. We use Rails as a REST application server and <a href="http://www.joosy.ws">Joosy</a> application working at browser as a client. One of the greatest advantages we get is the ability to cover the whole Ruby implementation with the acceptance tests. We use <strong>requests</strong> specs that are <a href="https://github.com/rspec/rspec-rails#request-specs">part of RSpec Rails</a> integration. However it’s easier said then done: our remote banking app-server for instance has near 500 routes to test. And the number of active routes grows constantly.</p>
+
+<p>Managing such a great amount of routes is a real pain no matter how good you organize your specs. To solve that my colleague <a href="http://twitter.com/ImGearHead">Andrew</a> prepared a small rspec plugin handling exactly this task: counting what’s tested on your behalf.  We spent several days playing with it and increasing it’s functionality. Join us and have some fun with the <a href="https://github.com/inossidabile/rspec-routes_coverage">rspec-routes_coverage</a> gem.</p>
+
+<h3>Usage</h3>
+
+<p>Plugin will add the following stats to your basic RSpec output:</p>
+
+<p><img src="http://f.cl.ly/items/3F0G0l1J250j0a392m1O/rspec.png" alt="" /></p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2012/11/24/rails-acceptance-tests-coverage/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2012/11/24/rails-acceptance-tests-coverage/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    </ul>
+    
+  
+  
+  
+  
+    <ul class="olders">
+    <li class="older odd">
+      <article>
+        <h1>
+          <a href="/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/">Joosy: alternative approach to browser frameworks</a>
+        </h1>
+        <time>
+          Jun 04, 2012 | <a class='category' href='/blog/categories/joosy/'>Joosy</a>, <a class='category' href='/blog/categories/rest/'>REST</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>
+        </time>
+        <h3>Long story short</h3>
+
+<p>We created a new JS framework that doesn’t clone anything existing but uses slightly different approach. Joosy we call it.</p>
+
+<ul>
+<li><a href="http://www.joosy.ws">Joosy website</a></li>
+<li><a href="http://guides.joosy.ws/guides/basics/getting-started.html">Getting started guide</a></li>
+<li><a href="https://github.com/joosy/joosy">Github Repo</a></li>
+</ul>
+
+
+<h3>Real introduction</h3>
+
+<p>Ourdays even a lazy and his grandmother is doing his own JS MVC framework. The reason is simple: we really need it. The problem, on the other side, is that everyone is just cloning Backbone. There is also Knockout and Ember that went a different way. Still not enough to satisfy sophisticated audience. The problems are different. Some may dislike Handlebars. The others won’t fit general API. It’s a matter of taste after all. The options are always good if you choose between something different.</p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    
+    
+  
+  
+  
+  
+    
+    <li class="older even">
+      <article>
+        <h1>
+          <a href="/blog/2012/04/08/conventions-i-kill-you/">Conventions! I kill you!</a>
+        </h1>
+        <time>
+          Apr 08, 2012 | <a class='category' href='/blog/categories/management/'>Management</a>
+        </time>
+        <p>For the development speed and quality there are a lot of factors like motivation, management style and all that stuff. It is important indeed. But they are quite common. I’ve seen a lot of SCRUMified happy teams that spend years to create large but straightforward projects. Why is this happening over and over? The wrong points of motivation and incorrect tasks prioritization are the roots. But besides project organization these roots also have an inner reason: the conventions problem.</p>
+
+<p>To take a long story short, here are three rules I encourage you follow:</p>
+
+<ul>
+<li>If you have the requirement for a project-level convention, run away, you are doing something wrong.</li>
+<li>All the things you can not solve with the existing tools and conventions should be turned into libraries and released publicly.</li>
+<li>Release should be fair. It should be available on GitHub and you should notify the community about what you did.</li>
+</ul>
+
+
+<p>The years of “keep your code reusable” paradigm make this sound so trivially. But there’s a great difference between just organizing your code into reusable blocks (inner project conventions) and creating the open-source libraries with public promotion. The latter is the key to success.</p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2012/04/08/conventions-i-kill-you/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2012/04/08/conventions-i-kill-you/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    </ul>
+    
+  
+  
+  
+  
+    <ul class="olders">
+    <li class="older odd">
+      <article>
+        <h1>
+          <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/">Heimdallr: ORM field-level security</a>
+        </h1>
+        <time>
+          Apr 01, 2012 | <a class='category' href='/blog/categories/cancan/'>CanCan</a>, <a class='category' href='/blog/categories/heimdallr/'>Heimdallr</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/security/'>Security</a>
+        </time>
+        <p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn&#8217;t go down to fields).</p>
+
+<p>We’ve figured out something awesome to solve this issue. Meet <a href="https://github.com/roundlake/heimdallr/">Heimdallr</a> and it’s extension <a href="https://github.com/roundlake/heimdallr-resource">Heimdallr::Resource</a>. They will bring you a peace and security.</p>
+
+<h3>Heimdallr</h3>
+
+<p>Let’s start from the deeper problem investigation though. Large part of Rails projects equates security to a REST restriction. The bigger projects sometimes fall down to a model to keep code DRY. And to keep your controllers/actions number from getting wild you may fall down to fields.</p>
+
+<p><img src="http://media.tumblr.com/tumblr_m1tdm3wF8m1r9yc7i.png" alt="" /></p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    
+    
+  </div>
+  
+  
+  
+  <div style="clear:both"></div>
+  <div class="paginator">
+    
+    <div class="button">
+      <img src="/images/left_arrow.png" alt="left_arrow">
+      <a href="/blog/page/2/">Older entries</a>
+    </div>
+    
+    
+  </div>
+</div>
+          </div>
+          <div class="footer">
+            Powered by <a href="http://octopress.org">Octopress</a>; Hosted at <a href="https://github.com/inossidabile/blog">Github</a>; Stay tuned :)
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <script type="text/javascript">
+  var _gauges = _gauges || [];
+  (function() {
+    var t   = document.createElement('script');
+    t.type  = 'text/javascript';
+    t.async = true;
+    t.id    = 'gauges-tracker';
+    t.setAttribute('data-site-id', '4f707c6c613f5d6d0000003f');
+    t.src = '//secure.gaug.es/track.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(t, s);
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Matrioshka | Staal Forge]]></title>
+  <link href="http://staal.io/blog/categories/matrioshka/atom.xml" rel="self"/>
+  <link href="http://staal.io/"/>
+  <updated>2013-11-07T22:42:14+07:00</updated>
+  <id>http://staal.io/</id>
+  <author>
+    <name><![CDATA[Boris Staal]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Redistributable Rails applications]]></title>
+    <link href="http://staal.io/blog/2013/01/12/redistributable-rails-applications/"/>
+    <updated>2013-01-12T22:48:00+07:00</updated>
+    <id>http://staal.io/blog/2013/01/12/redistributable-rails-applications</id>
+    <content type="html"><![CDATA[<p>Imagine you have a large Rails application that you are going to distribute. That's might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
+
+<p>Clever consumer will also want to store such a "deployment" in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
+
+<p><strong>How do you achieve that?</strong></p>
+
+<p>Let me share my story first. I manage two banking products: Roundbank and Smartkiosk. They are Rails applications. Every time bank wants to deploy Roundbank-based internet banking I need a way to:</p>
+
+<ol>
+<li>Get application core and create a nice new look that will match bank's design using internal API.</li>
+<li>Extend core with the transport methods that are required to integrate with bank's core banking platform.</li>
+<li>Support it.</li>
+</ol>
+
+
+<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that's involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but... damn! So provocative! You remember he's not supposed to change anything right?</p>
+
+<!-- more -->
+
+
+<h3>Gems</h3>
+
+<p>The solution to the dependency management is wide-known – Ruby Gems. Gems have nice versioning system that will solve the issue. You have a Rails application – can it be a gem at the same time? Answer is yes.</p>
+
+<p>I wrote <a href="http://github.com/inossidabile/matrioshka/tree/master/lib/generators/matrioshka/templates">a tiny gem called Matrioshka</a>. It contains the set of generators that will make everything on your behalf. Following sections will describe it's internals. You can skip it safely to the end of the article to read about gem itself.</p>
+
+<p>So what exactly do we need to allow another Rails application include the whole application as a gem?</p>
+
+<h5>1. gemspec, init.rb</h5>
+
+<p>Every gem starts with a gemspec and initialization routines. You will need the following files: <code>$application.gemspec</code>, <code>lib/$application.rb</code> and <code>init.rb</code>. Here is what Roundbank contains (patched a bit :):</p>
+
+<p>```ruby
+lib = File.expand_path('../lib', <strong>FILE</strong>)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'roundbank'</p>
+
+<p>Gem::Specification.new do |gem|
+  gem.name          = 'roundbank'
+  gem.version       = Roundbank::VERSION
+  gem.authors       = ['']
+  gem.email         = ['']
+  gem.description   = %q{Write a gem description}
+  gem.summary       = %q{Write a gem summary}
+  gem.homepage      = ''
+  gem.files         = <code>git ls-files</code>.split($/)</p>
+
+<p>  gem.executables   = gem.files.grep(%r{<sup>bin/}).map{</sup> |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{<sup>(test|spec|features)/})</sup>
+  gem.require_paths = ['lib']
+end
+```</p>
+
+<p><code>ruby
+module Roundbank
+  VERSION = '0.0.1'
+end
+</code></p>
+
+<p><code>ruby
+require 'roundbank'
+</code></p>
+
+<h5>2. Models/Controllers</h5>
+
+<p>Rails has out-of-box solution called Rails Engines. All you have to do is to extend your <code>lib/$application.rb</code> a bit.</p>
+
+<p>```ruby
+require 'rails/engine'</p>
+
+<p>module Roundbank
+  VERSION = '0.0.1'</p>
+
+<p>  class Engine &lt; ::Rails::Engine
+  end
+end
+```</p>
+
+<p>Rails Engines system was created to make Rails applications extendible by gems. But it's abilities are underestimated. It will even run <code>config/initializers</code> and <code>config/environments</code> for you. In fact it will transparently include most of your project with just the following code.</p>
+
+<h5>3. I18n, autoload_path, migrations</h5>
+
+<p>Mot of your project. Excluding some options. We need to help it a bit with a clever initializer.</p>
+
+<p>```ruby
+require 'rails/engine'</p>
+
+<p>module Roundbank
+  VERSION = '0.0.1'</p>
+
+<p>  class Engine &lt; ::Rails::Engine</p>
+
+<pre><code>initializer 'matrioshka', :before =&gt; :set_autoload_paths do |app|
+  app.class.configure do
+    config.i18n.load_path += Dir[Roundbank::Engine.root.join(*%w(config locales *.{rb,yml})).to_s]
+    config.autoload_paths += %W(#{Roundbank::Engine.root.join 'lib'})
+    config.paths['db/migrate'] += Roundbank::Engine.paths['db/migrate'].existent
+  end
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>This will proxy your locales, autoloadable pathes and even migrations! Note that there is popular approach to copy migrations from gems. Two words: NO WAY. Described initializer will allow you to seamlessly run migrations from both sources. They will stay ordered.</p>
+
+<h5>4. Seeds</h5>
+
+<p>Seeds are not handled by Rails Engines too. And moreover you can't improve your situation from within your gem. However all you need to do is to extend <code>db/seeds.rb</code> of descendant project with the following line:</p>
+
+<p><code>ruby
+load Roundbank::Engine.root.join(*%w(db seeds.rb))
+</code></p>
+
+<h5>5. Gemfile</h5>
+
+<p>This is the worst part. Ruby Gems are great. However some parts of it do not hold water.</p>
+
+<p><strong>You can not use gems from git</strong></p>
+
+<p>Okay it might be a strange requirement. But did you never use it with the Bundler itself? It's extremely comfortable and useful. Are you ready to abandon it? I am not.</p>
+
+<p><strong>You can not split gems for platforms</strong></p>
+
+<p>Roundbank can work under MRI and JRuby. And it uses slightly different set of gems for different platforms. What am I supposed to do with that? There are some workarounds that invoke proper dependencies of a particular platform from within compilation hooks – don't even try those. They will not work with Bundler well. They will stay ignored for <code>:path =&gt;</code> inclusion and even <code>:git =&gt;</code> inclusion. The worst thing is that new Ruby Gems 2.0 are ought to be released. And still no progress.</p>
+
+<p>The best option I was able to come up with is to copy host project <code>Gemfile</code> to every descendant project. Put it to, say, <code>Gemfile.roundbank</code> and then require:</p>
+
+<p><code>ruby
+eval_gemfile 'Gemfile.roundbank'
+</code></p>
+
+<h5>6. Transparent initialization</h5>
+
+<p>During initial startup Rails relies on <code>Foo::Application</code> constant heavily. You might <code>grep</code> you code for that – it's everywhere. Rack setup, Environments, Initializers, .... But now that we are trying to run it in a very special way – it will fail. <code>Foo::Application</code> will not exist in inherited context. Instead of that we are supposed to configure the descendant.</p>
+
+<p>And here comes magic. During class initialization at <code>config/application.rb</code> your application instance is storead at <code>Rails.application</code> property. The final step required to make your application gem-compatible is to replace <code>Foo::Applicaton</code> with <code>Rails.application.class</code> everywhere. Here is the total list of locations you should check:</p>
+
+<p><code>
+config.ru
+Rakefile
+config/environment.rb
+config/routes.rb
+config/environments/development.rb
+config/environments/production.rb
+config/environments/test.rb
+config/initializers/secret_token.rb
+config/initializers/session_store.rb
+</code></p>
+
+<p>This replacement makes the code application-indepent. No matter what application runs it – it always uses proper instances.</p>
+
+<h5>Summary</h5>
+
+<p>As soon as these 6 steps are done – you can pack your new gem and use it from any other Rails application. At the same time host application will remain runable from itself also.</p>
+
+<p>But why do all that steps manually if <a href="https://github.com/inossidabile/matrioshka/">Matrioshka</a> can do that for you?</p>
+
+<h3>Matrioshka</h3>
+
+<p>I tested this approach at Roundbank and fell in love. To extend it to other products and automate the 5th step I created the Matrioshka gem. It will do everything for you with it's mighty generators.</p>
+
+<h5>Host Application (Gem)</h5>
+
+<p>Inject the following to your host application Gemfile:</p>
+
+<p><code>ruby
+gem 'matrioshka'
+</code></p>
+
+<p>Run Matrioshka install generator</p>
+
+<p><code>bash
+rails g matrioshka:install
+</code></p>
+
+<p>It will generate all the required additions and patches. For a typical application they will just work. However you probably should edit <code>$application.gemspec</code> to set proper meta information for your future gem.</p>
+
+<h5>Client Application (Consumer)</h5>
+
+<p>As soon as your gem is ready to rumble we can procceed to the consumer. Let's make it work within a new rails application:</p>
+
+<p><code>bash
+rails new marakash
+</code></p>
+
+<p>Add your application gem to the new Gemfile:</p>
+
+<p><code>ruby
+gem '$application'
+</code></p>
+
+<p>Run <code>bundle install</code> and then</p>
+
+<p><code>bash
+rake $application:link
+</code></p>
+
+<p>Ta-dam. You are done here. Time to party hard!</p>
+
+<p>Love.</p>
+]]></content>
+  </entry>
+  
+</feed>

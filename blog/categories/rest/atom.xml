@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: REST | Staal Forge]]></title>
+  <link href="http://staal.io/blog/categories/rest/atom.xml" rel="self"/>
+  <link href="http://staal.io/"/>
+  <updated>2013-11-07T22:42:14+07:00</updated>
+  <id>http://staal.io/</id>
+  <author>
+    <name><![CDATA[Boris Staal]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Joosy: alternative approach to browser frameworks]]></title>
+    <link href="http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/"/>
+    <updated>2012-06-04T23:42:00+07:00</updated>
+    <id>http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks</id>
+    <content type="html"><![CDATA[<h3>Long story short</h3>
+
+<p>We created a new JS framework that doesn’t clone anything existing but uses slightly different approach. Joosy we call it.</p>
+
+<ul>
+<li><a href="http://www.joosy.ws">Joosy website</a></li>
+<li><a href="http://guides.joosy.ws/guides/basics/getting-started.html">Getting started guide</a></li>
+<li><a href="https://github.com/joosy/joosy">Github Repo</a></li>
+</ul>
+
+
+<h3>Real introduction</h3>
+
+<p>Ourdays even a lazy and his grandmother is doing his own JS MVC framework. The reason is simple: we really need it. The problem, on the other side, is that everyone is just cloning Backbone. There is also Knockout and Ember that went a different way. Still not enough to satisfy sophisticated audience. The problems are different. Some may dislike Handlebars. The others won’t fit general API. It’s a matter of taste after all. The options are always good if you choose between something different.</p>
+
+<!-- more -->
+
+
+<p>Half of year ago during some of new projects we started a tiny experiment. We took generally another approach to this problem: to consider JS Framework an extension to your backend. It should not be abstracted but exactly the opposite: binded to the server side as tightly as possible. It should replace your backend’s view layer. And be the View, just a View. What you usually call “model” is just a data set binded to the template. And JS logic is simply an extension to the template that makes it sophisticated but doesn’t make it a standalone application. We used Rails as a backend.</p>
+
+<p>To make it real we had to implement all the common things Rails people are used to and properly extend them with the abilities that Rails lack. Better organization of code, new conventions for statefull environment and so on. With that we’ve reproduced forms, helpers and even the HAML everything working right in your browser.</p>
+
+<p>Now that the time has passed and some of that projects are in production, we are ready to release this experiment as a mature feature-rich framework. Called “<a href="http://www.joosy.ws/">Joosy</a>”.</p>
+
+<p>Joosy is based on View terms. Pages, Layouts, Helpers and templates. Inside, it uses <a href="http://coffeescript.org">CoffeScript</a> possibilities massively. To make Coffee better, Joosy includes awesome <a href="http://sugarjs.com">Sugar.JS</a> library that feels like ActiveSupport. So you have better language that is sweetened.</p>
+
+<p>Joosy has everything you are used to within another frameworks but with slightly another sause. It has routing, “models” with identity map, nice structure and much more. Like ActiveSupport, ActiveResource-compatible interface, background generators, preloaders, etc.</p>
+
+<p>The practice shown: it’s very easy to jump in if you are used to Rails. It either does what other claims to do: it definitely saves your time. So no matter if you need this or not, please read through “<a href="http://guides.joosy.ws/guides/basics/getting-started.html">Getting Started</a>” guide. At least we have something new to offer and it won’t be dull. And then, maybe, you’ll find a great use for it :).</p>
+
+<p>Feel free to ask any questions at Stack Overflow using <code>joosy</code> tag. I will be there :)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rails + REST: views nightmare]]></title>
+    <link href="http://staal.io/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/"/>
+    <updated>2012-03-24T20:56:00+07:00</updated>
+    <id>http://staal.io/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare</id>
+    <content type="html"><![CDATA[<p>Rails is rapidly getting more and more popular as a comfortable platform for REST services. And it really is. We do Rails in this way for quite a long time already. There is however a real problem: <strong>JSON views are unmanageable!</strong></p>
+
+<p>At first it may look like everything’s just fine. All you need is <s>love</s> <code>.to_json</code> or <a href="https://github.com/nesquena/rabl">RABL</a> is some particular cases. But then things go wild. And you start switching JSON Builders one after another.</p>
+
+<h3>The problem</h3>
+
+<p>Let’s say you have a banking service. That’s like 30 models. Each has extended CRUD endpoint (extensions are maybe 3 or 4 methods per endpoint). Each model has like 10 or 12 fields which are quite common to be large strings. And off course all that stuff is insanely linked up to like 4 or 5 levels of <code>belongs_to</code>.</p>
+
+<p>The another thing to remember is that in real life your JSON entities are not just dumps of your ActiveRecord attributes. Two very common things are conditions (whether an attribute should appear) and custom methods.</p>
+
+<p><strong>The problem is that consumer often wants unique set of fields for EVERY method among EVERY endpoint. Set of relations' fields can differ too!</strong></p>
+
+<!-- more -->
+
+
+<p>Imagine that, you have <code>Post</code> and <code>Comment</code> CRUDs. Every CRUD has 5 methods and potentially different field sets to otput. That's already 10. Also when you otput <code>Post</code> you might want to inline serialized <code>Comment</code> relation. This will give you even more potential field sets for <code>Comment</code>. Imagine potential number of field sets for deeply nested entity. And every different field set has its own conditions and custom methods. We gonna die, aren't we?</p>
+
+<h3>Life with pain</h3>
+
+<p>The first thing we came with to was to leave the RABL alone. It looks fun and effective at first but you simply can not do anything complex and custom enough with that. And in real life RABL did not really go far away from basic <code>.to_json</code>. It's a pitty but when it comes to serialization straight declaration is the best declaration. And RABL was built upon magic.</p>
+
+<p>We’ve tried a lot of different builders and finally stopped with <a href="http://github.com/rails/jbuilder">Jbuilder</a>. It’s both straightforward and allows boilerplate-less.</p>
+
+<p>But the nightmare hasn’t gone. What do you do to keep your view DRY? Use partials, right. In a very short term that gave us 10-15 partials for each model. That’s <strong>30 models * 15 partials = 450 files</strong> at your <code>app/views</code> folder. Unmanageable. Again.</p>
+
+<h3>The Presenter pattern</h3>
+
+<p>Another approach to solve this problem with better organization is the Presenter pattern. Since our views are just ruby code it’s a good step forward to fulfill it with OOP.</p>
+
+<p>``` ruby</p>
+
+<h1>example taken from http://quickleft.com/blog/presenters-as-a-solution-to-asjson-woes-in-rails-apis</h1>
+
+<p>class Api::V1::ResourcePresenter</p>
+
+<p>  attr_reader :resource</p>
+
+<p>  def initialize( resource )</p>
+
+<pre><code>@resource = resource
+</code></pre>
+
+<p>  end</p>
+
+<p>  def as_json( include_root = false )</p>
+
+<pre><code>data_hash = {
+  :attr1 =&gt; @resource.attr1,
+  :attr2 =&gt; @resource.attr2
+}
+data_hash = { :resource =&gt; data_hash } if include_root
+data_hash
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>So we reduced the number of files and grouped similar sets into the one method with parameters. It's 1-1 number of models presenters declaring sets of fields. Time to refactor around with <a href="https://github.com/jcasimir/draper">Draper</a> gem. With help of Draper, our code turns into:</p>
+
+<p>``` ruby</p>
+
+<h1>app/decorators/article_decorator.rb</h1>
+
+<p>class ArticleDecorator &lt; ApplicationDecorator
+  decorates :article</p>
+
+<p>  def the_very_important_fields_set( include_root = false )</p>
+
+<pre><code>data_hash = {
+  :attr1 =&gt; att1,
+  :attr2 =&gt; attr2
+}
+data_hash = { :resource =&gt; data_hash } if include_root
+data_hash
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>But now again we stuck into the DRY problem that was initially solved by JSON builders. It should be noted that we don’t really need to work with hashes internally. We can build our response from a set of strings using Jbuilder internally at our presenters.</p>
+
+<p>At the moment I write this Jbuilder does not allow us to inject raw JSON string into response. There is another approach to get the required result though. There is a <a href="https://github.com/rails/jbuilder/pull/23">nice fork</a> (pull request was approved so this is expected to be supported by Jbuilder very soon).</p>
+
+<p>With help of this fork we can turn our presenter into following:</p>
+
+<p>``` ruby</p>
+
+<h1>app/decorators/article_decorator.rb</h1>
+
+<p>class ArticleDecorator &lt; ApplicationDecorator
+  decorates :article</p>
+
+<p>  def the_very_important_fields_set( include_root = false )</p>
+
+<pre><code>data = Jbuilder.encode do |j|
+  j.(self, :attr1, :attr2)
+end
+data = { :resource =&gt; data } if include_root
+</code></pre>
+
+<p>  end</p>
+
+<p>  def another_set</p>
+
+<pre><code>Jbuilder.encode do |j|
+  j.(self, :attr1, :attr2, :attr3)
+  j.cards card.basic_fields(:include_transactions)
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>So here is the final look:</p>
+
+<p><img src="http://media.tumblr.com/tumblr_m1ebls2GWl1r9yc7i.png" alt="" /></p>
+
+<p>This strategy is expensive and useless for small services. But as soon as you start operating massive entities and large amounts of custom methods – this is the way. It makes your REST providers exact (serving minimum required amount fields), DRY and supportable.</p>
+
+<h3>Keep on reading</h3>
+
+<p>You can find some real-life experience within this post: <a href="http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice">http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice</a>. If you think it's worth trying, keep on reading :).</p>
+]]></content>
+  </entry>
+  
+</feed>

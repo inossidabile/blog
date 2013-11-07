@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: CanCan | Staal Forge]]></title>
+  <link href="http://staal.io/blog/categories/cancan/atom.xml" rel="self"/>
+  <link href="http://staal.io/"/>
+  <updated>2013-11-07T22:42:14+07:00</updated>
+  <id>http://staal.io/</id>
+  <author>
+    <name><![CDATA[Boris Staal]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Heimdallr: ORM field-level security]]></title>
+    <link href="http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security/"/>
+    <updated>2012-04-01T23:02:00+07:00</updated>
+    <id>http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security</id>
+    <content type="html"><![CDATA[<p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn't go down to fields).</p>
+
+<p>We’ve figured out something awesome to solve this issue. Meet <a href="https://github.com/roundlake/heimdallr/">Heimdallr</a> and it’s extension <a href="https://github.com/roundlake/heimdallr-resource">Heimdallr::Resource</a>. They will bring you a peace and security.</p>
+
+<h3>Heimdallr</h3>
+
+<p>Let’s start from the deeper problem investigation though. Large part of Rails projects equates security to a REST restriction. The bigger projects sometimes fall down to a model to keep code DRY. And to keep your controllers/actions number from getting wild you may fall down to fields.</p>
+
+<p><img src="http://media.tumblr.com/tumblr_m1tdm3wF8m1r9yc7i.png" alt="" /></p>
+
+<!-- more -->
+
+
+<p>For properly designed RESTful applications, 1st and 2nd levels are same. So we are left with:</p>
+
+<ol>
+<li>Entity access level</li>
+<li>Entity fields separate restrictions</li>
+</ol>
+
+
+<p>Field-level management gets more and more important while your application grows. And Github’s discreditation is a great example of what you can get if you go “fields? Who cares?..” way.</p>
+
+<p>To take a long story short, here’s what <code>Heimdallr</code> allows to define inside a model:</p>
+
+<p>```ruby
+class Article &lt; ActiveRecord::Base
+  include Heimdallr::Model</p>
+
+<p>  belongs_to :owner, :class_name => 'User'</p>
+
+<p>  restrict do |user, record|</p>
+
+<pre><code>if user.admin?
+  # Administrator or owner can do everything
+  scope :fetch
+  scope :delete
+  can [:view, :create, :update]
+else
+  # Other users can view only their own or non-classified articles...
+  scope :fetch,  -&gt; { where('owner_id = ? or secrecy_level &lt; ?', user.id, 5) }
+  scope :delete, -&gt; { where('owner_id = ?', user.id) }
+
+  # ... and see all fields except the actual security level
+  # (through owners can see everything)...
+  if record.try(:owner) == user
+    can :view
+    can :update, {
+      secrecy_level: { inclusion: { in: 0..4 } }
+    }
+  else
+    can    :view
+    cannot :view, [:secrecy_level]
+  end
+
+  # ... and can create them with certain restrictions.
+  can :create, %w(content)
+  can :create, {
+    owner_id:      user.id,
+    secrecy_level: { inclusion: { in: 0..4 } }
+  }
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>Using straightforward DSL inside your models you define both, model and field-level restrictions. <code>Heimdallr</code> will extend all required models with <code>.restrict</code> method. It will wrap your model class into the Proxy that can be used in a default manner.</p>
+
+<p><code>ruby
+Article.restrict(current_user).where(:typical =&gt; true)
+</code></p>
+
+<p>Note that an entity (second) parameter is not always available during evaluation. Therefore <strong>all the checks depending on inner fields state should be wrapped with</strong> <code>.try(:field)</code>.</p>
+
+<p>These restrictions can be used anywhere in your project. Not only in your controllers. And that’s damn important. If you try to get anything that is protected – you get an exception. This makes the behavior predictable. But it’s so uncomfortable for the views!</p>
+
+<p>To avoid this <code>Heimdallr</code> has two restriction strategies. By default it will follow the first one, explicit strategy that raises an exception. However this is how you can switch:</p>
+
+<p>```ruby
+article = Article.restrict(current_user).first
+article.protected_thing # exception!</p>
+
+<p>@article = article.implicit
+@article.protected_thing # => nil
+```</p>
+
+<h3>CanCan</h3>
+
+<p>For the most Rails projects the Security term is often an alias for the CanCan gem. While CanCan was really an epoch and it still is superb it has some problems:</p>
+
+<ul>
+<li>CanCan was designed to interfere with models as least as possible. It proposes architecture where you get your REST implementation protected but models are plain and unrestricted. By itself this plan is sometimes good and sometimes not. The fact is that it can not get to fields whatever you do.</li>
+<li>1.x branch is dead and unsupported. It has some awful bugs for complex cases with namespaces and 2.x takes so much time to appear.</li>
+</ul>
+
+
+<p>We’ve started <code>Heimdallr</code> as a tool to maintain security on a model level but it appeared that we have enough info to restrict controller among our DSL. So it took just a few moment to come up with <code>Heimdallr::Resource</code>.</p>
+
+<p>The resource part of <code>Heimdallr</code> mimics CanCan as much as possible. You still get your <code>load_and_authorize filter</code> and this is how it works:</p>
+
+<ul>
+<li>If you don’t have your :create scope defined (and therefore can not create any entity) you are considered to not be able to request new and create.</li>
+<li>If you don’t have your :update scope, you can not request edit and update.</li>
+<li>Same goes for :destroy scope.</li>
+<li>Inside your actions you get protected entities so you can’t forget explicit restrict call.</li>
+</ul>
+
+
+<p>Here is the example:</p>
+
+<p>```ruby
+class ArticlesController &lt; ApplicationController
+  include Heimdallr::Resource</p>
+
+<p>  load_and_authorize_resource</p>
+
+<p>  # or set the name explicitly:
+  #
+  # load_and_authorize_resource :resource => :article</p>
+
+<p>  # if nested:
+  #
+  # routes.rb:
+  #   resources :categories do
+  #     resources :articles
+  #   end
+  #
+  # load_and_authorize_resource :through => :category</p>
+
+<p>  def index</p>
+
+<pre><code># @articles is loaded and restricted here
+</code></pre>
+
+<p>  end</p>
+
+<p>  def create</p>
+
+<pre><code># @article is loaded and restricted here
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<h3>REST API Providers</h3>
+
+<p>I’ve started my narrative from the roots of these gems, the restriction sync between client applications and server-side REST-based APIs. Let me tell you a bit about conventions we came up with.</p>
+
+<p>Imagine you have simple role-based CRUD interface that you want to implement on a browser side. You have index/create/update/destroy REST endpoint. Restrictions give us following questions:</p>
+
+<ul>
+<li>Which entities am I able to get through index?</li>
+<li>Which entities of those are modifiable?</li>
+<li>Which entities of those are destroyable?</li>
+<li>Am I able to create a new entity?</li>
+<li>Which fields am I able to modify for one of those entities I’m able to edit?</li>
+<li>Which fields am I able to fill while creating a new entity if I’m able to?</li>
+</ul>
+
+
+<p>The first question is already addressed by <code>Heimdallr</code> itself. You get your scope and you simply can’t get anything besides what you are allowed to.</p>
+
+<p>To get further with 2nd and 3d we should use meta-magic provided by <code>Heimdallr</code> proxy:</p>
+
+<p><code>ruby
+{modifiable: @model.modifiable?, destroyable: @model.destroyable?}
+</code></p>
+
+<p><code>@model</code> is supposed to be resricted. Add this fields to your serialization and you know the capabilities of current user.</p>
+
+<h4>Am I able to create? And which fields?</h4>
+
+<p><code>new</code> method is a rare guest among REST APIs. And it’s a perfect place to determine if we are able to create entity and how exactly. Here is the code to list fields we can modify:</p>
+
+<p><code>ruby
+Article.restrictions(current_user).allowed_fields[:create]
+</code></p>
+
+<p>Within <code>Heimdallr::Resource</code> you’ll get restriction error if you can not create it at all. <code>Heimdallr</code> either defines <code>.creatable?</code> method so you can pass it on too.</p>
+
+<h4>Which fields am I able to update</h4>
+
+<p>The idea behind modification is quite the same. Just use <code>edit</code> method and <code>:update</code> keyword to retrieve fields that are accessible.</p>
+
+<p><code>ruby
+Article.restrictions(current_user).allowed_fields[:update]
+</code></p>
+
+<h3>Summary</h3>
+
+<p>Using <code>Heimdallr</code> and <code>Heimdallr::Resource</code> you can get your application protected quite well with no boilerplate. And what’s not really hot: you get amazing magic for your REST APIs. So use it and be happy. Remember, Homakov is <a href="http://homakov.blogspot.com/2012/03/egor-stop-hacking-gh.html">watching you</a>!</p>
+
+<p>ಠ_ಠ</p>
+]]></content>
+  </entry>
+  
+</feed>

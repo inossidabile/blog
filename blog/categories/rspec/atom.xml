@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: RSpec | Staal Forge]]></title>
+  <link href="http://staal.io/blog/categories/rspec/atom.xml" rel="self"/>
+  <link href="http://staal.io/"/>
+  <updated>2013-11-07T22:42:14+07:00</updated>
+  <id>http://staal.io/</id>
+  <author>
+    <name><![CDATA[Boris Staal]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails acceptance tests coverage]]></title>
+    <link href="http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage/"/>
+    <updated>2012-11-24T23:52:00+07:00</updated>
+    <id>http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage</id>
+    <content type="html"><![CDATA[<p>Most of our banking products share the same architecture. We use Rails as a REST application server and <a href="http://www.joosy.ws">Joosy</a> application working at browser as a client. One of the greatest advantages we get is the ability to cover the whole Ruby implementation with the acceptance tests. We use <strong>requests</strong> specs that are <a href="https://github.com/rspec/rspec-rails#request-specs">part of RSpec Rails</a> integration. However it’s easier said then done: our remote banking app-server for instance has near 500 routes to test. And the number of active routes grows constantly.</p>
+
+<p>Managing such a great amount of routes is a real pain no matter how good you organize your specs. To solve that my colleague <a href="http://twitter.com/ImGearHead">Andrew</a> prepared a small rspec plugin handling exactly this task: counting what’s tested on your behalf.  We spent several days playing with it and increasing it’s functionality. Join us and have some fun with the <a href="https://github.com/inossidabile/rspec-routes_coverage">rspec-routes_coverage</a> gem.</p>
+
+<h3>Usage</h3>
+
+<p>Plugin will add the following stats to your basic RSpec output:</p>
+
+<p><img src="http://f.cl.ly/items/3F0G0l1J250j0a392m1O/rspec.png" alt="" /></p>
+
+<!-- more -->
+
+
+<p>First line is for the total number of routes you consider “actual”. By default gem will harvest all the routes your application possess. As soon as you don’t want to test some of them you can use the following code to improve the situation:</p>
+
+<p>```ruby
+RSpec.configure do |config|
+  config.routes_coverage.exclude_namespaces = %w(back)
+  config.routes_coverage.exclude_routes = [</p>
+
+<pre><code>/^\/$/,
+/^POST \/sessions/
+</code></pre>
+
+<p>  ]
+end
+```</p>
+
+<p>Second line is for the number of “manually-marked-as-tested” routes. At first sight it may seem that as soon as your route got a request it can be considered tested. But sometimes it’s not. To give you some control over the situation plugin introduces the <code>describe_request</code> helper. Use it instead of RSpec’s <code>describe</code> passing in the route you want to mark as checked. Here is the tiny sample:</p>
+
+<p>```ruby
+require 'spec_helper'</p>
+
+<p>describe ItemsController do</p>
+
+<p>  describe_request :index, request_path: '/items', method: 'GET' do</p>
+
+<pre><code>it 'lists items' do
+  get '/items'
+  # ...
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  # another style:
+  describe_request 'GET /items/:id' do</p>
+
+<pre><code>it 'shows item' do
+  get "/items/#{Item.first.id}"
+  # ...
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>end
+```</p>
+
+<p>The third line contains the counter of routes that received at least one HTTP request.</p>
+
+<p>And the final line shows you the amount of routes that were not tested in any way. So get ‘em and test ‘em!</p>
+
+<h3>Verbosity</h3>
+
+<p>The default output (see the screenshot) will appear at any RSpec call to provide the basic summary. However you definitely require the ability to list routes of each category. To go deeper use the <code>LIST_ROUTES_COVERAGE=true</code> option. Also you can use the Rake helper that we prepared for you:</p>
+
+<p><code>sh
+rake spec:requests:coverage
+</code></p>
+
+<h3>Workflow</h3>
+
+<p>The resulting workflow could look the following way:</p>
+
+<ul>
+<li>Include Gem</li>
+<li>Exclude useless routes</li>
+<li>Write tests using list of pending routes to cover it all</li>
+<li>Wrap your tests into describe_request blocks to mark specs as manually checked</li>
+<li>Start “green acceptance” party</li>
+</ul>
+
+
+<p>Enjoy! :)</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Boris Staal">
+  
+  <meta name="description" content="&larr; Back to entries Conventions! I kill you! Apr 08, 2012 | Management For the development speed and quality there are a lot of factors like &hellip;">
+  
+  
+  <link rel="canonical" href="http://staal.io/blog/2012/04/08/conventions-i-kill-you/">
+  <link href="/favicon.ico" rel="icon">
+  <link href="/stylesheets/screen.css" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr.js"></script>
+  <script src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/application.js"></script>
+  <link href="/atom.xml" rel="alternate" title="Staal Forge" type="application/atom+xml">
+  <title>Conventions! I kill you! - Staal Forge</title>
+</head>
+<body>
+  <table class="layoutTable" cellspacing="0" cellpadding="0">
+    <tbody>
+      <tr>
+        <td class="layoutSidebar" >
+          <div class="sidebar">
+            <div class="content">
+              <div class="about">
+                <a href="/"><img src="/images/bs_ava.png" alt="Boris Staal"></a>
+                <h1><a href="/">Boris Staal</a></h1>
+                <h2>About me</h2>
+                <p>
+                  I'm Boris Staal, the enterpreneur geek ಠ_ಠ.
+                  I do open-source and make ppl smile ^_^.
+                </p>
+              </div>
+              <div class="follow">
+                <a href="https://twitter.com/_inossidabile"><img src="/images/s_twitter.png" alt="Boris Staal"></a>
+                <a href="http://facebook.com/boris.staal"><img src="/images/s_facebook.png" alt="Boris Staal"></a>
+                <a href="http://github.com/inossidabile"><img src="/images/s_cat.png" alt="Boris Staal"></a>
+                <a href="skype://inossidabile."><img src="/images/s_skype.png" alt="Boris Staal"></a>
+              </div>
+              <div class="projects">
+                <h2>Projects I'm part of:</h2>
+                <div class="list">
+                  <div class="project joosy">
+                    <a href="http://joosy.ws">Joosy</a>
+                    <p>Rails-flavored browser applications framework</p>
+                  </div>
+                  <div class="project roundbank">
+                    <a href="https://github.com/roundbank">Roundbank</a>
+                    <p>Open-source internet banking platform</p>
+                  </div>
+                  <div class="project smartkiosk">
+                    <a href="https://github.com/smartkiosk">Smartkiosk</a>
+                    <p>Open-source kiosk platform</p>
+                  </div>
+                  <div class="project rove">
+                    <a href="http://rove.io">Rove.io</a>
+                    <p>Service that allows you to pregenerate typical Vagrant builds</p>
+                  </div>
+                  <div class="project heimdallr">
+                    <a href="https://github.com/roundlake/heimdallr">Protector</a>
+                    <p>Comfortable white-list security restrictions for ORMs on a field level</p>
+                  </div>
+                  <div class="project wash_out">
+                    <a href="https://github.com/inossidabile/wash_out">WashOut</a>
+                    <p>Rails 3 SOAP server library</p>
+                  </div>
+                  <div class="project codo">
+                    <a href="https://github.com/coffeedoc/codo">Codo</a>
+                    <p>CoffeeScript API documentation generator</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="layoutContent">
+          <div class="header">
+            <ul>
+              <li 
+                
+                >
+                <a href="/">Blog</a>
+              </li>
+              <li
+                
+                >
+                <a href="/blog/archives">Archives</a>
+              </li>
+            </ul>
+          </div>
+          <div class="content">
+            <div class="post">
+  <div class="button">
+    <span>&larr;</span>
+    <a href="/">Back to entries</a>
+  </div>
+
+  <article>
+    <h1>Conventions! I kill you!</h1>
+    <time>Apr 08, 2012 | <a class='category' href='/blog/categories/management/'>Management</a></time>
+    <p>For the development speed and quality there are a lot of factors like motivation, management style and all that stuff. It is important indeed. But they are quite common. I’ve seen a lot of SCRUMified happy teams that spend years to create large but straightforward projects. Why is this happening over and over? The wrong points of motivation and incorrect tasks prioritization are the roots. But besides project organization these roots also have an inner reason: the conventions problem.</p>
+
+<p>To take a long story short, here are three rules I encourage you follow:</p>
+
+<ul>
+<li>If you have the requirement for a project-level convention, run away, you are doing something wrong.</li>
+<li>All the things you can not solve with the existing tools and conventions should be turned into libraries and released publicly.</li>
+<li>Release should be fair. It should be available on GitHub and you should notify the community about what you did.</li>
+</ul>
+
+
+<p>The years of “keep your code reusable” paradigm make this sound so trivially. But there’s a great difference between just organizing your code into reusable blocks (inner project conventions) and creating the open-source libraries with public promotion. The latter is the key to success.</p>
+
+<!-- more -->
+
+
+<p>For the years new projects start from the same thing: we come up with coding style conventions and basic rules about how we are going to do what we have to do. Modern times improved that approach bringing us a ready set of conventions from your framework or even language. Let’s take the Rails framework as a baseline since it is well known for its “conventions over configuration” propaganda. So it appeared that conventions help you avoid thinking and concentrate on development.</p>
+
+<p>Great! Now we start quickly and go deep into the problem we solve. While the project grows we meet the problem that framework doesn’t address. We search for extensions and what happens if there’s nothing that can help us? No probs, we address it ourselves and create new inner project “convention”. Yay! Code is DRY and everyone’s happy.</p>
+
+<p>I tell you something provocative but that won’t allow your project turn into a mess.</p>
+
+<h4>If you have the requirement for a project-level convention, run away, you are doing something wrong.</h4>
+
+<p>No matter how motivated and experienced your team is, the conventions of a project will never match conventions of a framework or its’ extensions. The reason is simple: there’s no community pressure. The deadline is scary. We come up with concessions and do only something we have a reason to do. There’s totally no need in updating conventions description. They just work. Everyone on the team is familiar. There’s nothing that can harm. But…</p>
+
+<ol>
+<li>Newcomers. The project team can change. The worst part is not even the fact newcomers will spend time trying to learn your custom conventions. The problem is that they can get them wrong. If your convention is not documented and covered with samples enough people will distort it.</li>
+<li>Project went to a hold/slow/support state. And you start another one. And suddenly discover you need something similar. You just need to adapt it a bit. The chances you don’t remember your own solution well enough are very high. The chances you’ll need to modify it a bit to adapt are even higher. Together with convention distortion this leads to the only option: fork it.</li>
+</ol>
+
+
+<p>Fork will break the main idea, the code portability and independency. And it will greatly increase support costs. So to avoid ending up like this we can add another rule:</p>
+
+<h4>All the things you can not solve with the existing tools and conventions should be turned into libraries and released publicly.</h4>
+
+<p>Sit, relax and try to come up with a solution to your problem like it was typical. Forget about your project. Library is your project for now. You should try to address problems that are out your project’s problem but are neighbors of that.</p>
+
+<p>As soon as you encourage this rule your development process will be split into two parts:</p>
+
+<ul>
+<li>Thinking part. You decide which dependencies you need. If you don’t have some of them you spend time creating them as external dependencies.</li>
+<li>NEVER decide on anything inside a project. If you don’t have a ready answer, you go to Thinking Part.</li>
+</ul>
+
+
+<p>But the quality of the solution you get is just a first step. The main problem is still the lack of motivation to provide the support and develop your solution properly. Here comes the open-source.</p>
+
+<h4>Release should be fair. It should be available on GitHub and you should notify the community about what you did.</h4>
+
+<p>If you were not able to find the correct solution among existing you are 100% to not be alone. Help people and they will help you back. With the pressure to keep your library organized.</p>
+
+<p>Open-Source miracle is greatly underestimated in large companies. The classical benefits are the brand popularization and community cooperation. And the truth is that you get those only for successful libraries that are required by a large amount of people. Which simply is not true for a typical problem you address within your projects day-to-day. However open-sourcing has another incredible benefit, it pushes your team to care. Even 2 or 3 other consumers of your library will make your team work on it, support it and make it fresh, easy to learn and use in new projects.</p>
+
+<p>So you should not only perceive your problem as a separate from your project. You should release it to a GitHub and shout everywhere: “I did a cute thing! This is no more a problem!”. Sometimes people will poke you into a nicer alternative which is good too: you still can drop your bicycle and use the right solution inside your project.</p>
+
+<h3>So what do you finally get?</h3>
+
+<p>You get a set of nicely described libraries/framework dependencies which address exact problems. Newcomers can easily learn those and you can reuse it completely (no cheating) inside your new projects.</p>
+
+<p>On the other side you get slim and VERY simple projects that only consist of a project-level business-logic. They are so easy and cheap to maintain.</p>
+
+<p>Your people grow their names and experience. No training can replace live experience with community. And you should know your organization is just your team. Always.</p>
+
+<p>I really like pictures. So I drawn this thing:</p>
+
+<p><img src="http://media.tumblr.com/tumblr_m25z70HE9e1r9yc7i.png" alt="" /></p>
+
+<p>Print it out and pin to your wall. I will make you one step closer to a great maintainable result among projects you create.</p>
+
+<h3>P.S. Following this rules we’ve created:</h3>
+
+<ul>
+<li><a href="https://github.com/inossidabile/wash_out">WashOut</a> (116 followers)</li>
+<li><a href="https://github.com/roundlake/heimdallr">Heimdallr</a> (76 followers)</li>
+<li><a href="https://github.com/inossidabile/styx">Styx</a> (17 followers)</li>
+<li><a href="https://github.com/inossidabile/hashbang">Hashbang</a> (15 followers)</li>
+<li><a href="https://github.com/joosy/joosy">Joosy</a> (276 followers)</li>
+</ul>
+
+
+<p>Every project on this list got at least on issue. Half of them even got pull request. Even the simplest and craziest ideas appear to be required by society. Be the part of it, don’t miss your chance.</p>
+
+  </article>
+
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'staalforge';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://staal.io/blog/2012/04/08/conventions-i-kill-you/';
+        var disqus_url = 'http://staal.io/blog/2012/04/08/conventions-i-kill-you/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+  
+    <section class="comments">
+      <div id="disqus_thread" aria-live="polite"></div>
+    </section>
+  
+</div>
+
+          </div>
+          <div class="footer">
+            Powered by <a href="http://octopress.org">Octopress</a>; Hosted at <a href="https://github.com/inossidabile/blog">Github</a>; Stay tuned :)
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <script type="text/javascript">
+  var _gauges = _gauges || [];
+  (function() {
+    var t   = document.createElement('script');
+    t.type  = 'text/javascript';
+    t.async = true;
+    t.id    = 'gauges-tracker';
+    t.setAttribute('data-site-id', '4f707c6c613f5d6d0000003f');
+    t.src = '//secure.gaug.es/track.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(t, s);
+  })();
+  </script>
+</body>
+</html>
