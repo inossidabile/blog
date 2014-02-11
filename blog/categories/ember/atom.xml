@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ember | Staal Forge]]></title>
   <link href="http://staal.io/blog/categories/ember/atom.xml" rel="self"/>
   <link href="http://staal.io/"/>
-  <updated>2014-02-12T00:06:08+07:00</updated>
+  <updated>2014-02-12T00:22:22+07:00</updated>
   <id>http://staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
@@ -271,7 +271,7 @@ output.appendChild(a);
 <p>The last step to bright future is the reverse binding. Automatically changing the fields of objects during the modifications of form fields. Having all our experience it&rsquo;s a piece of cake. Angular and Ember having declarative templates simply add another attribute specifying which field should be mapped:</p>
 
 <p><code>html
-&lt;input ng-model='entity.field'&gt;                      &lt;!-- Angular --&gt;
+&lt;input ng-model='entity.field'&gt; &lt;!-- Angular --&gt;
 {{input value=entity.field}}    &lt;!-- Ember --&gt;
 </code></p>
 
