@@ -237,7 +237,7 @@ I don't think it's a proper solution as well but at least it works. We are curre
 The last step to bright future is the reverse binding. Automatically changing the fields of objects during the modifications of form fields. Having all our experience it's a piece of cake. Angular and Ember having declarative templates simply add another attribute specifying which field should be mapped:
 
 ```html
-<input ng-model='entity.field'>                      <!-- Angular -->
+<input ng-model='entity.field'> <!-- Angular -->
 {% raw %}{{input value=entity.field}}{% endraw %}    <!-- Ember -->
 ```
 
