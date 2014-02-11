@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RSpec | Staal Forge]]></title>
   <link href="http://staal.io/blog/categories/rspec/atom.xml" rel="self"/>
   <link href="http://staal.io/"/>
-  <updated>2013-11-07T22:42:14+07:00</updated>
+  <updated>2014-02-12T00:06:08+07:00</updated>
   <id>http://staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
@@ -49,11 +49,11 @@ end
 <p>Second line is for the number of “manually-marked-as-tested” routes. At first sight it may seem that as soon as your route got a request it can be considered tested. But sometimes it’s not. To give you some control over the situation plugin introduces the <code>describe_request</code> helper. Use it instead of RSpec’s <code>describe</code> passing in the route you want to mark as checked. Here is the tiny sample:</p>
 
 <p>```ruby
-require 'spec_helper'</p>
+require &lsquo;spec_helper&rsquo;</p>
 
 <p>describe ItemsController do</p>
 
-<p>  describe_request :index, request_path: '/items', method: 'GET' do</p>
+<p>  describe_request :index, request_path: &lsquo;/items&rsquo;, method: &lsquo;GET&rsquo; do</p>
 
 <pre><code>it 'lists items' do
   get '/items'
@@ -64,7 +64,7 @@ end
 <p>  end</p>
 
 <p>  # another style:
-  describe_request 'GET /items/:id' do</p>
+  describe_request &lsquo;GET /items/:id&rsquo; do</p>
 
 <pre><code>it 'shows item' do
   get "/items/#{Item.first.id}"

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Rails | Staal Forge]]></title>
   <link href="http://staal.io/blog/categories/rails/atom.xml" rel="self"/>
   <link href="http://staal.io/"/>
-  <updated>2013-11-07T22:42:14+07:00</updated>
+  <updated>2014-02-12T00:06:08+07:00</updated>
   <id>http://staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
@@ -24,7 +24,7 @@
 
 <p>The main goal of this post is to share my vision of administration frameworks potential we could expect. While ActiveAdmin in my opinion is the first one that finally felt the ground.</p>
 
-<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I'll keep it short addressing main of them. After "why I think AA is the true way" introduction I'll do a bit of interface nit-picking. And that's probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
+<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I&rsquo;ll keep it short addressing main of them. After &ldquo;why I think AA is the true way&rdquo; introduction I&rsquo;ll do a bit of interface nit-picking. And that&rsquo;s probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
 
 <!-- more -->
 
@@ -52,27 +52,27 @@
 
 <p><strong>And this is exactly what AA does.</strong> Unlike everything else. Yes I do really believe ActiveAdmin is the only available tool that at least formulated the goal correctly.</p>
 
-<p>Okay, to the solution. Ruby is a perfect language to express such a DSL. In fact having tiny DSLs for particular task is so Rubyish. And so awesome. What's more awesome is that AA uses popular gems exposing those DSLs within it's own. So there are not so many things you should learn about new specific language – most of them are already very likely to be familiar.</p>
+<p>Okay, to the solution. Ruby is a perfect language to express such a DSL. In fact having tiny DSLs for particular task is so Rubyish. And so awesome. What&rsquo;s more awesome is that AA uses popular gems exposing those DSLs within it&rsquo;s own. So there are not so many things you should learn about new specific language – most of them are already very likely to be familiar.</p>
 
-<p>Unfortunately this is where the success stops. Correct formulation leads to correct paper solution (at least visually). But the quality and the result depend on implementation heavily. At the moment I'm writing this AA does not follow it's own conventions within it's architecture which is sad... But you are reading this to go deeper right? Let's try to change something about it or find another way out.</p>
+<p>Unfortunately this is where the success stops. Correct formulation leads to correct paper solution (at least visually). But the quality and the result depend on implementation heavily. At the moment I&rsquo;m writing this AA does not follow it&rsquo;s own conventions within it&rsquo;s architecture which is sad&hellip; But you are reading this to go deeper right? Let&rsquo;s try to change something about it or find another way out.</p>
 
 <h3>In reality things go wild</h3>
 
 <p>One of the worst parts of ActiveAdmin is the way it is supported. We all are in debt of open-source. And especially those strong people that lead projects like ActiveAdmin. But this particular task requires constant attention to make a perfect brilliant from a rough diamond. Did you remember I told the default process had to be at its best?</p>
 
-<p>I've gathered all the recipes described below into one repo: <a href="https://github.com/inossidabile/mastering_aa">https://github.com/inossidabile/mastering_aa</a>. Download and start it go live. Note that sometimes I intentionally put patches to the places that are not semantically suitable for them (like <code>config/initializers/active_admin</code> folder) to ease grouping. Consider regrouping of that code for a real project.</p>
+<p>I&rsquo;ve gathered all the recipes described below into one repo: <a href="https://github.com/inossidabile/mastering_aa">https://github.com/inossidabile/mastering_aa</a>. Download and start it go live. Note that sometimes I intentionally put patches to the places that are not semantically suitable for them (like <code>config/initializers/active_admin</code> folder) to ease grouping. Consider regrouping of that code for a real project.</p>
 
 <h4>Respect internationalization!</h4>
 
-<p>I18n and ActiveAdmin are old enemies. Main roots of that go deep into architectural bugs (and we'll discuss that later). But first thing you want to monkey-patch after AA inclusion is this: <a href="https://github.com/gregbell/active_admin/issues/1832">https://github.com/gregbell/active_admin/issues/1832</a>. Without this patch AA will break <code>has_many</code> forms for models having UTF-8 localization.</p>
+<p>I18n and ActiveAdmin are old enemies. Main roots of that go deep into architectural bugs (and we&rsquo;ll discuss that later). But first thing you want to monkey-patch after AA inclusion is this: <a href="https://github.com/gregbell/active_admin/issues/1832">https://github.com/gregbell/active_admin/issues/1832</a>. Without this patch AA will break <code>has_many</code> forms for models having UTF-8 localization.</p>
 
-<p>Here's how to fix it: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_form_builder_has_many.rb">config/initializers/active_admin/fix_form_builder_has_many.rb</a></p>
+<p>Here&rsquo;s how to fix it: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_form_builder_has_many.rb">config/initializers/active_admin/fix_form_builder_has_many.rb</a></p>
 
 <h4>Chosen</h4>
 
 <p><img src="http://f.cl.ly/items/31270T3Z3w3Y3D1K311D/chosen.png" alt="Chosen" /></p>
 
-<p>ActiveAdmin is pretty stylish isn't it? Suddenly is not when it comes to controls. AA has incredible amount of interface mistakes connected to controls. We are going to fix some of them and the first overall step is to include a <code>Chosen</code> library. What's funny - Chosen when integrated properly looks like it was initially meant for this design. It improves usability and looks so perfect. I have no idea what makes AA team ignore this fact.</p>
+<p>ActiveAdmin is pretty stylish isn&rsquo;t it? Suddenly is not when it comes to controls. AA has incredible amount of interface mistakes connected to controls. We are going to fix some of them and the first overall step is to include a <code>Chosen</code> library. What&rsquo;s funny &ndash; Chosen when integrated properly looks like it was initially meant for this design. It improves usability and looks so perfect. I have no idea what makes AA team ignore this fact.</p>
 
 <p>Here are the files required to integrate it as well:</p>
 
@@ -80,26 +80,26 @@
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/Gemfile#L17">Gemfile</a> – include chosen assets gem</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin/chosen.js.coffee">app/assets/javascripts/active_admin/chosen.js.coffee</a> – simple script that will enable Chosen for all selects we intentionally marked</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin.js#L2-L3">app/assets/javascripts/active_admin.js</a> – include our script and Chosen itself</li>
-<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/chosen.css.scss">app/assets/stylesheets/active_admin/chosen.css.scss</a> – let's style our inputs a bit</li>
-<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L13-L14">app/assets/stylesheets/active_admin.css.scss</a> - include our new styles and Chosen styles</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/chosen.css.scss">app/assets/stylesheets/active_admin/chosen.css.scss</a> – let&rsquo;s style our inputs a bit</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L13-L14">app/assets/stylesheets/active_admin.css.scss</a> &ndash; include our new styles and Chosen styles</li>
 </ol>
 
 
-<p>That's it. The only thing that is left is to mark required selects with <code>chosen</code> HTML class. There are several ways to do that. You can add <code>:input_html_options =&gt; { :class =&gt; 'chosen' }</code> to every select you write. Or you can patch input generation class. I really like Chosen look (and also I'm so lazy) so the latter is definitely a way I recommend: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/chosen.rb">config/initializers/active_admin/chosen.rb</a>.</p>
+<p>That&rsquo;s it. The only thing that is left is to mark required selects with <code>chosen</code> HTML class. There are several ways to do that. You can add <code>:input_html_options =&gt; { :class =&gt; 'chosen' }</code> to every select you write. Or you can patch input generation class. I really like Chosen look (and also I&rsquo;m so lazy) so the latter is definitely a way I recommend: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/chosen.rb">config/initializers/active_admin/chosen.rb</a>.</p>
 
 <h4>Numeric range filter</h4>
 
 <p><img src="http://f.cl.ly/items/2l40221S3N0L3E0O3F1w/numeric_range.png" class="liquid" /></p>
 
-<p>ActiveAdmin offers "more/less/equal number" comparison filter for numeric fields. This is not something you should live with. It might be more or less useful for ID navigation but come on! That's not like people are used to navigate through numbers.</p>
+<p>ActiveAdmin offers &ldquo;more/less/equal number&rdquo; comparison filter for numeric fields. This is not something you should live with. It might be more or less useful for ID navigation but come on! That&rsquo;s not like people are used to navigate through numbers.</p>
 
-<p>The more typical interface is a range. If you want "more then" you fill in the left field. Otherwise you fill the right one. And what's more important you can find values that are in between.</p>
+<p>The more typical interface is a range. If you want &ldquo;more then&rdquo; you fill in the left field. Otherwise you fill the right one. And what&rsquo;s more important you can find values that are in between.</p>
 
-<p>ActiveAdmin has similar interface for dates but still no luck for numbers. Let's fix it:</p>
+<p>ActiveAdmin has similar interface for dates but still no luck for numbers. Let&rsquo;s fix it:</p>
 
 <ol>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/filter_numeric_range_input.rb">config/initializers/active_admin/filter_numeric_range_input.rb</a> – filter implementation</li>
-<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/numeric_range.css.scss">app/assets/stylesheets/active_admin/numeric_range.css.scss</a> - nifty styling</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/numeric_range.css.scss">app/assets/stylesheets/active_admin/numeric_range.css.scss</a> &ndash; nifty styling</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L15">ap/assets/stylesheets/active_admin.css.scss</a> – include our new styles</li>
 </ol>
 
@@ -117,9 +117,9 @@ end
 
 <p><img src="http://f.cl.ly/items/1P35390h3Q1n1i3j1B3m/multiple_selects.png" class="liquid" /></p>
 
-<p>Another serious issue with controls of ActiveAdmin are check boxes. Creating and styling multiple selections (and especially multiple select filters) is a huge pain. It's more or less affordable for cases with 5-6 elements to choose from. But hey, it's not how things work again.</p>
+<p>Another serious issue with controls of ActiveAdmin are check boxes. Creating and styling multiple selections (and especially multiple select filters) is a huge pain. It&rsquo;s more or less affordable for cases with 5-6 elements to choose from. But hey, it&rsquo;s not how things work again.</p>
 
-<p>Fortunately we are already saved by Chosen and it's incredible multiple select mode (see the screenshot – it does rock hard). Note that Chosen has in-line search that allows you to navigate through associations so easily. Even through hundreds of them.</p>
+<p>Fortunately we are already saved by Chosen and it&rsquo;s incredible multiple select mode (see the screenshot – it does rock hard). Note that Chosen has in-line search that allows you to navigate through associations so easily. Even through hundreds of them.</p>
 
 <p>Within your forms you can use <code>:input_html_options =&gt; {:multiple =&gt; true}</code> but filters require some magic to start working. I have this magic for you:</p>
 
@@ -150,7 +150,7 @@ end
 <ol>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/sortable_forms.rb">config/initializers/active_admin/sortable_forms.rb</a> – the patch itself</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/sortable_forms.css.scss">app/assets/stylesheets/active_admin/sortable_forms.css.scss</a> – a bit of styles</li>
-<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L16">app/assets/stylesheets/active_admin.css.scss</a> – don't forget to include new styles</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L16">app/assets/stylesheets/active_admin.css.scss</a> – don&rsquo;t forget to include new styles</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin/sortable_forms.js.coffee">app/assets/javascripts/acitve_admin/sortable_forms.js.coffee</a> – and a pinch of Javascript</li>
 </ol>
 
@@ -172,7 +172,7 @@ end
 
 <h4>DateTime searches</h4>
 
-<p>To finalize our hackety session let's improve the way AA seeks through <code>datetime</code> fields. The filter itself looks like a range. And a range is supposed to contain the value of right field by default. But what happens if date was given and the column is of a <code>datetime</code> type? It cuts it to <code>00:00:00</code>. And the last day does not get included into the result set. This annoyed me long enough to patch it the following way:</p>
+<p>To finalize our hackety session let&rsquo;s improve the way AA seeks through <code>datetime</code> fields. The filter itself looks like a range. And a range is supposed to contain the value of right field by default. But what happens if date was given and the column is of a <code>datetime</code> type? It cuts it to <code>00:00:00</code>. And the last day does not get included into the result set. This annoyed me long enough to patch it the following way:</p>
 
 <ol>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_resource_controller.rb">config/initializers/active_admin/fix_resource_controller.rb</a></li>
@@ -181,15 +181,15 @@ end
 
 <h3>Bad luck of architecture</h3>
 
-<p>Alright wasn't that fun? Now let's get serious and talk about something that can't be fixed/extended so easily and fast. There are several things about ActiveAdmin that are totally wrong.</p>
+<p>Alright wasn&rsquo;t that fun? Now let&rsquo;s get serious and talk about something that can&rsquo;t be fixed/extended so easily and fast. There are several things about ActiveAdmin that are totally wrong.</p>
 
 <h4>Rails integration</h4>
 
-<p>The way ActiveAdmin bootstraps is a huge failure. I'll concentrate on two particular parts of this process and leave the rest to your imagination.</p>
+<p>The way ActiveAdmin bootstraps is a huge failure. I&rsquo;ll concentrate on two particular parts of this process and leave the rest to your imagination.</p>
 
 <h5>ActiveAdmin requires and caches content of <code>register</code> blocks</h5>
 
-<p>And that breaks I18n support for a devastating number of DSL entries. Let's assume you have the following page:</p>
+<p>And that breaks I18n support for a devastating number of DSL entries. Let&rsquo;s assume you have the following page:</p>
 
 <p><code>ruby
 ActiveAdmin.register Foo do
@@ -197,9 +197,9 @@ ActiveAdmin.register Foo do
 end
 </code></p>
 
-<p>The <code>menu</code> call will only occur on bootstrap. And we are not done yet: it's going to occur <strong>before</strong> configuration evaluation. So no matter what locale you setup at <code>application.rb</code> – it will always use <code>:en</code>. And if only <code>menu</code> was the only one... There are some attempts to fix the issue at master at the moment but they cure symptoms and not the source.</p>
+<p>The <code>menu</code> call will only occur on bootstrap. And we are not done yet: it&rsquo;s going to occur <strong>before</strong> configuration evaluation. So no matter what locale you setup at <code>application.rb</code> – it will always use <code>:en</code>. And if only <code>menu</code> was the only one&hellip; There are some attempts to fix the issue at master at the moment but they cure symptoms and not the source.</p>
 
-<p>A really long time has passed since this fundamental issue was raised. Up until now authors were solving it adding more and more places where you can use <code>proc</code> instead of fixed value. But it still can't be used anywhere.</p>
+<p>A really long time has passed since this fundamental issue was raised. Up until now authors were solving it adding more and more places where you can use <code>proc</code> instead of fixed value. But it still can&rsquo;t be used anywhere.</p>
 
 <p>At the moment the only proper solution to get around this is to add the following hack into your AA initialization code:</p>
 
@@ -210,32 +210,32 @@ ActiveAdmin.setup do |config|
   I18n.reload!
 </code></p>
 
-<p>But! The real problem is that there is no way to change locale on the fly. Even you hack AA to force correct locale usage like described above it will get cached. No mater what locale you set afterwards it will still output Russian names. At the same time forms blocks that evaluate dynamically will get binded to current locale. So you better don't even try setting locale dynamically. And that's really really sad.</p>
+<p>But! The real problem is that there is no way to change locale on the fly. Even you hack AA to force correct locale usage like described above it will get cached. No mater what locale you set afterwards it will still output Russian names. At the same time forms blocks that evaluate dynamically will get binded to current locale. So you better don&rsquo;t even try setting locale dynamically. And that&rsquo;s really really sad.</p>
 
-<h5>ActiveAdmin uses it's own require cycle</h5>
+<h5>ActiveAdmin uses it&rsquo;s own require cycle</h5>
 
-<p>For some reason that's not quite clear to me (probably historical one) AA hacks Rails integration to not use Engine Eager Loading (tm). So every time you are in development mode it duplicates Rails behavior reloading <code>admin/</code> on its own. It breaks <code>Engine</code> API and self-extending capabilities.</p>
+<p>For some reason that&rsquo;s not quite clear to me (probably historical one) AA hacks Rails integration to not use Engine Eager Loading &trade;. So every time you are in development mode it duplicates Rails behavior reloading <code>admin/</code> on its own. It breaks <code>Engine</code> API and self-extending capabilities.</p>
 
-<p>This leads to one very unpleasant specificity – it's no so easy to split parts of your Admin Panel into subgems. I mean we all love Rails engines right? It's a great way to decompose stuff. And you can't use that with ActiveAdmin for no sensible reason. That's sad again.</p>
+<p>This leads to one very unpleasant specificity – it&rsquo;s no so easy to split parts of your Admin Panel into subgems. I mean we all love Rails engines right? It&rsquo;s a great way to decompose stuff. And you can&rsquo;t use that with ActiveAdmin for no sensible reason. That&rsquo;s sad again.</p>
 
 <p>I met this weird problem working on Matrioshka and had to hardcode workaround: <a href="https://github.com/inossidabile/matrioshka/blob/master/lib/generators/matrioshka/templates/engine.rb#L17-L20">matrioshka/lib/generators/matrioshka/templats/engine.rb</a>. This is a bad way to achieve modularity but at least an existing one.</p>
 
 <h4>ARBRE buffers</h4>
 
-<p>AA does not generally follow MVC and this is win. MVC is not a holy grail: describing Administration Workflow does not require MVC in most cases. To make mixtures of logic and representation readable it introduces ARBRE – HTML Ruby DSL. Yay! It's a really nice move.</p>
+<p>AA does not generally follow MVC and this is win. MVC is not a holy grail: describing Administration Workflow does not require MVC in most cases. To make mixtures of logic and representation readable it introduces ARBRE – HTML Ruby DSL. Yay! It&rsquo;s a really nice move.</p>
 
-<p>But (I hate this word)! I mentioned earlier that ActiveAdmin plays role of meta DSL. It wraps existing gems like Formtastic and exposes them where possible. Unfortunately they don't play nice together. ARBRE and Formtatstic for example use encapsulated buffers and injecting blocks of one into another often leads to a VERY unpredictable result. Same goes to Rails helpers. Mixing those 3 together is a nightmare.</p>
+<p>But (I hate this word)! I mentioned earlier that ActiveAdmin plays role of meta DSL. It wraps existing gems like Formtastic and exposes them where possible. Unfortunately they don&rsquo;t play nice together. ARBRE and Formtatstic for example use encapsulated buffers and injecting blocks of one into another often leads to a VERY unpredictable result. Same goes to Rails helpers. Mixing those 3 together is a nightmare.</p>
 
-<p>This is the first issue that can't be solved with a fast patch. It's just something you should consider if you start doing your own ActiveAdmin implementation.</p>
+<p>This is the first issue that can&rsquo;t be solved with a fast patch. It&rsquo;s just something you should consider if you start doing your own ActiveAdmin implementation.</p>
 
 <h4>Gems isolation and update rate</h4>
 
-<p>ActiveAdmin is a Rails Engine (at least mostly). It means it works within your project namespace and you get all the gems it uses internally as a present. Doesn't look like a problem until you get in conflict. ActiveAdmin does not work with fresh CoffeeScript (1.5.0) and jQuery. If you used them – you are in trouble. Same goes to any other gem it uses and there are enough of them.</p>
+<p>ActiveAdmin is a Rails Engine (at least mostly). It means it works within your project namespace and you get all the gems it uses internally as a present. Doesn&rsquo;t look like a problem until you get in conflict. ActiveAdmin does not work with fresh CoffeeScript (1.5.0) and jQuery. If you used them – you are in trouble. Same goes to any other gem it uses and there are enough of them.</p>
 
 <p>I can see three strategies that could be used to reduce the harm of such conflicts or eliminate it completely.</p>
 
 <ol>
-<li>Update often – watching dependencies is a duty for contributors and it has to be done. At the moment ActiveAdmin is bound to a <code>metasearch</code> gem that is deprecated for a year. Year! That's not so good :(.</li>
+<li>Update often – watching dependencies is a duty for contributors and it has to be done. At the moment ActiveAdmin is bound to a <code>metasearch</code> gem that is deprecated for a year. Year! That&rsquo;s not so good :(.</li>
 <li>Keep most of integrations in separate gems. Meta DSL should have points of integration that could be used by others to swap <code>Kaminari</code> and <code>will_paginate</code>. Or at least used to modify integration plug-in separately from the huge DSL core.</li>
 <li>Do not tie to Rails the way everybody do that. Jump off the train: using <code>Engine</code> is not a right way to integrate with admin part. Being a Rack Middleware gives so much more flexibility.</li>
 </ol>
@@ -245,13 +245,13 @@ ActiveAdmin.setup do |config|
 
 <h4>Heavy framework ties</h4>
 
-<p>The last thing I want to discuss is the integration level. We all know it's evil to tie entities. But ActiveAdmin is all about ties. It ties you to Rails, ActiveRecord, zillions of gems, etc. And I'm a real fan of being framework-agnostic. I believe that we finally came pretty close to the epoch where it's Ruby what we call a framework. It has Rake as transport part, Tilt as views, Sprockets as assets etc. Rails/Sinatra/... are just controllers and skeleton. Why would you bind to them explicitly for the god sake?</p>
+<p>The last thing I want to discuss is the integration level. We all know it&rsquo;s evil to tie entities. But ActiveAdmin is all about ties. It ties you to Rails, ActiveRecord, zillions of gems, etc. And I&rsquo;m a real fan of being framework-agnostic. I believe that we finally came pretty close to the epoch where it&rsquo;s Ruby what we call a framework. It has Rake as transport part, Tilt as views, Sprockets as assets etc. Rails/Sinatra/&hellip; are just controllers and skeleton. Why would you bind to them explicitly for the god sake?</p>
 
-<p>I did already propose switching to Rack-level integration to solve gems isolation issue. This and proper modularity could make it absolutely agnostic to frameworks. Not from the start of course. But it's freedom degree will be more then enough to achieve that in nearest future. Current AA implementation makes it close to impossible.</p>
+<p>I did already propose switching to Rack-level integration to solve gems isolation issue. This and proper modularity could make it absolutely agnostic to frameworks. Not from the start of course. But it&rsquo;s freedom degree will be more then enough to achieve that in nearest future. Current AA implementation makes it close to impossible.</p>
 
-<p>There is one downside in that though. It's very likely for a common administration panel to have one or two specific scenarios that require working with controllers and native low-level MVC. Currently you just get down to Rails when you need it. If we use Rack – in theory you can end up with having different type of controllers among one application.</p>
+<p>There is one downside in that though. It&rsquo;s very likely for a common administration panel to have one or two specific scenarios that require working with controllers and native low-level MVC. Currently you just get down to Rails when you need it. If we use Rack – in theory you can end up with having different type of controllers among one application.</p>
 
-<p>But (this is the positive one)! I've already encouraged you to consider your administration panel a separate application and I still do. I can't see anything <em>that</em> bad in having Sinatra controllers for your administration panel while having Rails controllers for the other parts of your site. It's probably a matter of taste and habit.</p>
+<p>But (this is the positive one)! I&rsquo;ve already encouraged you to consider your administration panel a separate application and I still do. I can&rsquo;t see anything <em>that</em> bad in having Sinatra controllers for your administration panel while having Rails controllers for the other parts of your site. It&rsquo;s probably a matter of taste and habit.</p>
 
 <h3>Hero! Come and save me!</h3>
 
@@ -259,7 +259,7 @@ ActiveAdmin.setup do |config|
 
 <p>We really need it!</p>
 
-<p>P.S. If you are seriously considering to start such a project in MIT – I'm in.</p>
+<p>P.S. If you are seriously considering to start such a project in MIT – I&rsquo;m in.</p>
 ]]></content>
   </entry>
   
@@ -268,13 +268,13 @@ ActiveAdmin.setup do |config|
     <link href="http://staal.io/blog/2013/01/18/dangers-of-turbolinks/"/>
     <updated>2013-01-18T21:35:00+07:00</updated>
     <id>http://staal.io/blog/2013/01/18/dangers-of-turbolinks</id>
-    <content type="html"><![CDATA[<p>Turbolinks! This "award-winning" technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let's see if it really is THAT bad. And what are the reasons if it is.</p>
+    <content type="html"><![CDATA[<p>Turbolinks! This &ldquo;award-winning&rdquo; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&rsquo;s see if it really is THAT bad. And what are the reasons if it is.</p>
 
 <h3>Part 1. Well-known problems</h3>
 
 <h4>Document ready event</h4>
 
-<p>Problems don't keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document's <code>ready</code> event.</p>
+<p>Problems don&rsquo;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&rsquo;s <code>ready</code> event.</p>
 
 <p><code>coffeescript
 $ -&gt; alert '123'
@@ -289,7 +289,7 @@ $ -&gt; alert '123'
 
 <h4>Global scope does not get cleaned</h4>
 
-<p>Turbolinks clames it reduces load time due to the fact browser doesn't have to reevaluate your assets. True. But not only assets remain. The whole global scope saves a state.</p>
+<p>Turbolinks clames it reduces load time due to the fact browser doesn&rsquo;t have to reevaluate your assets. True. But not only assets remain. The whole global scope saves a state.</p>
 
 <p>Imagine we have a page with the script from previous example. Script is injected into the <code>body</code> tag. It could be i.e. some kind of external service inclusion. What happens in this case? It adds one more binding per each load. It evaluates one time for the first page, two times for second and so on. Bindings do not disappear automaticaly like before. You suddenly appear in a locked environment where nobody but you is responsible for page desctruction routines.</p>
 
@@ -299,7 +299,7 @@ $ -&gt; alert '123'
 
 <h4>Global scope does not get cleaned 2</h4>
 
-<p>The worst side-effect of this behavior however is not in bindings. They are easily catchable in particular case of <code>ready</code> event. Let's see what happens if we have heavy backbone application instead that <code>alert</code> script. Backbone applications are likely to use <code>window</code> as a global namespace to store reachable instances.</p>
+<p>The worst side-effect of this behavior however is not in bindings. They are easily catchable in particular case of <code>ready</code> event. Let&rsquo;s see what happens if we have heavy backbone application instead that <code>alert</code> script. Backbone applications are likely to use <code>window</code> as a global namespace to store reachable instances.</p>
 
 <p>We have 2 pages <strong>A</strong> and <strong>B</strong>. <strong>A</strong> is the text-only welcome page. <strong>B</strong> is the page that bootstraps backbone applicaton and therefore links it to particular DOM node. Backbone has:</p>
 
@@ -326,35 +326,35 @@ collection: -&gt; window.AppView.currentCollection ||= new AppCollection
 
 <h3>Part 3. Something you might not even think about</h3>
 
-<p>I've started studying Turbolinks from reviews. So actually when I got to it's source I was already aware of the described issues. The reason was simple – as an author of browser framework I already faced them at Joosy. And had to solve each of them at the framework level. But there's one thing at sources that shocked me like a lightning bolt.</p>
+<p>I&rsquo;ve started studying Turbolinks from reviews. So actually when I got to it&rsquo;s source I was already aware of the described issues. The reason was simple – as an author of browser framework I already faced them at Joosy. And had to solve each of them at the framework level. But there&rsquo;s one thing at sources that shocked me like a lightning bolt.</p>
 
 <p><strong>Turbolinks store DOM trees of last 10 loaded pages.</strong></p>
 
 <p>Javascript does not have a way to directly erase an object once it was created. Engine automatically destroys all instances that are not referenced from anywhere. There are two things that make it awkward:</p>
 
 <ul>
-<li>It's Javascript. Oppa-lambda-style.</li>
+<li>It&rsquo;s Javascript. Oppa-lambda-style.</li>
 <li>Nobody ever cares</li>
 </ul>
 
 
-<p>It's incredibly easy to drain all the RAM out of client with a large application. But it's affordable and, well, we can live with that since all that stuff is dead as soon as we reload a page. But thanks to Turbolinks it's no more!</p>
+<p>It&rsquo;s incredibly easy to drain all the RAM out of client with a large application. But it&rsquo;s affordable and, well, we can live with that since all that stuff is dead as soon as we reload a page. But thanks to Turbolinks it&rsquo;s no more!</p>
 
-<p>Let me explain. Your large JS application is likely to be a huge graph that's INCREDIBLY linked. It's very typical for a JS app to have mostly atomic unload. In theory even with Turbolinks, as soon as we drop the page out and load the next one we are supposed to detach the application. Dereferenced application gets collected and our RAM is free again! But Turbolinks save DOM. And DOM has bindings. And bindings reference you application. So big parts of your application survive at page reload. Therefore in practice there's a HUGE chance that Turbolinks will boost RAM usage up to 10 times.</p>
+<p>Let me explain. Your large JS application is likely to be a huge graph that&rsquo;s INCREDIBLY linked. It&rsquo;s very typical for a JS app to have mostly atomic unload. In theory even with Turbolinks, as soon as we drop the page out and load the next one we are supposed to detach the application. Dereferenced application gets collected and our RAM is free again! But Turbolinks save DOM. And DOM has bindings. And bindings reference you application. So big parts of your application survive at page reload. Therefore in practice there&rsquo;s a HUGE chance that Turbolinks will boost RAM usage up to 10 times.</p>
 
-<p>But... It's not the worst again! Turbolinks don't just store 10 last pages. They are stored for a reason. As soon as you go back – it restores your DOM. Therefore restoring your application parts. Now your application is likely to be broken – remember your botstrap has already been exectued several time for next pages. But some of bindings remain alive. How do you even debug that for god sake?</p>
+<p>But&hellip; It&rsquo;s not the worst again! Turbolinks don&rsquo;t just store 10 last pages. They are stored for a reason. As soon as you go back – it restores your DOM. Therefore restoring your application parts. Now your application is likely to be broken – remember your botstrap has already been exectued several time for next pages. But some of bindings remain alive. How do you even debug that for god sake?</p>
 
 <h3>What do you need it for?</h3>
 
-<p>Most of critics additionaly claim Turbolinks is pretty useless. It's up to you to decide: <a href="https://github.com/steveklabnik/turbolinks_test">https://github.com/steveklabnik/turbolinks_test</a>.</p>
+<p>Most of critics additionaly claim Turbolinks is pretty useless. It&rsquo;s up to you to decide: <a href="https://github.com/steveklabnik/turbolinks_test">https://github.com/steveklabnik/turbolinks_test</a>.</p>
 
-<p>There is however small advantage that Turbolinks could give you – the ability to controll page switch animation. Unfortunately it doesn't have required hooks. If you need animation – you should go use full-stack browser framework.</p>
+<p>There is however small advantage that Turbolinks could give you – the ability to controll page switch animation. Unfortunately it doesn&rsquo;t have required hooks. If you need animation – you should go use full-stack browser framework.</p>
 
 <h3>Turbolinks is the silent killer</h3>
 
-<p>Turbolinks claim that it's the successor to pjax that seamlessly works out of box. As you can see – it's not even close to that. Real problems of Turbolinks are hidden deep inside. Existing MVC frameworks like Ember or Joosy address such problems – they may use different approaches but they face them. Turbolinks silently ignore it. And if it will ever try start fighting – it will turn into another MVC framework.</p>
+<p>Turbolinks claim that it&rsquo;s the successor to pjax that seamlessly works out of box. As you can see – it&rsquo;s not even close to that. Real problems of Turbolinks are hidden deep inside. Existing MVC frameworks like Ember or Joosy address such problems – they may use different approaches but they face them. Turbolinks silently ignore it. And if it will ever try start fighting – it will turn into another MVC framework.</p>
 
-<p>Remember: with Turbolinks you might easily fix surface issues. But it's an iceberg so think twice. You have to write your code in a very special way to work with that. You are likely to have issues with legacy code. And you get almost nothing for that.</p>
+<p>Remember: with Turbolinks you might easily fix surface issues. But it&rsquo;s an iceberg so think twice. You have to write your code in a very special way to work with that. You are likely to have issues with legacy code. And you get almost nothing for that.</p>
 ]]></content>
   </entry>
   
@@ -363,22 +363,22 @@ collection: -&gt; window.AppView.currentCollection ||= new AppCollection
     <link href="http://staal.io/blog/2013/01/12/redistributable-rails-applications/"/>
     <updated>2013-01-12T22:48:00+07:00</updated>
     <id>http://staal.io/blog/2013/01/12/redistributable-rails-applications</id>
-    <content type="html"><![CDATA[<p>Imagine you have a large Rails application that you are going to distribute. That's might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
+    <content type="html"><![CDATA[<p>Imagine you have a large Rails application that you are going to distribute. That&rsquo;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
 
-<p>Clever consumer will also want to store such a "deployment" in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
+<p>Clever consumer will also want to store such a &ldquo;deployment&rdquo; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
 
 <p><strong>How do you achieve that?</strong></p>
 
 <p>Let me share my story first. I manage two banking products: Roundbank and Smartkiosk. They are Rails applications. Every time bank wants to deploy Roundbank-based internet banking I need a way to:</p>
 
 <ol>
-<li>Get application core and create a nice new look that will match bank's design using internal API.</li>
-<li>Extend core with the transport methods that are required to integrate with bank's core banking platform.</li>
-<li>Support it.</li>
+<li> Get application core and create a nice new look that will match bank&rsquo;s design using internal API.</li>
+<li> Extend core with the transport methods that are required to integrate with bank&rsquo;s core banking platform.</li>
+<li> Support it.</li>
 </ol>
 
 
-<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that's involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but... damn! So provocative! You remember he's not supposed to change anything right?</p>
+<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that&rsquo;s involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but&hellip; damn! So provocative! You remember he&rsquo;s not supposed to change anything right?</p>
 
 <!-- more -->
 
@@ -387,7 +387,7 @@ collection: -&gt; window.AppView.currentCollection ||= new AppCollection
 
 <p>The solution to the dependency management is wide-known – Ruby Gems. Gems have nice versioning system that will solve the issue. You have a Rails application – can it be a gem at the same time? Answer is yes.</p>
 
-<p>I wrote <a href="http://github.com/inossidabile/matrioshka/tree/master/lib/generators/matrioshka/templates">a tiny gem called Matrioshka</a>. It contains the set of generators that will make everything on your behalf. Following sections will describe it's internals. You can skip it safely to the end of the article to read about gem itself.</p>
+<p>I wrote <a href="http://github.com/inossidabile/matrioshka/tree/master/lib/generators/matrioshka/templates">a tiny gem called Matrioshka</a>. It contains the set of generators that will make everything on your behalf. Following sections will describe it&rsquo;s internals. You can skip it safely to the end of the article to read about gem itself.</p>
 
 <p>So what exactly do we need to allow another Rails application include the whole application as a gem?</p>
 
@@ -396,23 +396,23 @@ collection: -&gt; window.AppView.currentCollection ||= new AppCollection
 <p>Every gem starts with a gemspec and initialization routines. You will need the following files: <code>$application.gemspec</code>, <code>lib/$application.rb</code> and <code>init.rb</code>. Here is what Roundbank contains (patched a bit :):</p>
 
 <p>```ruby
-lib = File.expand_path('../lib', <strong>FILE</strong>)
+lib = File.expand_path(&lsquo;../lib&rsquo;, <strong>FILE</strong>)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'roundbank'</p>
+require &lsquo;roundbank&rsquo;</p>
 
 <p>Gem::Specification.new do |gem|
-  gem.name          = 'roundbank'
+  gem.name          = &lsquo;roundbank&rsquo;
   gem.version       = Roundbank::VERSION
-  gem.authors       = ['']
-  gem.email         = ['']
+  gem.authors       = [&lsquo;&rsquo;]
+  gem.email         = [&lsquo;&rsquo;]
   gem.description   = %q{Write a gem description}
   gem.summary       = %q{Write a gem summary}
-  gem.homepage      = ''
+  gem.homepage      = &lsquo;&rsquo;
   gem.files         = <code>git ls-files</code>.split($/)</p>
 
-<p>  gem.executables   = gem.files.grep(%r{<sup>bin/}).map{</sup> |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{<sup>(test|spec|features)/})</sup>
-  gem.require_paths = ['lib']
+<p>  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.require_paths = [&lsquo;lib&rsquo;]
 end
 ```</p>
 
@@ -431,27 +431,27 @@ require 'roundbank'
 <p>Rails has out-of-box solution called Rails Engines. All you have to do is to extend your <code>lib/$application.rb</code> a bit.</p>
 
 <p>```ruby
-require 'rails/engine'</p>
+require &lsquo;rails/engine&rsquo;</p>
 
 <p>module Roundbank
-  VERSION = '0.0.1'</p>
+  VERSION = &lsquo;0.0.1&rsquo;</p>
 
 <p>  class Engine &lt; ::Rails::Engine
   end
 end
 ```</p>
 
-<p>Rails Engines system was created to make Rails applications extendible by gems. But it's abilities are underestimated. It will even run <code>config/initializers</code> and <code>config/environments</code> for you. In fact it will transparently include most of your project with just the following code.</p>
+<p>Rails Engines system was created to make Rails applications extendible by gems. But it&rsquo;s abilities are underestimated. It will even run <code>config/initializers</code> and <code>config/environments</code> for you. In fact it will transparently include most of your project with just the following code.</p>
 
 <h5>3. I18n, autoload_path, migrations</h5>
 
 <p>Mot of your project. Excluding some options. We need to help it a bit with a clever initializer.</p>
 
 <p>```ruby
-require 'rails/engine'</p>
+require &lsquo;rails/engine&rsquo;</p>
 
 <p>module Roundbank
-  VERSION = '0.0.1'</p>
+  VERSION = &lsquo;0.0.1&rsquo;</p>
 
 <p>  class Engine &lt; ::Rails::Engine</p>
 
@@ -472,7 +472,7 @@ end
 
 <h5>4. Seeds</h5>
 
-<p>Seeds are not handled by Rails Engines too. And moreover you can't improve your situation from within your gem. However all you need to do is to extend <code>db/seeds.rb</code> of descendant project with the following line:</p>
+<p>Seeds are not handled by Rails Engines too. And moreover you can&rsquo;t improve your situation from within your gem. However all you need to do is to extend <code>db/seeds.rb</code> of descendant project with the following line:</p>
 
 <p><code>ruby
 load Roundbank::Engine.root.join(*%w(db seeds.rb))
@@ -484,11 +484,11 @@ load Roundbank::Engine.root.join(*%w(db seeds.rb))
 
 <p><strong>You can not use gems from git</strong></p>
 
-<p>Okay it might be a strange requirement. But did you never use it with the Bundler itself? It's extremely comfortable and useful. Are you ready to abandon it? I am not.</p>
+<p>Okay it might be a strange requirement. But did you never use it with the Bundler itself? It&rsquo;s extremely comfortable and useful. Are you ready to abandon it? I am not.</p>
 
 <p><strong>You can not split gems for platforms</strong></p>
 
-<p>Roundbank can work under MRI and JRuby. And it uses slightly different set of gems for different platforms. What am I supposed to do with that? There are some workarounds that invoke proper dependencies of a particular platform from within compilation hooks – don't even try those. They will not work with Bundler well. They will stay ignored for <code>:path =&gt;</code> inclusion and even <code>:git =&gt;</code> inclusion. The worst thing is that new Ruby Gems 2.0 are ought to be released. And still no progress.</p>
+<p>Roundbank can work under MRI and JRuby. And it uses slightly different set of gems for different platforms. What am I supposed to do with that? There are some workarounds that invoke proper dependencies of a particular platform from within compilation hooks – don&rsquo;t even try those. They will not work with Bundler well. They will stay ignored for <code>:path =&gt;</code> inclusion and even <code>:git =&gt;</code> inclusion. The worst thing is that new Ruby Gems 2.0 are ought to be released. And still no progress.</p>
 
 <p>The best option I was able to come up with is to copy host project <code>Gemfile</code> to every descendant project. Put it to, say, <code>Gemfile.roundbank</code> and then require:</p>
 
@@ -498,7 +498,7 @@ eval_gemfile 'Gemfile.roundbank'
 
 <h5>6. Transparent initialization</h5>
 
-<p>During initial startup Rails relies on <code>Foo::Application</code> constant heavily. You might <code>grep</code> you code for that – it's everywhere. Rack setup, Environments, Initializers, .... But now that we are trying to run it in a very special way – it will fail. <code>Foo::Application</code> will not exist in inherited context. Instead of that we are supposed to configure the descendant.</p>
+<p>During initial startup Rails relies on <code>Foo::Application</code> constant heavily. You might <code>grep</code> you code for that – it&rsquo;s everywhere. Rack setup, Environments, Initializers, &hellip;. But now that we are trying to run it in a very special way – it will fail. <code>Foo::Application</code> will not exist in inherited context. Instead of that we are supposed to configure the descendant.</p>
 
 <p>And here comes magic. During class initialization at <code>config/application.rb</code> your application instance is storead at <code>Rails.application</code> property. The final step required to make your application gem-compatible is to replace <code>Foo::Applicaton</code> with <code>Rails.application.class</code> everywhere. Here is the total list of locations you should check:</p>
 
@@ -524,7 +524,7 @@ config/initializers/session_store.rb
 
 <h3>Matrioshka</h3>
 
-<p>I tested this approach at Roundbank and fell in love. To extend it to other products and automate the 5th step I created the Matrioshka gem. It will do everything for you with it's mighty generators.</p>
+<p>I tested this approach at Roundbank and fell in love. To extend it to other products and automate the 5th step I created the Matrioshka gem. It will do everything for you with it&rsquo;s mighty generators.</p>
 
 <h5>Host Application (Gem)</h5>
 
@@ -544,7 +544,7 @@ rails g matrioshka:install
 
 <h5>Client Application (Consumer)</h5>
 
-<p>As soon as your gem is ready to rumble we can procceed to the consumer. Let's make it work within a new rails application:</p>
+<p>As soon as your gem is ready to rumble we can procceed to the consumer. Let&rsquo;s make it work within a new rails application:</p>
 
 <p><code>bash
 rails new marakash
@@ -604,11 +604,11 @@ end
 <p>Second line is for the number of “manually-marked-as-tested” routes. At first sight it may seem that as soon as your route got a request it can be considered tested. But sometimes it’s not. To give you some control over the situation plugin introduces the <code>describe_request</code> helper. Use it instead of RSpec’s <code>describe</code> passing in the route you want to mark as checked. Here is the tiny sample:</p>
 
 <p>```ruby
-require 'spec_helper'</p>
+require &lsquo;spec_helper&rsquo;</p>
 
 <p>describe ItemsController do</p>
 
-<p>  describe_request :index, request_path: '/items', method: 'GET' do</p>
+<p>  describe_request :index, request_path: &lsquo;/items&rsquo;, method: &lsquo;GET&rsquo; do</p>
 
 <pre><code>it 'lists items' do
   get '/items'
@@ -619,7 +619,7 @@ end
 <p>  end</p>
 
 <p>  # another style:
-  describe_request 'GET /items/:id' do</p>
+  describe_request &lsquo;GET /items/:id&rsquo; do</p>
 
 <pre><code>it 'shows item' do
   get "/items/#{Item.first.id}"

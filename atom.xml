@@ -4,7 +4,7 @@
   <title><![CDATA[Staal Forge]]></title>
   <link href="http://staal.io/atom.xml" rel="self"/>
   <link href="http://staal.io/"/>
-  <updated>2013-11-07T22:42:14+07:00</updated>
+  <updated>2014-02-12T00:06:08+07:00</updated>
   <id>http://staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
@@ -14,13 +14,323 @@
 
   
   <entry>
+    <title type="html"><![CDATA[2-Way Data Binding under the Microscope]]></title>
+    <link href="http://staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope/"/>
+    <updated>2014-02-05T23:43:00+07:00</updated>
+    <id>http://staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope</id>
+    <content type="html"><![CDATA[<p>2-way data binding has entrenched modern front-end development as a tool allowing you to avoid boilerplate code when working with DOM, concentrate on logic and isolate the logic from your templates. All the Angular is built around this piece of technology. Pretty big part of Ember joins that. And for the Backbone framework there are numerous extensions appearing every day. It makes a lot of sense actually: 2-way data binding is pretty awesome. However the technology has its own issues, limitations and mostly important implementation details (within different frameworks). Why not speculate about it a little bit?</p>
+
+<!-- more -->
+
+
+<h3>What is 2-way data binding after all?</h3>
+
+<p>JavaScript allows you to build interaction with a user responding to his actions with visual events. User enters some data into a form, presses &ldquo;submit&rdquo; button and a page shows loading indicator. Then (given the input contained some kind of error) invalidated fields get highlighted.</p>
+
+<p>What&rsquo;s happening behind the scenes?</p>
+
+<ul>
+<li>values of fields get stored into a variable</li>
+<li>variable gets serialized into JSON and gets sent onto server with an AJAX query</li>
+<li>DOM gets modified: loading indicator appears</li>
+<li>as soon as the request finishes we see that status is not 200, then we parse response body</li>
+<li>DOM gets modified again: loading indicator disappears, invalidated fields get highlighted</li>
+</ul>
+
+
+<p>Classical jQuery code could work similarly to this:</p>
+
+<ol>
+<li> a function gets attached to the &lsquo;click&rsquo; event of button</li>
+<li> the functon collects fields and puts them into a variable</li>
+<li> the variables gets serialized into JSON and goes to server</li>
+<li> we mark &ldquo;request in process&rdquo; state using another variable (to not react double clicks mainly)</li>
+<li> we modify DOM adding indicator</li>
+<li> as soon as the request finihes we parse response body and get invalidation data</li>
+<li> we modify DOM adding invalidation information and removing the loading indicator</li>
+</ol>
+
+
+<blockquote><p>Note that step 7 has huge risk of the encapsulation violation: we modify our view heavily. Where should this logic be? How to avoid duplication of code with something that generated the form initially? Basically it&rsquo;s the most popular place for projects to turn into mess.</p></blockquote>
+
+<p>2-way data binding lets us get rid of steps 2, 5 and 7. It also solves the issue with the encapsulation or – as it&rsquo;s trendy to think now – alows you to completely remove logic from your views.</p>
+
+<p>Given we have a variable called <code>entity</code> holding JavaScript object. Each field of the form is associated with the attribute of the object (i.e. <code>&lt;input name='name'&gt;</code> with <code>entity.name</code>). At the same time the variable can include inlined object <code>entity.errors</code> containing invalidations list (it&rsquo;s empty by default). Then if we want to invalidate field <code>entity.name</code> we are doing something similar to <code>entity.errors.name = 'The field is too short'</code>. Additionally we set <code>entity.loading</code> to <code>true</code> when our AJAX is in progress.</p>
+
+<p>To turn such object into required form we could use a template looking like this (<a href="http://underscorejs.org/#template">Underscore Template</a> notation):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="err">&lt;</span>% if (entity.errors.name) { %&gt;
+</span><span class='line'><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;error&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="err">&lt;</span>% } %&gt;
+</span><span class='line'>  <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;name&quot;</span> <span class="na">value=</span><span class="s">&quot;&lt;%= entity.name %&gt;&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="err">&lt;</span>% if (entity.errors.name) { %&gt;
+</span><span class='line'><span class="err">&lt;</span>%= entity.errors.name %&gt;
+</span><span class='line'><span class="nt">&lt;/div&gt;</span>
+</span><span class='line'><span class="err">&lt;</span>% } %&gt;
+</span><span class='line'><span class="err">&lt;</span>% if (entity.loading) { %&gt;
+</span><span class='line'>Sending form...
+</span><span class='line'><span class="err">&lt;</span>% } else {
+</span><span class='line'><span class="nt">&lt;button&gt;</span>Send!<span class="nt">&lt;/button&gt;</span>
+</span><span class='line'><span class="err">&lt;</span>% } %&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now if any change of form input automatically got delivered to <code>entity.name</code> and vice versa any change of any attribute at <code>entity</code> caused automatic refresh of DOM according to template definition – that would be the 2-way data binding. Your template completely describes the display logic corresponding to possible states. The application in its turn simply changes states.</p>
+
+<p>All we have to do now is to bind form submission to button click event and work with <code>entity</code> variable. When the server responds – we put all the validation errors into <code>entity.errors</code>. That&rsquo;s it. Much easier isn&rsquo;t it?</p>
+
+<h3>Actually no. It is not.</h3>
+
+<p>Unfortunately it is just an example. In real-life it misses a vast amount of meta-inforation that it simply can&rsquo;t work without. To make it work universally we have to solve the following problems:</p>
+
+<ul>
+<li>we have to find a way to monitor <code>entity</code> modifications recursively. You remember it&rsquo;s still plain old JavaScript right?</li>
+<li>we can&rsquo;t monitor all the modifications for all the variables and constantly redraw the whole DOM of the page. In best case it will end up being extremely slow. Otherwise it can lead to the loss of state of DOM parts. DOM should be modified as atomically as possible.</li>
+<li>even if we section our page in zones, what&rsquo;s going to happen if we need to replace the part of text content not touching its siblings? Or how do you update (including the tag itself) two <code>&lt;tr&gt;</code>s out of 10?</li>
+<li>sometimes we might want to animate automatic modifications instead of changing DOM instantly</li>
+<li>we don&rsquo;t currently have the reflection of <code>input</code> to <code>entity.name</code>. We imagined having that but how do we actually implement that? Where is this logic supposed to be situated? At the application code with <code>bind</code> or at the view itself where the reverse binding is described?</li>
+</ul>
+
+
+<p>To solve all that every framework offers its own unique solutions that add fly in the ointment to a beautiful theory. So let&rsquo;s dive in and see how 2-way data binding actually works internally and where do all those weird limitations come from?</p>
+
+<p>We are going to dig into 3 examples: <a href="http://angularjs.org">Angular</a> as a canonical sample of &ldquo;new and better HTML&rdquo;, <a href="http://emberjs.com">Ember</a> as a sample of more classical JS paradigm attached to the new tool. And certainly <a href="http://joosy.ws">Joosy</a> as a demonstration of my subjective vision of experimental 2-way data binding that doesn&rsquo;t require declarative templating language.</p>
+
+<h3>Object modifications monitoring</h3>
+
+<p>Sadly there are no good univeral ways to track objects modifications in JavaScript. All the existing solutions impose some restrictions on how you work with the object. There actually exactly two solutions: wrapping with setters/getters and external monitoring.</p>
+
+<h4>Setters/Getters (Ember, Joosy)</h4>
+
+<p>Properties working through getters and setters are the classic of programming. All the required data types get wrapped into extending classes (types) definining two methods: <code>get</code> and <code>set</code> (or two methods per property). Every call to the <code>set</code> method makes object generate &ldquo;something has changed&rdquo; event. The solution is very simple technically and for obvious reasons quite efficient. However instead of <code>entity.field = 'value'</code> you have to write <code>entity.set('field', 'value')</code>. The latter is not only less readable by a human being but also can affect some basic tools like <a href="http://www.javascriptlint.com">JavaScript Lint</a> and code highlighting.</p>
+
+<h5>Ember</h5>
+
+<p>Getters and setters are the root of Ember&rsquo;s properties system. Not only they allow to monitor object modifications but also allow you to subscribe to the modifications of particular fields. Basically it looks exactly as described:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">entity</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;field&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)</span>             <span class="c1">// Object field</span>
+</span><span class='line'><span class="nx">entity</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;field.subfield&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">)</span>    <span class="c1">// Subobject field</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On the other hand when we get to arrays (that Ember generalizes into <code>Enumerable</code>) everything gets a little bit more complicated and confusing. Now we have to additionally watch the length of array and also provide the ability to monitor changes of particular fied of every entry (Ember allows doing that using meta property called <code>@each</code>: for instance <code>@each.field</code> to monitor change of <code>field</code> for every array entry).</p>
+
+<blockquote><p>If you watch the history of how frameworks evolve you will see one funny repeating loop. Complicated frameworks a-la Rails appear, take over the market and then get split into separate independent components. Components that can be used separately. That is often used to build variety of similar frameworks based on similar technologies. Watchable objects library could be the perfect candidate to become an independent library with a separate API.</p></blockquote>
+
+<h5>Joosy</h5>
+
+<p>Getters and setters for objects work identically in Joosy. Excluding the fact that Joosy doesn&rsquo;t have inline fields monitoring. That&rsquo;s why arrays work simpler:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nv">collection = </span><span class="k">new</span> <span class="nx">Joosy</span><span class="p">.</span><span class="nx">Resources</span><span class="p">.</span><span class="nb">Array</span>
+</span><span class='line'><span class="nx">collection</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&#39;value&#39;</span><span class="p">)</span>                <span class="c1"># Index-based</span>
+</span><span class='line'><span class="nx">collection</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s">&#39;another value&#39;</span><span class="p">)</span>          <span class="c1"># Basic array actions</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Besides that Joosy mimics Ruby allowing you to additionaly define direct accessors for properties.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="k">class</span> <span class="nx">Entity</span> <span class="k">extends</span> <span class="nx">Joosy</span><span class="p">.</span><span class="nx">Resources</span><span class="p">.</span><span class="nx">Hash</span>
+</span><span class='line'>  <span class="nx">@attrAccessor</span> <span class="s">&#39;field1&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;field2&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s">&#39;subfield1&#39;</span><span class="p">,</span> <span class="s">&#39;subfield2&#39;</span><span class="p">]}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Such definition will force Joosy to create JavaScrpipt object properties with <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty"><code>defineProperty</code></a> allowing you to work with them as if they were normal attributes: <code>entity.field1</code>. Therefore you can get back to <code>entity.field1 = 'value'</code> instead of <code>entity.set('field1', 'value')</code> – these are now equal. With this you have to manually define the list of fields, yes, but you get your proper JavaScript syntax back.</p>
+
+<h4>External monitoring (Angular)</h4>
+
+<p>Angular took its own approch. Instead of attempts to catch attributes modifications from the internals of the object it introduces the global monitoring system. The famous <code>$watch</code> method that is overabused in every second Angular application.</p>
+
+<p>Angular architecture introduces &ldquo;drawing cycle&rdquo;. One of its step is the check against the list of watchers if there are any changes. Every element of the list can refer to one or more functions that are called upon every change. Such solition allows you to transparently work with any way of attributes modifications (no need to know the list of fields or use the <code>set</code> method). This however is not a silver bullet as well.</p>
+
+<ol>
+<li><p> <strong>Performance</strong></p>
+
+<p>If you used to work with Angular you probably noticed that after the particular amount of active <code>$watch</code> assignments everthing slows down critically. The more mobile your client is (and we are living in the mobile technologies epoch) the faster you get to this amount. Performance is the first payment for universalism.</p></li>
+<li><p> <strong>Non-scalars</strong></p>
+
+<p>By default the modification check is being held by reference. It means that no matter how you change your array or object Angular is not going to see the change. One of the solutions to this problem is additional mode of <code>$watch</code> that allows you to force value-based comparison. It however is even slower. The other problem is that it still might not always work with complicated structures. On the other hand it&rsquo;s not a normal case when you need to monitor something like that in Angular: its architecture tries to avoid the need to monitor non-scalar data as much as possible.</p></li>
+</ol>
+
+
+<p>Protip: try to search for <code>angular watch</code> <a href="http://stackoverflow.com/search?q=angular+watch">at StackOverflow.com</a> to understand the scale of the disaster.</p>
+
+<h3>Page sectioning</h3>
+
+<p>Now that we can catch objects modifications the time has come to decide how we segment the page. What exactly are we going to update when object changes? Clearly if we output <code>entity.name</code> field for instance – we only have to update that value and only when it&rsquo;s changed. What if we output a table in cycle though?</p>
+
+<h4>Declarative templates (Angular, Ember)</h4>
+
+<p>This is one of the reasons making Angular to have &ldquo;the other HTML&rdquo; and making Ebmer to have Handlebars. Declarative description that is being parsed by their own internal parsers provides information about contexts of the bindings.</p>
+
+<p>When we output <code>{{person.first_name}}</code>, Ember creates a region and attaches that to the updae of <code>first_name</code> field from the <code>person</code> object. Angular works similarly: <code>&lt;ng_repeat ...</code> creates a common region for the whole array and additionaly one inner region per each array element. If the array changes – the bigger region redraws. If one of the elements changes – the inner region redraws.</p>
+
+<p>The conditional declarations (<code>ng_if</code> and <code>{{if}}</code>) work in the same way. As soon as value is changed all the region redraws].</p>
+
+<blockquote><p>This by the way is one of the reasons that makes Angular recomdend to prefer <code>ng_show</code> hiding the region instead of rerendering it.</p></blockquote>
+
+<p>Devise of this approach is: &ldquo;templates should not contain logic!&rdquo;. This however looks more like a consequence than a rule. Integration of full logical language into such declarative notation would be extremely expensive. So the wolves are fed and the sheep kept safe. We don&rsquo;t need language and we achieve the ultimate theoretical goal. Isn&rsquo;t that great?</p>
+
+<p>Reality is tough though. Logic can&rsquo;t just disappear, it has to move somewhere. If it&rsquo;s not at template in any way – it should be defined somewhere as a state. It means that every little feature will add one more virtual state to your application. Loading indicators, accessibility rules, selection marks, each tiny switcher. The understanding of how serious this tax can be can come too late since you normally add tiny visual features at the very end of the project when you can&rsquo;t just switch the approach.</p>
+
+<h4>Manual sectioning (Joosy)</h4>
+
+<p>I always wanted to keep my beloved HAML (mixed <a href="https://github.com/netzpirat/haml-coffee">with CoffeeScript</a>) and at the same time to keep all the abilities of 2-way data binding. To achieve that Joosy implements manual sectioning. Instead of declarative definitions we use classical helpers. One of them for instance allows you to define dynamic region and pass it the local data that this region will watch for.</p>
+
+<p>E.g. to get the behavior similar to <code>ng_repeat</code> of Angular or to <code>each</code> of Ember you can do something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='haml'><span class='line'><span class="nt">%ul</span>
+</span><span class='line'>  <span class="p">!=</span> <span class="vi">@renderInline</span> <span class="p">{</span><span class="ss">projects</span><span class="p">:</span> <span class="vi">@projects</span><span class="p">},</span> <span class="o">-&gt;</span>
+</span><span class='line'>    <span class="p">-</span> <span class="k">for</span> <span class="n">project</span> <span class="k">in</span> <span class="vi">@projects</span>
+</span><span class='line'>      <span class="nt">%li</span><span class="p">=</span> <span class="n">project</span><span class="o">.</span><span class="n">name</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As soon as the <code>@projects</code> array or any of its elements change the modification immediately applies to DOM. Note that region watchers expressly implemented to monitor collections with all the nested values. That&rsquo;s why you only need one segment in this case.</p>
+
+<p>Besides inlining Joosy allows you to render a partial (just like in Rails) as a region. This case is even more common.</p>
+
+<p>This approach gives you ability to work with any templating language you want. Any notation is fine (Joosy currently supports any templating language compilable by JST). The other benefit is ability to control rendering manually (for instance you can bind a region to the resource that is not outputed explicitly) which might sound destructive but can be useful rarely.</p>
+
+<p>The cons of this approach are the flip side of pros. Not only you can control everything – you actually have to. No regions defined – no 2-way data binding. The other problem is the case with <em>huge</em> regions (1000 rows per table). Since Joosy registeres just one region per array, any modification will alway redraw the whole table. Even worse – you can&rsquo;t really define a region depending on a particular field. It only accepts a whole resource. This can be painfull when it comes to complicated forms.</p>
+
+<h3>Partial DOM updates</h3>
+
+<p>Now that we have sections with binding to proper local sets of objects that redraw automatically. Life is getting better. There&rsquo;s however a new problem to solve:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'>Text
+</span><span class='line'><span class="c">&lt;!-- region --&gt;</span>Another Text<span class="c">&lt;!-- /region --&gt;</span>
+</span><span class='line'>And some more text
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What if our region is not entirely a tag content and it can&rsquo;t be modified with the usage of <code>.innerHTML</code>?</p>
+
+<h4>Metamorph (Ember, Joosy)</h4>
+
+<p>Ember and Joosy are on the same page here. We wrote separate solution initialy but ended up using the library <a href="https://github.com/tomhuda/metamorph.js/">Metamorph</a> created by Ember team. And Metamorph works pretty well.</p>
+
+<p>When working in modern browsers Metamorph relies on <a href="http://www.w3.org/TR/DOM-Level-2-Traversal-Range/ranges.html">W3C Ranges</a>. For the old browsers everything gets much more interesting. Region gets wrapped into two <code>script</code> tags that, according to specification, can be part of any other tags. To update content Metamorph replaces the content between these two tags.</p>
+
+<h4>Angular</h4>
+
+<p>Since Angular&rsquo;s approach is based on the &ldquo;better HTML&rdquo; – it&rsquo;s task is a little bit different. In most cases we simply bind to a particular tag so Angular basicly doesn&rsquo;t have this problem. The only similar case it has is the interpolation. During interpolation Angular binds everything to the closest parent tag and turns it into a region. Thus Angular alway modifies only tags and attributes of tags. No magic.</p>
+
+<h4>Another interesting approach</h4>
+
+<p>There&rsquo;s one more interesting approach that I saw implemented by tiny frameworks (mostly implementing just the binding itself). This approach was also mentioned by Yehuda Katz to become a replacement for Metamorph. Instead of interpreting HTML as a text it makes you to parse it and convert it into direct DOM statements:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// Taken from: https://gist.github.com/wycats/8116673</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">output</span> <span class="o">=</span> <span class="nx">dom</span><span class="p">.</span><span class="nx">createDocumentFragment</span><span class="p">();</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">dom</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">dom</span><span class="p">.</span><span class="nx">RESOLVE_ATTR</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">a</span><span class="p">,</span> <span class="s1">&#39;href&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="nx">dom</span><span class="p">.</span><span class="nx">createTextNode</span><span class="p">();</span>
+</span><span class='line'><span class="nx">dom</span><span class="p">.</span><span class="nx">RESOLVE</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">text</span><span class="p">,</span> <span class="s1">&#39;textContent&#39;</span><span class="p">,</span> <span class="s1">&#39;link&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">a</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+</span><span class='line'><span class="nx">output</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Animations</h3>
+
+<h4>CSS-classes (Angular)</h4>
+
+<p>Since Angular always works on a tag level – it always has a container to interact with. This is a huge advantage when it comes to animations. During the modificaiton of DOM Angular sets special CSS classes to the changing tag. This allows you to easily add CSS-based transitions and animations with no additional code.</p>
+
+<p>Angular also contains additional tools allowing you to bind JS animations to particular CSS classes. Seriously, Angular is amazing when it comes to animations. Some limitations in other areas seriously simplify everything here.</p>
+
+<h4>Numerous issues (Ember, Joosy)</h4>
+
+<p>Metamorph is on the other page. Everything is much more sad – our regions are not bound to DOM in any way and it&rsquo;s unclear what should be animated during modification. There are numerous proposals for Ember syntax like <code>{{if flag transition='fade'}}</code>. However they don&rsquo;t look realistic with the current implementation of Handlebars. You simply can&rsquo;t animate random DOM region having no single root.</p>
+
+<p>You could probably explicitly pass the ID of element to animate as addition to the animation style. This however seriously breaks conventions of Ember declarative language. I&rsquo;m really excited to monitor all the discussions regarding this topic but it doesn&rsquo;t look like it&rsquo;s on the priority list of Ember right now.</p>
+
+<p>Joosy is in the similar situation here. It has a little advantage with the fact we work with JS code straightly (CoffeScript code to be more correct). That&rsquo;s why it&rsquo;s not limited to strings and can pass JS function directly. So basically we can hook into the rendering internals.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='haml'><span class='line'><span class="p">!=</span> <span class="vi">@renderInline</span> <span class="p">{</span><span class="ss">entity</span><span class="p">:</span> <span class="vi">@entity</span><span class="p">},</span> <span class="vi">@animation</span><span class="p">,</span> <span class="o">-&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I don&rsquo;t think it&rsquo;s a proper solution as well but at least it works. We are currently considering allowing you to pass in the selector and animation keyword as described before:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='haml'><span class='line'><span class="p">!=</span> <span class="vi">@renderInline</span> <span class="p">{</span><span class="ss">entity</span><span class="p">:</span> <span class="vi">@entity</span><span class="p">},</span> <span class="o">[</span><span class="s1">&#39;#selector&#39;</span><span class="p">,</span> <span class="s1">&#39;fade&#39;</span><span class="o">]</span><span class="p">,</span> <span class="o">-&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Reverse binding (inputs to fields of objects)</h3>
+
+<p>The last step to bright future is the reverse binding. Automatically changing the fields of objects during the modifications of form fields. Having all our experience it&rsquo;s a piece of cake. Angular and Ember having declarative templates simply add another attribute specifying which field should be mapped:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;input</span> <span class="na">ng-model=</span><span class="s">&#39;entity.field&#39;</span><span class="nt">&gt;</span>                      <span class="c">&lt;!-- Angular --&gt;</span>
+</span><span class='line'>{{input value=entity.field}}    <span class="c">&lt;!-- Ember --&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Joosy implements the same with set of helpers:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='haml'><span class='line'><span class="p">!=</span> <span class="vi">@formFor</span> <span class="vi">@entity</span><span class="p">,</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">-&gt;</span>
+</span><span class='line'>  <span class="p">!=</span> <span class="vi">@f</span><span class="o">.</span><span class="n">input</span> <span class="s1">&#39;field&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally we got the 2-way binding working!</p>
+
+<h3>Instead of conclusion</h3>
+
+<p>As you can see there are numerous ways to implement 2-way data binding. While declarative languages (including separate languages like Handlebars and HTML extensions) masterfully dominate, there are other options as well. None of them works perfectly though. Generally this is what all the &ldquo;modern&rdquo; tools go through and I&rsquo;m sure we will come up with more elegant ways of solving the described issues. We are still waiting for tons of exciting HTML features to get accessible and even more to be defined (like <a href="http://www.polymer-project.org/platform/node_bind.html">Node.bind()</a>).</p>
+
+<p>Be careful until we there though. 2-way data binding is an amazing tool. But the drawbacks can be essential. Make sure to discover them as soon as possible: hopefully you just got one step closer to this.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Incredibly convenient testing of front-end Javascript with Node.js]]></title>
     <link href="http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/"/>
     <updated>2013-08-17T23:28:00+07:00</updated>
     <id>http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js</id>
-    <content type="html"><![CDATA[<p>You do have automated testing for your front-end Javascript application / library / framework don&#8217;t you? And tests work equally well at console, browsers and Travis aren&#8217;t they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let&#8217;s see if we can do something about it!</p>
+    <content type="html"><![CDATA[<p>You do have automated testing for your front-end Javascript application / library / framework don&rsquo;t you? And tests work equally well at console, browsers and Travis aren&rsquo;t they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let&rsquo;s see if we can do something about it!</p>
 
-<p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here&#8217;s the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
+<p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here&rsquo;s the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
 
 <!-- more -->
 
@@ -31,46 +341,46 @@
 
 <p>When it comes to testing, the first question is &mdash; which framework are we going to use? There are numerous articles on the Internet that describe pros and cons of those. Read this for example: <a href="http://www.netmagazine.com/features/essential-javascript-top-five-testing-libraries">http://www.netmagazine.com/features/essential-javascript-top-five-testing-libraries</a>.</p>
 
-<p>I personally prefer <a href="http://pivotal.github.io/jasmine/">Jasmine</a> and <a href="http://visionmedia.github.io/mocha/">Mocha</a> (coupled with CoffeeScript and <a href="http://chaijs.com">Chai</a> they feel so much like RSpec). But it&#8217;s only a matter of taste in fact. Their capabilities are more or less equal.</p>
+<p>I personally prefer <a href="http://pivotal.github.io/jasmine/">Jasmine</a> and <a href="http://visionmedia.github.io/mocha/">Mocha</a> (coupled with CoffeeScript and <a href="http://chaijs.com">Chai</a> they feel so much like RSpec). But it&rsquo;s only a matter of taste in fact. Their capabilities are more or less equal.</p>
 
-<p>Let&#8217;s say we have a framework. Then we can manually create HTML file, include JS we want to test, open it in a browser and, well, test. It&#8217;s certainly a kind of automatic testing already but still so far away from something reasonable. And the first thing to think about is Continuous Integration. You can only run such tests manually and see the results with your eyes. No &#8220;on-commit runs&#8221;, no Travis integration. Sadness.</p>
+<p>Let&rsquo;s say we have a framework. Then we can manually create HTML file, include JS we want to test, open it in a browser and, well, test. It&rsquo;s certainly a kind of automatic testing already but still so far away from something reasonable. And the first thing to think about is Continuous Integration. You can only run such tests manually and see the results with your eyes. No &ldquo;on-commit runs&rdquo;, no Travis integration. Sadness.</p>
 
 <h4>PhantomJS</h4>
 
-<p><a href="http://phantomjs.org">Phantom</a> is a thing that solves that. It&#8217;s a headless invisible browser that you can control programmatically. Like this for example: <a href="https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js">https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js</a>. <strong>Phantom</strong> will play the role of our eyes and hands &mdash; it will open a page, check the results and pass them back to a &#8220;script runner&#8221;. The &#8220;script runner&#8221; that can run on commit or at Travis.</p>
+<p><a href="http://phantomjs.org">Phantom</a> is a thing that solves that. It&rsquo;s a headless invisible browser that you can control programmatically. Like this for example: <a href="https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js">https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js</a>. <strong>Phantom</strong> will play the role of our eyes and hands &mdash; it will open a page, check the results and pass them back to a &ldquo;script runner&rdquo;. The &ldquo;script runner&rdquo; that can run on commit or at Travis.</p>
 
 <h4>Grunt</h4>
 
 <p><img src="http://gruntjs.com/img/grunt-logo.png" style="float: right; margin-left: 10px; height: 80px"></p>
 
-<p>And the &#8220;script runner&#8221; in its turn is <a href="http://gruntjs.com">Grunt</a>. Did you use <strong>Grunt</strong> before? <a href="http://gruntjs.com/getting-started">Go and try</a> if you did not &mdash; it&#8217;s incredible. <strong>Grunt</strong> comes with <a href="https://github.com/cowboy/jquery-tiny-pubsub/">sample project</a> showing its main features. And guess what? It has testing section! The sample project uses <a href="http://qunitjs.com">QUnit</a>. Here we see:</p>
+<p>And the &ldquo;script runner&rdquo; in its turn is <a href="http://gruntjs.com">Grunt</a>. Did you use <strong>Grunt</strong> before? <a href="http://gruntjs.com/getting-started">Go and try</a> if you did not &mdash; it&rsquo;s incredible. <strong>Grunt</strong> comes with <a href="https://github.com/cowboy/jquery-tiny-pubsub/">sample project</a> showing its main features. And guess what? It has testing section! The sample project uses <a href="http://qunitjs.com">QUnit</a>. Here we see:</p>
 
 <ul>
 <li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/test/tiny-pubsub.html">hand-made HTML testing playground</a></li>
 <li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/test/tiny-pubsub_test.js">single test file</a></li>
-<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L80">external plug-in <strong>grunt-contrib-qunit</strong>&#8230;</a></li>
-<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L37-L39">&#8230;and its configuration</a></li>
+<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L80">external plug-in <strong>grunt-contrib-qunit</strong>&hellip;</a></li>
+<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L37-L39">&hellip;and its configuration</a></li>
 </ul>
 
 
 <p>Unlike this one, most of real projects do not keep HTML playground manually crafted. They use another (more powerful) <strong>Grunt</strong> plug-ins allowing to generate that on the fly. Combining all that we have a <strong>Grunt</strong> task that:</p>
 
 <ol>
-<li>generates page with test</li>
-<li>runs <strong>Phantom</strong></li>
-<li>grabs the result</li>
-<li>prints it to console</li>
-<li>exits with proper code (whether test succeeded)</li>
+<li> generates page with test</li>
+<li> runs <strong>Phantom</strong></li>
+<li> grabs the result</li>
+<li> prints it to console</li>
+<li> exits with proper code (whether test succeeded)</li>
 </ol>
 
 
-<p>That&#8217;s pretty much it. This is exactly how Javascript front-end testing works basically. And it has some issues that you either experienced already or are going to experience.</p>
+<p>That&rsquo;s pretty much it. This is exactly how Javascript front-end testing works basically. And it has some issues that you either experienced already or are going to experience.</p>
 
 <h3>Part 2. Basic stuff and issues</h3>
 
 <blockquote><p>Have you already automated tests that run in both, console and browsers? If you already know the pains and just want a cure &mdash; pass on to the Part 3.</p></blockquote>
 
-<p>It&#8217;s pretty easy to organize tests like its described in Part 1. It&#8217;s a common way to solve the issue and there are tons of ready-made <strong>Grunt</strong> plug-ins for any framework no matter which one you use. Seriously, take a look at these for example:</p>
+<p>It&rsquo;s pretty easy to organize tests like its described in Part 1. It&rsquo;s a common way to solve the issue and there are tons of ready-made <strong>Grunt</strong> plug-ins for any framework no matter which one you use. Seriously, take a look at these for example:</p>
 
 <ul>
 <li><a href="https://github.com/gruntjs/grunt-contrib-jasmine">grunt-contrib-jasmine</a> (I used this one before)</li>
@@ -79,17 +389,17 @@
 </ul>
 
 
-<p>Alright! Isn&#8217;t that simple? Install the plug-in, drop couple lines into a config, add proper runner to <code>.travis.yml</code>. That&#8217;s it. Flawless victory. Victory? Doh&#8230;</p>
+<p>Alright! Isn&rsquo;t that simple? Install the plug-in, drop couple lines into a config, add proper runner to <code>.travis.yml</code>. That&rsquo;s it. Flawless victory. Victory? Doh&hellip;</p>
 
 <h4>Development mode</h4>
 
-<p>Single runs are working now. But that&#8217;s just a start. To keep development process away from the &#8220;switch a window&#8221; game runners are supposed to watch modifications of the test files and restart tests automatically. Here comes <a href="https://github.com/gruntjs/grunt-contrib-watch">grunt-contrib-watch</a>! Right? Another entry to config and we are done &mdash; <strong>Grunt</strong> keeps process running and every time you save a file it runs test runner from scratch.</p>
+<p>Single runs are working now. But that&rsquo;s just a start. To keep development process away from the &ldquo;switch a window&rdquo; game runners are supposed to watch modifications of the test files and restart tests automatically. Here comes <a href="https://github.com/gruntjs/grunt-contrib-watch">grunt-contrib-watch</a>! Right? Another entry to config and we are done &mdash; <strong>Grunt</strong> keeps process running and every time you save a file it runs test runner from scratch.</p>
 
-<p>In simple cases (if we forgive <strong>watch</strong> its bugginess) it saves indeed. Let&#8217;s just keep it in mind for now: we have the development mode and it utilizes <strong>watch</strong> internally.</p>
+<p>In simple cases (if we forgive <strong>watch</strong> its bugginess) it saves indeed. Let&rsquo;s just keep it in mind for now: we have the development mode and it utilizes <strong>watch</strong> internally.</p>
 
 <h4>Bundling</h4>
 
-<p>Libraries happen to be big. And sometimes even huge. But even mid-sized libraries typically use more then one file. And as you know front-end JS can&#8217;t bundle itself, something has to help it (and this &#8220;something&#8221; probably runs from <strong>Grunt</strong> as well).</p>
+<p>Libraries happen to be big. And sometimes even huge. But even mid-sized libraries typically use more then one file. And as you know front-end JS can&rsquo;t bundle itself, something has to help it (and this &ldquo;something&rdquo; probably runs from <strong>Grunt</strong> as well).</p>
 
 <p>It means that before we actually test our code we have to bundle it. No probs you say, <strong>Grunt</strong> can hook tasks. We just make it run bundling task before the tests run. And now do you remember we have a development mode with <strong>watch</strong>? So we have to bundle code every single time we press Save in the editor and/or file changes. How long does it take to bundle your code once? ;)</p>
 
@@ -97,30 +407,30 @@
 
 <h4>CoffeeScript</h4>
 
-<p>But even if you don&#8217;t we are still not there yet. If your application is in CoffeeScript or another dialect, you probably use the same language for specs. So you have to compile them too. Now you have to compile both &mdash; your app and EVERY test file you have on EACH test run. Should I say there are can be MUCH more test files than application files? So how long did you say it takes to bundle your code?</p>
+<p>But even if you don&rsquo;t we are still not there yet. If your application is in CoffeeScript or another dialect, you probably use the same language for specs. So you have to compile them too. Now you have to compile both &mdash; your app and EVERY test file you have on EACH test run. Should I say there are can be MUCH more test files than application files? So how long did you say it takes to bundle your code?</p>
 
-<p>Wait. Can&#8217;t we only recompile files that actually changed? Not really. <strong>watch</strong> simply can&#8217;t do that. And none of existing workarounds help with modern version unfortunately. The only thing that works (if you can call that <em>works</em>) is full recompilation on each change.</p>
+<p>Wait. Can&rsquo;t we only recompile files that actually changed? Not really. <strong>watch</strong> simply can&rsquo;t do that. And none of existing workarounds help with modern version unfortunately. The only thing that works (if you can call that <em>works</em>) is full recompilation on each change.</p>
 
 <h4>Run with something else but Phantom</h4>
 
-<p>In the real life nobody is going to use your code in <strong>PhantomJS</strong>. From time to time you have to check it with real browsers anyway. To do that we should manually open HTML that was generated by runner in the browser we target. If you are unlucky enough to deal with things that behave differently in different browsers you get back to the start. To the &#8220;switch a window&#8221; game.</p>
+<p>In the real life nobody is going to use your code in <strong>PhantomJS</strong>. From time to time you have to check it with real browsers anyway. To do that we should manually open HTML that was generated by runner in the browser we target. If you are unlucky enough to deal with things that behave differently in different browsers you get back to the start. To the &ldquo;switch a window&rdquo; game.</p>
 
-<p>It&#8217;s not a 100% of cases for sure. Not even 50% of them. Is that what you might be thinking. At least so did I before I experienced it for the first time. And the circle has closed.</p>
+<p>It&rsquo;s not a 100% of cases for sure. Not even 50% of them. Is that what you might be thinking. At least so did I before I experienced it for the first time. And the circle has closed.</p>
 
 <h3>Part 3. Testem, Mincer and the way they integrate</h3>
 
-<p><a href="github.com/airportyh/testem/">Testem</a> is simply awesome. Really. It&#8217;s so incredible I can&#8217;t even describe what I felt when I tried it first. Just watch this:</p>
+<p><a href="github.com/airportyh/testem/">Testem</a> is simply awesome. Really. It&rsquo;s so incredible I can&rsquo;t even describe what I felt when I tried it first. Just watch this:</p>
 
 <iframe width="560" height="315" src="http://staal.io//www.youtube.com/embed/-1mjv4yk5JM" frameborder="0" allowfullscreen style="margin-top: 20px; margin-bottom: 20px;"></iframe>
 
 
-<p><strong>Testem</strong> completely removes the difference between headless console runs and real browsers. Things just get bundled into a big ecosystem with single large green &#8220;CHECK&#8221; button. And I was happy until I tried to use it with a real project&#8230;</p>
+<p><strong>Testem</strong> completely removes the difference between headless console runs and real browsers. Things just get bundled into a big ecosystem with single large green &ldquo;CHECK&rdquo; button. And I was happy until I tried to use it with a real project&hellip;</p>
 
-<p>The marketing lies! Well&#8230; A little bit at least. <strong>Testem</strong> says it supports preprocessing. No it does not. I mean it does in some way &mdash; it allows you to run custom bash command before each test run and after that. It states it&#8217;s possible to do anything from command line. Well&#8230; Technically it is. It&#8217;s also technically possible to cross an ocean riding a dolphin.</p>
+<p>The marketing lies! Well&hellip; A little bit at least. <strong>Testem</strong> says it supports preprocessing. No it does not. I mean it does in some way &mdash; it allows you to run custom bash command before each test run and after that. It states it&rsquo;s possible to do anything from command line. Well&hellip; Technically it is. It&rsquo;s also technically possible to cross an ocean riding a dolphin.</p>
 
 <hr />
 
-<p>But I didn&#8217;t give up! Despite this limitation <strong>Testem</strong> still has a lot of stuff to support. At least we are going to solve the problem with manual browsers checking. This alone is a huge step forward. Yet another disappointment &mdash; <strong>Testem</strong> absolutely is (was!) not adapted for external programmatic integration. It&#8217;s all kinda selfish and independent. So I did this:</p>
+<p>But I didn&rsquo;t give up! Despite this limitation <strong>Testem</strong> still has a lot of stuff to support. At least we are going to solve the problem with manual browsers checking. This alone is a huge step forward. Yet another disappointment &mdash; <strong>Testem</strong> absolutely is (was!) not adapted for external programmatic integration. It&rsquo;s all kinda selfish and independent. So I did this:</p>
 
 <p><strong>I wrote a Grunt task that was running Testem that was running bash script that was running Grunt that was compiling Coffee.</strong></p>
 
@@ -144,7 +454,7 @@
 
 <ul>
 <li>Accept configuration from API calls. Config file is not required anymore.</li>
-<li>Accept hooks as JS functions (instead of bash strings that run X that runs Y that runs&#8230;)</li>
+<li>Accept hooks as JS functions (instead of bash strings that run X that runs Y that runs&hellip;)</li>
 <li>Pass data to hooks</li>
 <li>Run <code>on_change</code> event when <strong>Testem</strong> notices file modification</li>
 <li>Include JS from URLs not just paths</li>
@@ -154,7 +464,7 @@
 
 <p>And as a bonus new version supports Javascript configuration files (testem.js).</p>
 
-<p>Okay then. Here I come, storage. At 1.2 branch of <a href="http://joosy.ws">Joosy</a> we have adapted <a href="https://github.com/nodeca/mincer">Mincer</a> to manage internal dependencies. And that&#8217;s exactly the storage we need in fact. It suits us simply perfect. Here is the resulting workflow:</p>
+<p>Okay then. Here I come, storage. At 1.2 branch of <a href="http://joosy.ws">Joosy</a> we have adapted <a href="https://github.com/nodeca/mincer">Mincer</a> to manage internal dependencies. And that&rsquo;s exactly the storage we need in fact. It suits us simply perfect. Here is the resulting workflow:</p>
 
 <p><img src="https://github-camo.global.ssl.fastly.net/800e21517caf421200ca027c0bd50da0a5b913f1/687474703a2f2f662e636c2e6c792f6974656d732f30513275327632633143316531333252334c33332f636c6f75642e706e67" style="float: left; margin-right: 40px;"></p>
 
@@ -171,9 +481,9 @@
 <br style="clear: both">
 
 
-<p>As the result <strong>Testem</strong> watches modification of original files but it doesn&#8217;t include them directly. Instead it includes them through <strong>Mincer</strong> that is listening the neighbor port. And <strong>Mincer</strong> in its turn handles all compilations and caching.</p>
+<p>As the result <strong>Testem</strong> watches modification of original files but it doesn&rsquo;t include them directly. Instead it includes them through <strong>Mincer</strong> that is listening the neighbor port. And <strong>Mincer</strong> in its turn handles all compilations and caching.</p>
 
-<p>I have to say here that <strong>Mincer</strong> isn&#8217;t just fast. It&#8217;s incredibly smart when it comes to caching. You can rest assured that at any moment you get actual code for any file. But what&#8217;s really important it has nothing to do with <strong>Testem</strong>. Even if it takes a while to compile all your code (which happens on the first run) &mdash; it&#8217;s browser that waits. It makes <strong>Testem</strong> watcher feel relaxed and work well. It also means that at any time you open console &mdash; you can be sure you see the latest results. You&#8217;ll just see zero progress if it&#8217;s compiling right now.</p>
+<p>I have to say here that <strong>Mincer</strong> isn&rsquo;t just fast. It&rsquo;s incredibly smart when it comes to caching. You can rest assured that at any moment you get actual code for any file. But what&rsquo;s really important it has nothing to do with <strong>Testem</strong>. Even if it takes a while to compile all your code (which happens on the first run) &mdash; it&rsquo;s browser that waits. It makes <strong>Testem</strong> watcher feel relaxed and work well. It also means that at any time you open console &mdash; you can be sure you see the latest results. You&rsquo;ll just see zero progress if it&rsquo;s compiling right now.</p>
 
 <p>All this stuff is wrapped into a Grunt plug-in. All you have to do to start using it is to install <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> and list files you want to test at the config like this:</p>
 
@@ -221,9 +531,9 @@
     <id>http://staal.io/blog/2013/06/04/the-protector</id>
     <content type="html"><![CDATA[<p>More than a year ago me and <a href="http://whitequark.org/">Peter Zotov</a> released <a href="https://github.com/inossidabile/heimdallr">Heimdallr</a> – gem allowing to control models&#8217; security using shiny DSL. It was an extraction from a huge API backend project where it was used to consolidate access control, ease testing and DRY controllers.</p>
 
-<p>Heimdallr was a proof-of-concept release and while I really like DSL part I never had a chance to seriously use it anywhere else. It appeared to be <strong>way</strong> too paranoid, difficult, slow and sometimes even buggy – it was so stubborn it didn&#8217;t feel Ruby way at all. But what&#8217;s even worse – it was incompatible with almost anything trying to work with ActiveRecord besides really basic interaction. Even with things like <a href="https://github.com/amatsuda/kaminari">Kaminari</a>.</p>
+<p>Heimdallr was a proof-of-concept release and while I really like DSL part I never had a chance to seriously use it anywhere else. It appeared to be <strong>way</strong> too paranoid, difficult, slow and sometimes even buggy – it was so stubborn it didn&rsquo;t feel Ruby way at all. But what&rsquo;s even worse – it was incompatible with almost anything trying to work with ActiveRecord besides really basic interaction. Even with things like <a href="https://github.com/amatsuda/kaminari">Kaminari</a>.</p>
 
-<p>Heimdallr as a proof-of-concept could afford having technical issues. And what&#8217;s good about having technical issues is that usually they can be solved. So I decided to make a Ruby-way clone of Heimdallr propagating the same idea (with similar DSL) but with really different implementation base and ideology.</p>
+<p>Heimdallr as a proof-of-concept could afford having technical issues. And what&rsquo;s good about having technical issues is that usually they can be solved. So I decided to make a Ruby-way clone of Heimdallr propagating the same idea (with similar DSL) but with really different implementation base and ideology.</p>
 
 <p>And the first thing I fixed was the name: meet <a href="https://github.com/inossidabile/protector">Protector</a>.</p>
 
@@ -232,7 +542,7 @@
 
 <h3>Usage</h3>
 
-<p><strong>This post is not meant to describe how to use Protector – instead it&#8217;s here to explain possible use-cases and future possibilities. If you are after the API and general description, please refer to <a href="https://github.com/inossidabile/protector#protector">its README</a>.</strong></p>
+<p><strong>This post is not meant to describe how to use Protector – instead it&rsquo;s here to explain possible use-cases and future possibilities. If you are after the API and general description, please refer to <a href="https://github.com/inossidabile/protector#protector">its README</a>.</strong></p>
 
 <h3>Evolution</h3>
 
@@ -240,15 +550,15 @@
 
 <ul>
 <li>Unlike Heimdallr that was trying to act as a duck-type compatible proxy, Protector works as an extension. It carefully modifies ORM from inside and theoretically should not affect any other gems.</li>
-<li>Heimdallr was trying to protect a model like a black box. Protector is after persistence process. It doesn&#8217;t interrupt attributes modification but instead injects creation and updation security validations.</li>
-<li>Protector trusts you a bit more. Heimdallr puts hands on everything even custom SQL queries. Protector doesn&#8217;t act that agressive – it only works at object level.</li>
+<li>Heimdallr was trying to protect a model like a black box. Protector is after persistence process. It doesn&rsquo;t interrupt attributes modification but instead injects creation and updation security validations.</li>
+<li>Protector trusts you a bit more. Heimdallr puts hands on everything even custom SQL queries. Protector doesn&rsquo;t act that agressive – it only works at object level.</li>
 </ul>
 
 
 <p>And the improvements that I always wanted to have at Heimdallr:</p>
 
 <ul>
-<li>It has support for several adapters! There are only two of them for the moment – AR and Sequel. But two beats one. And I&#8217;m after Mongoid and DataMapper as well.</li>
+<li>It has support for several adapters! There are only two of them for the moment – AR and Sequel. But two beats one. And I&rsquo;m after Mongoid and DataMapper as well.</li>
 <li>It supports custom actions. Besides basic <code>readable?</code>, <code>updateable?</code>, etc actions it lets you to define your own.</li>
 <li>It works well with both strategies of eager loading (yay yay).</li>
 <li>It has perf tests! ^_^</li>
@@ -265,9 +575,9 @@
 
 <h4>Centralized security management</h4>
 
-<p>Another and probably the most important thing is that since we are working on model level – we can manage fields. <code>CanCan</code> operates with entities and you are supposed to manage fields on your own. Here comes <code>Strong Parameters</code> functionality but it&#8217;s heavily bound to controllers (at least if you use it in comfortable way). So you get your security scope smeared. With Protector you get all your security logic at one place. Easily-readable. Easily-testable. Easily-maintainable. At all levels.</p>
+<p>Another and probably the most important thing is that since we are working on model level – we can manage fields. <code>CanCan</code> operates with entities and you are supposed to manage fields on your own. Here comes <code>Strong Parameters</code> functionality but it&rsquo;s heavily bound to controllers (at least if you use it in comfortable way). So you get your security scope smeared. With Protector you get all your security logic at one place. Easily-readable. Easily-testable. Easily-maintainable. At all levels.</p>
 
-<p>Rails and most of Ruby web apps are Data-centric. We are used to the fact that it&#8217;s models&#8217; duty to control data integrity. Could one consider security restrictions being a part of the integrity? I believe the answer is yes. And Protector gives you a way to implement that layer of integrity check seamlessly.</p>
+<p>Rails and most of Ruby web apps are Data-centric. We are used to the fact that it&rsquo;s models&#8217; duty to control data integrity. Could one consider security restrictions being a part of the integrity? I believe the answer is yes. And Protector gives you a way to implement that layer of integrity check seamlessly.</p>
 
 <h4>DRYing your code</h4>
 
@@ -275,29 +585,29 @@
 
 <h4>Accessible rules reflections</h4>
 
-<p>Another bonus you get having centralized security management is having security reflections for every model (or even data source relation). It&#8217;s not that noticeable for classic web applications but it hits when you come to APIs. Especially when it comes to Hypermedia APIs. Having ability to predict what exactly can be accessible and manageable for particular client might be saving.</p>
+<p>Another bonus you get having centralized security management is having security reflections for every model (or even data source relation). It&rsquo;s not that noticeable for classic web applications but it hits when you come to APIs. Especially when it comes to Hypermedia APIs. Having ability to predict what exactly can be accessible and manageable for particular client might be saving.</p>
 
 <h3>Roadmap</h3>
 
-<p>I&#8217;m approaching three main goals at the moment: more adapters, better controllers, wider DSL.</p>
+<p>I&rsquo;m approaching three main goals at the moment: more adapters, better controllers, wider DSL.</p>
 
 <h4>Adapters</h4>
 
-<p>Additionally to AR and Sequel I&#8217;m after Mongoid and DataMapper. However three days before I finished the first implementation of Protector, the DataMapper team has announced that DataMapper 2 has been renamed to ROM. I&#8217;m not quite sure if somebody might want to use it with the first version of DataMapper so I guess it will be delayed until the arrival of ROM.</p>
+<p>Additionally to AR and Sequel I&rsquo;m after Mongoid and DataMapper. However three days before I finished the first implementation of Protector, the DataMapper team has announced that DataMapper 2 has been renamed to ROM. I&rsquo;m not quite sure if somebody might want to use it with the first version of DataMapper so I guess it will be delayed until the arrival of ROM.</p>
 
 <h4>Controllers automation</h4>
 
-<p>Heimdallr was packed with CanCan-like controllers extension called <a href="https://github.com/inossidabile/heimdallr-resource/">Heimdallr::Resource</a>. Protector will get the same. And again I&#8217;m not completely sure if it will try to mimic <code>CanCan</code> like Heimdallr::Resource did. But it will greatly reduce the size of controllers for sure.</p>
+<p>Heimdallr was packed with CanCan-like controllers extension called <a href="https://github.com/inossidabile/heimdallr-resource/">Heimdallr::Resource</a>. Protector will get the same. And again I&rsquo;m not completely sure if it will try to mimic <code>CanCan</code> like Heimdallr::Resource did. But it will greatly reduce the size of controllers for sure.</p>
 
 <h4>DSL extensions</h4>
 
-<p>Protector gives you basic points of control over CRUD. But as long as we work with both, instances and scopes, we can extend the possibilities. For example one thing I&#8217;m thinking about is the <code>limit</code> rule that could control maximum per-query selection limit.</p>
+<p>Protector gives you basic points of control over CRUD. But as long as we work with both, instances and scopes, we can extend the possibilities. For example one thing I&rsquo;m thinking about is the <code>limit</code> rule that could control maximum per-query selection limit.</p>
 
-<p>The balance is very important here – Data-centric design is often the most suitable pattern for web application but it doesn&#8217;t make models the only member of the orchestra: models are already claimed for being too heavy. So this point will be developed with caution.</p>
+<p>The balance is very important here – Data-centric design is often the most suitable pattern for web application but it doesn&rsquo;t make models the only member of the orchestra: models are already claimed for being too heavy. So this point will be developed with caution.</p>
 
 <h3>Post Scriptum</h3>
 
-<p>I&#8217;m currently migrating the initial service that Heimdallr was extracted from to Protector. It&#8217;s not production-tested yet but it&#8217;s approaching it. It has performance tests and it&#8217;s 99% covered with specs. If you like the idea – try it and let me know if it works for you.</p>
+<p>I&rsquo;m currently migrating the initial service that Heimdallr was extracted from to Protector. It&rsquo;s not production-tested yet but it&rsquo;s approaching it. It has performance tests and it&rsquo;s 99% covered with specs. If you like the idea – try it and let me know if it works for you.</p>
 
 <p>Thank you! :bow:</p>
 ]]></content>
@@ -312,18 +622,18 @@
 
 <p><strong>But unfortunately the chances to win provisioning are not high at all.</strong></p>
 
-<blockquote><p>There are two feature-rich options for provisioning: Chef and Puppet. Hereinafter I will intend Chef (as the most popular option) whenever I say &#8220;provisioning&#8221;.</p></blockquote>
+<blockquote><p>There are two feature-rich options for provisioning: Chef and Puppet. Hereinafter I will intend Chef (as the most popular option) whenever I say &ldquo;provisioning&rdquo;.</p></blockquote>
 
 <p>Setting up a virtual environment with Chef is NOT an easy task. Chef lacks centralized repository of recipes and this results into a huge mess. There are at least ten Redis recipes with different configurations for example. Top 5 Google results are outdated and will not even start. So while in general Chef is a great piece of technology, you better be a qualified DevOps with a set of ready and tested recipes to navigate nicely in its world.</p>
 
-<p>What&#8217;s for us as developers? Recently I had a chance to help with the development of something that sorts naughty provisioning out. On behalf of its author, Andrey Deryabin, let me present you <strong><a href="http://rove.io">Rove</a></strong> &mdash; the Vagrant configuration service.</p>
+<p>What&rsquo;s for us as developers? Recently I had a chance to help with the development of something that sorts naughty provisioning out. On behalf of its author, Andrey Deryabin, let me present you <strong><a href="http://rove.io">Rove</a></strong> &mdash; the Vagrant configuration service.</p>
 
 <!-- more -->
 
 
 <h3>How to use</h3>
 
-<p>We&#8217;ve gathered some working recipes for typical configurations and wraped them into a visual interface. Use a form to select packages you need, fill in required options and, ta-dam, you have a new and shiny environment.</p>
+<p>We&rsquo;ve gathered some working recipes for typical configurations and wraped them into a visual interface. Use a form to select packages you need, fill in required options and, ta-dam, you have a new and shiny environment.</p>
 
 <p><img src="http://f.cl.ly/items/2z19450w3u1O1Y14011c/hospice.png" alt="Rove" /></p>
 
@@ -331,7 +641,7 @@
 
 <ol>
 <li><p><strong>Vagrantfile</strong> is a main Vagrant configuration. Typically it is supposed to be placed at the root of your project. Just put it whenever you want your box root should be. Additional documentation can be found <a href="http://docs.vagrantup.com/v2/vagrantfile/index.html">here</a>.</p></li>
-<li><p><strong>Cheffile</strong> describes sources of cookbooks we use to provision packages you demanded. It&#8217;s used by <a href="https://github.com/applicationsonline/librarian">Librarian</a> to download all the cookbooks you need including referenced dependencies. Unless you already have it install it using <code>gem install librarian-chef</code> command.</p></li>
+<li><p><strong>Cheffile</strong> describes sources of cookbooks we use to provision packages you demanded. It&rsquo;s used by <a href="https://github.com/applicationsonline/librarian">Librarian</a> to download all the cookbooks you need including referenced dependencies. Unless you already have it install it using <code>gem install librarian-chef</code> command.</p></li>
 </ol>
 
 
@@ -346,9 +656,9 @@
 
 <h3>The goal</h3>
 
-<p>There is something more behind Rove than just a web interface. The interface itself is based on a small DSL that allows you to help us make the service better. Currently it consists of 12 recipes but we hope it&#8217;s just a start. Rove sources are hosted at <a href="https://github.com/aderyabin/">Github</a> and you are free to extend the whole service with new recipes by using <a href="https://github.com/aderyabin/rove/pulls">pull requests</a>.</p>
+<p>There is something more behind Rove than just a web interface. The interface itself is based on a small DSL that allows you to help us make the service better. Currently it consists of 12 recipes but we hope it&rsquo;s just a start. Rove sources are hosted at <a href="https://github.com/aderyabin/">Github</a> and you are free to extend the whole service with new recipes by using <a href="https://github.com/aderyabin/rove/pulls">pull requests</a>.</p>
 
-<p>That&#8217;s said: Chef recipes&#8217; reality is a big mess at the moment. We hope to separate the wheat from the chaff. And if you can help &mdash; you are very very welcome.</p>
+<p>That&rsquo;s said: Chef recipes&#8217; reality is a big mess at the moment. We hope to separate the wheat from the chaff. And if you can help &mdash; you are very very welcome.</p>
 
 <p>We have prepared a <a href="https://github.com/aderyabin/rove#dsl-description">nice introduction to the DSL at README</a>. Duplicating it here would not make a lot of sense. Let met introduce you a real package to demonstrate how easy it is instead:</p>
 
@@ -415,7 +725,7 @@
 
 <hr />
 
-<p>Personally I&#8217;m pretty excited about Rove. It&#8217;s something that made Vagrant affordable for me &mdash; I don&#8217;t have to spend days seeking for a proper recipe anymore. And I really hope Rove will get a chance to save a bit of your time too <img class="icon" src="https://a248.e.akamai.net/assets.github.com/images/icons/emoji/bow.png" height="20" />.</p>
+<p>Personally I&rsquo;m pretty excited about Rove. It&rsquo;s something that made Vagrant affordable for me &mdash; I don&rsquo;t have to spend days seeking for a proper recipe anymore. And I really hope Rove will get a chance to save a bit of your time too <img class="icon" src="https://a248.e.akamai.net/assets.github.com/images/icons/emoji/bow.png" height="20" />.</p>
 ]]></content>
   </entry>
   
@@ -430,7 +740,7 @@
 
 <p>The main goal of this post is to share my vision of administration frameworks potential we could expect. While ActiveAdmin in my opinion is the first one that finally felt the ground.</p>
 
-<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I&#8217;ll keep it short addressing main of them. After &#8220;why I think AA is the true way&#8221; introduction I&#8217;ll do a bit of interface nit-picking. And that&#8217;s probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
+<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I&rsquo;ll keep it short addressing main of them. After &ldquo;why I think AA is the true way&rdquo; introduction I&rsquo;ll do a bit of interface nit-picking. And that&rsquo;s probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
 
 <!-- more -->
 
@@ -458,27 +768,27 @@
 
 <p><strong>And this is exactly what AA does.</strong> Unlike everything else. Yes I do really believe ActiveAdmin is the only available tool that at least formulated the goal correctly.</p>
 
-<p>Okay, to the solution. Ruby is a perfect language to express such a DSL. In fact having tiny DSLs for particular task is so Rubyish. And so awesome. What&#8217;s more awesome is that AA uses popular gems exposing those DSLs within it&#8217;s own. So there are not so many things you should learn about new specific language – most of them are already very likely to be familiar.</p>
+<p>Okay, to the solution. Ruby is a perfect language to express such a DSL. In fact having tiny DSLs for particular task is so Rubyish. And so awesome. What&rsquo;s more awesome is that AA uses popular gems exposing those DSLs within it&rsquo;s own. So there are not so many things you should learn about new specific language – most of them are already very likely to be familiar.</p>
 
-<p>Unfortunately this is where the success stops. Correct formulation leads to correct paper solution (at least visually). But the quality and the result depend on implementation heavily. At the moment I&#8217;m writing this AA does not follow it&#8217;s own conventions within it&#8217;s architecture which is sad&#8230; But you are reading this to go deeper right? Let&#8217;s try to change something about it or find another way out.</p>
+<p>Unfortunately this is where the success stops. Correct formulation leads to correct paper solution (at least visually). But the quality and the result depend on implementation heavily. At the moment I&rsquo;m writing this AA does not follow it&rsquo;s own conventions within it&rsquo;s architecture which is sad&hellip; But you are reading this to go deeper right? Let&rsquo;s try to change something about it or find another way out.</p>
 
 <h3>In reality things go wild</h3>
 
 <p>One of the worst parts of ActiveAdmin is the way it is supported. We all are in debt of open-source. And especially those strong people that lead projects like ActiveAdmin. But this particular task requires constant attention to make a perfect brilliant from a rough diamond. Did you remember I told the default process had to be at its best?</p>
 
-<p>I&#8217;ve gathered all the recipes described below into one repo: <a href="https://github.com/inossidabile/mastering_aa">https://github.com/inossidabile/mastering_aa</a>. Download and start it go live. Note that sometimes I intentionally put patches to the places that are not semantically suitable for them (like <code>config/initializers/active_admin</code> folder) to ease grouping. Consider regrouping of that code for a real project.</p>
+<p>I&rsquo;ve gathered all the recipes described below into one repo: <a href="https://github.com/inossidabile/mastering_aa">https://github.com/inossidabile/mastering_aa</a>. Download and start it go live. Note that sometimes I intentionally put patches to the places that are not semantically suitable for them (like <code>config/initializers/active_admin</code> folder) to ease grouping. Consider regrouping of that code for a real project.</p>
 
 <h4>Respect internationalization!</h4>
 
-<p>I18n and ActiveAdmin are old enemies. Main roots of that go deep into architectural bugs (and we&#8217;ll discuss that later). But first thing you want to monkey-patch after AA inclusion is this: <a href="https://github.com/gregbell/active_admin/issues/1832">https://github.com/gregbell/active_admin/issues/1832</a>. Without this patch AA will break <code>has_many</code> forms for models having UTF-8 localization.</p>
+<p>I18n and ActiveAdmin are old enemies. Main roots of that go deep into architectural bugs (and we&rsquo;ll discuss that later). But first thing you want to monkey-patch after AA inclusion is this: <a href="https://github.com/gregbell/active_admin/issues/1832">https://github.com/gregbell/active_admin/issues/1832</a>. Without this patch AA will break <code>has_many</code> forms for models having UTF-8 localization.</p>
 
-<p>Here&#8217;s how to fix it: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_form_builder_has_many.rb">config/initializers/active_admin/fix_form_builder_has_many.rb</a></p>
+<p>Here&rsquo;s how to fix it: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_form_builder_has_many.rb">config/initializers/active_admin/fix_form_builder_has_many.rb</a></p>
 
 <h4>Chosen</h4>
 
 <p><img src="http://f.cl.ly/items/31270T3Z3w3Y3D1K311D/chosen.png" alt="Chosen" /></p>
 
-<p>ActiveAdmin is pretty stylish isn&#8217;t it? Suddenly is not when it comes to controls. AA has incredible amount of interface mistakes connected to controls. We are going to fix some of them and the first overall step is to include a <code>Chosen</code> library. What&#8217;s funny - Chosen when integrated properly looks like it was initially meant for this design. It improves usability and looks so perfect. I have no idea what makes AA team ignore this fact.</p>
+<p>ActiveAdmin is pretty stylish isn&rsquo;t it? Suddenly is not when it comes to controls. AA has incredible amount of interface mistakes connected to controls. We are going to fix some of them and the first overall step is to include a <code>Chosen</code> library. What&rsquo;s funny &ndash; Chosen when integrated properly looks like it was initially meant for this design. It improves usability and looks so perfect. I have no idea what makes AA team ignore this fact.</p>
 
 <p>Here are the files required to integrate it as well:</p>
 
@@ -486,26 +796,26 @@
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/Gemfile#L17">Gemfile</a> – include chosen assets gem</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin/chosen.js.coffee">app/assets/javascripts/active_admin/chosen.js.coffee</a> – simple script that will enable Chosen for all selects we intentionally marked</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin.js#L2-L3">app/assets/javascripts/active_admin.js</a> – include our script and Chosen itself</li>
-<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/chosen.css.scss">app/assets/stylesheets/active_admin/chosen.css.scss</a> – let&#8217;s style our inputs a bit</li>
-<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L13-L14">app/assets/stylesheets/active_admin.css.scss</a> - include our new styles and Chosen styles</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/chosen.css.scss">app/assets/stylesheets/active_admin/chosen.css.scss</a> – let&rsquo;s style our inputs a bit</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L13-L14">app/assets/stylesheets/active_admin.css.scss</a> &ndash; include our new styles and Chosen styles</li>
 </ol>
 
 
-<p>That&#8217;s it. The only thing that is left is to mark required selects with <code>chosen</code> HTML class. There are several ways to do that. You can add <code>:input_html_options =&gt; { :class =&gt; 'chosen' }</code> to every select you write. Or you can patch input generation class. I really like Chosen look (and also I&#8217;m so lazy) so the latter is definitely a way I recommend: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/chosen.rb">config/initializers/active_admin/chosen.rb</a>.</p>
+<p>That&rsquo;s it. The only thing that is left is to mark required selects with <code>chosen</code> HTML class. There are several ways to do that. You can add <code>:input_html_options =&gt; { :class =&gt; 'chosen' }</code> to every select you write. Or you can patch input generation class. I really like Chosen look (and also I&rsquo;m so lazy) so the latter is definitely a way I recommend: <a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/chosen.rb">config/initializers/active_admin/chosen.rb</a>.</p>
 
 <h4>Numeric range filter</h4>
 
 <p><img src="http://f.cl.ly/items/2l40221S3N0L3E0O3F1w/numeric_range.png" class="liquid" /></p>
 
-<p>ActiveAdmin offers &#8220;more/less/equal number&#8221; comparison filter for numeric fields. This is not something you should live with. It might be more or less useful for ID navigation but come on! That&#8217;s not like people are used to navigate through numbers.</p>
+<p>ActiveAdmin offers &ldquo;more/less/equal number&rdquo; comparison filter for numeric fields. This is not something you should live with. It might be more or less useful for ID navigation but come on! That&rsquo;s not like people are used to navigate through numbers.</p>
 
-<p>The more typical interface is a range. If you want &#8220;more then&#8221; you fill in the left field. Otherwise you fill the right one. And what&#8217;s more important you can find values that are in between.</p>
+<p>The more typical interface is a range. If you want &ldquo;more then&rdquo; you fill in the left field. Otherwise you fill the right one. And what&rsquo;s more important you can find values that are in between.</p>
 
-<p>ActiveAdmin has similar interface for dates but still no luck for numbers. Let&#8217;s fix it:</p>
+<p>ActiveAdmin has similar interface for dates but still no luck for numbers. Let&rsquo;s fix it:</p>
 
 <ol>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/filter_numeric_range_input.rb">config/initializers/active_admin/filter_numeric_range_input.rb</a> – filter implementation</li>
-<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/numeric_range.css.scss">app/assets/stylesheets/active_admin/numeric_range.css.scss</a> - nifty styling</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/numeric_range.css.scss">app/assets/stylesheets/active_admin/numeric_range.css.scss</a> &ndash; nifty styling</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L15">ap/assets/stylesheets/active_admin.css.scss</a> – include our new styles</li>
 </ol>
 
@@ -527,9 +837,9 @@
 
 <p><img src="http://f.cl.ly/items/1P35390h3Q1n1i3j1B3m/multiple_selects.png" class="liquid" /></p>
 
-<p>Another serious issue with controls of ActiveAdmin are check boxes. Creating and styling multiple selections (and especially multiple select filters) is a huge pain. It&#8217;s more or less affordable for cases with 5-6 elements to choose from. But hey, it&#8217;s not how things work again.</p>
+<p>Another serious issue with controls of ActiveAdmin are check boxes. Creating and styling multiple selections (and especially multiple select filters) is a huge pain. It&rsquo;s more or less affordable for cases with 5-6 elements to choose from. But hey, it&rsquo;s not how things work again.</p>
 
-<p>Fortunately we are already saved by Chosen and it&#8217;s incredible multiple select mode (see the screenshot – it does rock hard). Note that Chosen has in-line search that allows you to navigate through associations so easily. Even through hundreds of them.</p>
+<p>Fortunately we are already saved by Chosen and it&rsquo;s incredible multiple select mode (see the screenshot – it does rock hard). Note that Chosen has in-line search that allows you to navigate through associations so easily. Even through hundreds of them.</p>
 
 <p>Within your forms you can use <code>:input_html_options =&gt; {:multiple =&gt; true}</code> but filters require some magic to start working. I have this magic for you:</p>
 
@@ -564,7 +874,7 @@
 <ol>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/sortable_forms.rb">config/initializers/active_admin/sortable_forms.rb</a> – the patch itself</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin/sortable_forms.css.scss">app/assets/stylesheets/active_admin/sortable_forms.css.scss</a> – a bit of styles</li>
-<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L16">app/assets/stylesheets/active_admin.css.scss</a> – don&#8217;t forget to include new styles</li>
+<li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/stylesheets/active_admin.css.scss#L16">app/assets/stylesheets/active_admin.css.scss</a> – don&rsquo;t forget to include new styles</li>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/app/assets/javascripts/active_admin/sortable_forms.js.coffee">app/assets/javascripts/acitve_admin/sortable_forms.js.coffee</a> – and a pinch of Javascript</li>
 </ol>
 
@@ -592,7 +902,7 @@
 
 <h4>DateTime searches</h4>
 
-<p>To finalize our hackety session let&#8217;s improve the way AA seeks through <code>datetime</code> fields. The filter itself looks like a range. And a range is supposed to contain the value of right field by default. But what happens if date was given and the column is of a <code>datetime</code> type? It cuts it to <code>00:00:00</code>. And the last day does not get included into the result set. This annoyed me long enough to patch it the following way:</p>
+<p>To finalize our hackety session let&rsquo;s improve the way AA seeks through <code>datetime</code> fields. The filter itself looks like a range. And a range is supposed to contain the value of right field by default. But what happens if date was given and the column is of a <code>datetime</code> type? It cuts it to <code>00:00:00</code>. And the last day does not get included into the result set. This annoyed me long enough to patch it the following way:</p>
 
 <ol>
 <li><a href="https://github.com/inossidabile/mastering_aa/blob/master/config/initializers/active_admin/fix_resource_controller.rb">config/initializers/active_admin/fix_resource_controller.rb</a></li>
@@ -601,15 +911,15 @@
 
 <h3>Bad luck of architecture</h3>
 
-<p>Alright wasn&#8217;t that fun? Now let&#8217;s get serious and talk about something that can&#8217;t be fixed/extended so easily and fast. There are several things about ActiveAdmin that are totally wrong.</p>
+<p>Alright wasn&rsquo;t that fun? Now let&rsquo;s get serious and talk about something that can&rsquo;t be fixed/extended so easily and fast. There are several things about ActiveAdmin that are totally wrong.</p>
 
 <h4>Rails integration</h4>
 
-<p>The way ActiveAdmin bootstraps is a huge failure. I&#8217;ll concentrate on two particular parts of this process and leave the rest to your imagination.</p>
+<p>The way ActiveAdmin bootstraps is a huge failure. I&rsquo;ll concentrate on two particular parts of this process and leave the rest to your imagination.</p>
 
 <h5>ActiveAdmin requires and caches content of <code>register</code> blocks</h5>
 
-<p>And that breaks I18n support for a devastating number of DSL entries. Let&#8217;s assume you have the following page:</p>
+<p>And that breaks I18n support for a devastating number of DSL entries. Let&rsquo;s assume you have the following page:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -620,9 +930,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The <code>menu</code> call will only occur on bootstrap. And we are not done yet: it&#8217;s going to occur <strong>before</strong> configuration evaluation. So no matter what locale you setup at <code>application.rb</code> – it will always use <code>:en</code>. And if only <code>menu</code> was the only one&#8230; There are some attempts to fix the issue at master at the moment but they cure symptoms and not the source.</p>
+<p>The <code>menu</code> call will only occur on bootstrap. And we are not done yet: it&rsquo;s going to occur <strong>before</strong> configuration evaluation. So no matter what locale you setup at <code>application.rb</code> – it will always use <code>:en</code>. And if only <code>menu</code> was the only one&hellip; There are some attempts to fix the issue at master at the moment but they cure symptoms and not the source.</p>
 
-<p>A really long time has passed since this fundamental issue was raised. Up until now authors were solving it adding more and more places where you can use <code>proc</code> instead of fixed value. But it still can&#8217;t be used anywhere.</p>
+<p>A really long time has passed since this fundamental issue was raised. Up until now authors were solving it adding more and more places where you can use <code>proc</code> instead of fixed value. But it still can&rsquo;t be used anywhere.</p>
 
 <p>At the moment the only proper solution to get around this is to add the following hack into your AA initialization code:</p>
 
@@ -637,32 +947,32 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>But! The real problem is that there is no way to change locale on the fly. Even you hack AA to force correct locale usage like described above it will get cached. No mater what locale you set afterwards it will still output Russian names. At the same time forms blocks that evaluate dynamically will get binded to current locale. So you better don&#8217;t even try setting locale dynamically. And that&#8217;s really really sad.</p>
+<p>But! The real problem is that there is no way to change locale on the fly. Even you hack AA to force correct locale usage like described above it will get cached. No mater what locale you set afterwards it will still output Russian names. At the same time forms blocks that evaluate dynamically will get binded to current locale. So you better don&rsquo;t even try setting locale dynamically. And that&rsquo;s really really sad.</p>
 
-<h5>ActiveAdmin uses it&#8217;s own require cycle</h5>
+<h5>ActiveAdmin uses it&rsquo;s own require cycle</h5>
 
-<p>For some reason that&#8217;s not quite clear to me (probably historical one) AA hacks Rails integration to not use Engine Eager Loading (tm). So every time you are in development mode it duplicates Rails behavior reloading <code>admin/</code> on its own. It breaks <code>Engine</code> API and self-extending capabilities.</p>
+<p>For some reason that&rsquo;s not quite clear to me (probably historical one) AA hacks Rails integration to not use Engine Eager Loading &trade;. So every time you are in development mode it duplicates Rails behavior reloading <code>admin/</code> on its own. It breaks <code>Engine</code> API and self-extending capabilities.</p>
 
-<p>This leads to one very unpleasant specificity – it&#8217;s no so easy to split parts of your Admin Panel into subgems. I mean we all love Rails engines right? It&#8217;s a great way to decompose stuff. And you can&#8217;t use that with ActiveAdmin for no sensible reason. That&#8217;s sad again.</p>
+<p>This leads to one very unpleasant specificity – it&rsquo;s no so easy to split parts of your Admin Panel into subgems. I mean we all love Rails engines right? It&rsquo;s a great way to decompose stuff. And you can&rsquo;t use that with ActiveAdmin for no sensible reason. That&rsquo;s sad again.</p>
 
 <p>I met this weird problem working on Matrioshka and had to hardcode workaround: <a href="https://github.com/inossidabile/matrioshka/blob/master/lib/generators/matrioshka/templates/engine.rb#L17-L20">matrioshka/lib/generators/matrioshka/templats/engine.rb</a>. This is a bad way to achieve modularity but at least an existing one.</p>
 
 <h4>ARBRE buffers</h4>
 
-<p>AA does not generally follow MVC and this is win. MVC is not a holy grail: describing Administration Workflow does not require MVC in most cases. To make mixtures of logic and representation readable it introduces ARBRE – HTML Ruby DSL. Yay! It&#8217;s a really nice move.</p>
+<p>AA does not generally follow MVC and this is win. MVC is not a holy grail: describing Administration Workflow does not require MVC in most cases. To make mixtures of logic and representation readable it introduces ARBRE – HTML Ruby DSL. Yay! It&rsquo;s a really nice move.</p>
 
-<p>But (I hate this word)! I mentioned earlier that ActiveAdmin plays role of meta DSL. It wraps existing gems like Formtastic and exposes them where possible. Unfortunately they don&#8217;t play nice together. ARBRE and Formtatstic for example use encapsulated buffers and injecting blocks of one into another often leads to a VERY unpredictable result. Same goes to Rails helpers. Mixing those 3 together is a nightmare.</p>
+<p>But (I hate this word)! I mentioned earlier that ActiveAdmin plays role of meta DSL. It wraps existing gems like Formtastic and exposes them where possible. Unfortunately they don&rsquo;t play nice together. ARBRE and Formtatstic for example use encapsulated buffers and injecting blocks of one into another often leads to a VERY unpredictable result. Same goes to Rails helpers. Mixing those 3 together is a nightmare.</p>
 
-<p>This is the first issue that can&#8217;t be solved with a fast patch. It&#8217;s just something you should consider if you start doing your own ActiveAdmin implementation.</p>
+<p>This is the first issue that can&rsquo;t be solved with a fast patch. It&rsquo;s just something you should consider if you start doing your own ActiveAdmin implementation.</p>
 
 <h4>Gems isolation and update rate</h4>
 
-<p>ActiveAdmin is a Rails Engine (at least mostly). It means it works within your project namespace and you get all the gems it uses internally as a present. Doesn&#8217;t look like a problem until you get in conflict. ActiveAdmin does not work with fresh CoffeeScript (1.5.0) and jQuery. If you used them – you are in trouble. Same goes to any other gem it uses and there are enough of them.</p>
+<p>ActiveAdmin is a Rails Engine (at least mostly). It means it works within your project namespace and you get all the gems it uses internally as a present. Doesn&rsquo;t look like a problem until you get in conflict. ActiveAdmin does not work with fresh CoffeeScript (1.5.0) and jQuery. If you used them – you are in trouble. Same goes to any other gem it uses and there are enough of them.</p>
 
 <p>I can see three strategies that could be used to reduce the harm of such conflicts or eliminate it completely.</p>
 
 <ol>
-<li>Update often – watching dependencies is a duty for contributors and it has to be done. At the moment ActiveAdmin is bound to a <code>metasearch</code> gem that is deprecated for a year. Year! That&#8217;s not so good :(.</li>
+<li>Update often – watching dependencies is a duty for contributors and it has to be done. At the moment ActiveAdmin is bound to a <code>metasearch</code> gem that is deprecated for a year. Year! That&rsquo;s not so good :(.</li>
 <li>Keep most of integrations in separate gems. Meta DSL should have points of integration that could be used by others to swap <code>Kaminari</code> and <code>will_paginate</code>. Or at least used to modify integration plug-in separately from the huge DSL core.</li>
 <li>Do not tie to Rails the way everybody do that. Jump off the train: using <code>Engine</code> is not a right way to integrate with admin part. Being a Rack Middleware gives so much more flexibility.</li>
 </ol>
@@ -672,13 +982,13 @@
 
 <h4>Heavy framework ties</h4>
 
-<p>The last thing I want to discuss is the integration level. We all know it&#8217;s evil to tie entities. But ActiveAdmin is all about ties. It ties you to Rails, ActiveRecord, zillions of gems, etc. And I&#8217;m a real fan of being framework-agnostic. I believe that we finally came pretty close to the epoch where it&#8217;s Ruby what we call a framework. It has Rake as transport part, Tilt as views, Sprockets as assets etc. Rails/Sinatra/&#8230; are just controllers and skeleton. Why would you bind to them explicitly for the god sake?</p>
+<p>The last thing I want to discuss is the integration level. We all know it&rsquo;s evil to tie entities. But ActiveAdmin is all about ties. It ties you to Rails, ActiveRecord, zillions of gems, etc. And I&rsquo;m a real fan of being framework-agnostic. I believe that we finally came pretty close to the epoch where it&rsquo;s Ruby what we call a framework. It has Rake as transport part, Tilt as views, Sprockets as assets etc. Rails/Sinatra/&hellip; are just controllers and skeleton. Why would you bind to them explicitly for the god sake?</p>
 
-<p>I did already propose switching to Rack-level integration to solve gems isolation issue. This and proper modularity could make it absolutely agnostic to frameworks. Not from the start of course. But it&#8217;s freedom degree will be more then enough to achieve that in nearest future. Current AA implementation makes it close to impossible.</p>
+<p>I did already propose switching to Rack-level integration to solve gems isolation issue. This and proper modularity could make it absolutely agnostic to frameworks. Not from the start of course. But it&rsquo;s freedom degree will be more then enough to achieve that in nearest future. Current AA implementation makes it close to impossible.</p>
 
-<p>There is one downside in that though. It&#8217;s very likely for a common administration panel to have one or two specific scenarios that require working with controllers and native low-level MVC. Currently you just get down to Rails when you need it. If we use Rack – in theory you can end up with having different type of controllers among one application.</p>
+<p>There is one downside in that though. It&rsquo;s very likely for a common administration panel to have one or two specific scenarios that require working with controllers and native low-level MVC. Currently you just get down to Rails when you need it. If we use Rack – in theory you can end up with having different type of controllers among one application.</p>
 
-<p>But (this is the positive one)! I&#8217;ve already encouraged you to consider your administration panel a separate application and I still do. I can&#8217;t see anything <em>that</em> bad in having Sinatra controllers for your administration panel while having Rails controllers for the other parts of your site. It&#8217;s probably a matter of taste and habit.</p>
+<p>But (this is the positive one)! I&rsquo;ve already encouraged you to consider your administration panel a separate application and I still do. I can&rsquo;t see anything <em>that</em> bad in having Sinatra controllers for your administration panel while having Rails controllers for the other parts of your site. It&rsquo;s probably a matter of taste and habit.</p>
 
 <h3>Hero! Come and save me!</h3>
 
@@ -686,7 +996,7 @@
 
 <p>We really need it!</p>
 
-<p>P.S. If you are seriously considering to start such a project in MIT – I&#8217;m in.</p>
+<p>P.S. If you are seriously considering to start such a project in MIT – I&rsquo;m in.</p>
 ]]></content>
   </entry>
   
@@ -695,13 +1005,13 @@
     <link href="http://staal.io/blog/2013/01/18/dangers-of-turbolinks/"/>
     <updated>2013-01-18T21:35:00+07:00</updated>
     <id>http://staal.io/blog/2013/01/18/dangers-of-turbolinks</id>
-    <content type="html"><![CDATA[<p>Turbolinks! This &#8220;award-winning&#8221; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&#8217;s see if it really is THAT bad. And what are the reasons if it is.</p>
+    <content type="html"><![CDATA[<p>Turbolinks! This &ldquo;award-winning&rdquo; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&rsquo;s see if it really is THAT bad. And what are the reasons if it is.</p>
 
 <h3>Part 1. Well-known problems</h3>
 
 <h4>Document ready event</h4>
 
-<p>Problems don&#8217;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&#8217;s <code>ready</code> event.</p>
+<p>Problems don&rsquo;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&rsquo;s <code>ready</code> event.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span> <span class="o">-&gt;</span> <span class="nx">alert</span> <span class="s">&#39;123&#39;</span>
@@ -717,7 +1027,7 @@
 
 <h4>Global scope does not get cleaned</h4>
 
-<p>Turbolinks clames it reduces load time due to the fact browser doesn&#8217;t have to reevaluate your assets. True. But not only assets remain. The whole global scope saves a state.</p>
+<p>Turbolinks clames it reduces load time due to the fact browser doesn&rsquo;t have to reevaluate your assets. True. But not only assets remain. The whole global scope saves a state.</p>
 
 <p>Imagine we have a page with the script from previous example. Script is injected into the <code>body</code> tag. It could be i.e. some kind of external service inclusion. What happens in this case? It adds one more binding per each load. It evaluates one time for the first page, two times for second and so on. Bindings do not disappear automaticaly like before. You suddenly appear in a locked environment where nobody but you is responsible for page desctruction routines.</p>
 
@@ -727,7 +1037,7 @@
 
 <h4>Global scope does not get cleaned 2</h4>
 
-<p>The worst side-effect of this behavior however is not in bindings. They are easily catchable in particular case of <code>ready</code> event. Let&#8217;s see what happens if we have heavy backbone application instead that <code>alert</code> script. Backbone applications are likely to use <code>window</code> as a global namespace to store reachable instances.</p>
+<p>The worst side-effect of this behavior however is not in bindings. They are easily catchable in particular case of <code>ready</code> event. Let&rsquo;s see what happens if we have heavy backbone application instead that <code>alert</code> script. Backbone applications are likely to use <code>window</code> as a global namespace to store reachable instances.</p>
 
 <p>We have 2 pages <strong>A</strong> and <strong>B</strong>. <strong>A</strong> is the text-only welcome page. <strong>B</strong> is the page that bootstraps backbone applicaton and therefore links it to particular DOM node. Backbone has:</p>
 
@@ -755,35 +1065,35 @@
 
 <h3>Part 3. Something you might not even think about</h3>
 
-<p>I&#8217;ve started studying Turbolinks from reviews. So actually when I got to it&#8217;s source I was already aware of the described issues. The reason was simple – as an author of browser framework I already faced them at Joosy. And had to solve each of them at the framework level. But there&#8217;s one thing at sources that shocked me like a lightning bolt.</p>
+<p>I&rsquo;ve started studying Turbolinks from reviews. So actually when I got to it&rsquo;s source I was already aware of the described issues. The reason was simple – as an author of browser framework I already faced them at Joosy. And had to solve each of them at the framework level. But there&rsquo;s one thing at sources that shocked me like a lightning bolt.</p>
 
 <p><strong>Turbolinks store DOM trees of last 10 loaded pages.</strong></p>
 
 <p>Javascript does not have a way to directly erase an object once it was created. Engine automatically destroys all instances that are not referenced from anywhere. There are two things that make it awkward:</p>
 
 <ul>
-<li>It&#8217;s Javascript. Oppa-lambda-style.</li>
+<li>It&rsquo;s Javascript. Oppa-lambda-style.</li>
 <li>Nobody ever cares</li>
 </ul>
 
 
-<p>It&#8217;s incredibly easy to drain all the RAM out of client with a large application. But it&#8217;s affordable and, well, we can live with that since all that stuff is dead as soon as we reload a page. But thanks to Turbolinks it&#8217;s no more!</p>
+<p>It&rsquo;s incredibly easy to drain all the RAM out of client with a large application. But it&rsquo;s affordable and, well, we can live with that since all that stuff is dead as soon as we reload a page. But thanks to Turbolinks it&rsquo;s no more!</p>
 
-<p>Let me explain. Your large JS application is likely to be a huge graph that&#8217;s INCREDIBLY linked. It&#8217;s very typical for a JS app to have mostly atomic unload. In theory even with Turbolinks, as soon as we drop the page out and load the next one we are supposed to detach the application. Dereferenced application gets collected and our RAM is free again! But Turbolinks save DOM. And DOM has bindings. And bindings reference you application. So big parts of your application survive at page reload. Therefore in practice there&#8217;s a HUGE chance that Turbolinks will boost RAM usage up to 10 times.</p>
+<p>Let me explain. Your large JS application is likely to be a huge graph that&rsquo;s INCREDIBLY linked. It&rsquo;s very typical for a JS app to have mostly atomic unload. In theory even with Turbolinks, as soon as we drop the page out and load the next one we are supposed to detach the application. Dereferenced application gets collected and our RAM is free again! But Turbolinks save DOM. And DOM has bindings. And bindings reference you application. So big parts of your application survive at page reload. Therefore in practice there&rsquo;s a HUGE chance that Turbolinks will boost RAM usage up to 10 times.</p>
 
-<p>But&#8230; It&#8217;s not the worst again! Turbolinks don&#8217;t just store 10 last pages. They are stored for a reason. As soon as you go back – it restores your DOM. Therefore restoring your application parts. Now your application is likely to be broken – remember your botstrap has already been exectued several time for next pages. But some of bindings remain alive. How do you even debug that for god sake?</p>
+<p>But&hellip; It&rsquo;s not the worst again! Turbolinks don&rsquo;t just store 10 last pages. They are stored for a reason. As soon as you go back – it restores your DOM. Therefore restoring your application parts. Now your application is likely to be broken – remember your botstrap has already been exectued several time for next pages. But some of bindings remain alive. How do you even debug that for god sake?</p>
 
 <h3>What do you need it for?</h3>
 
-<p>Most of critics additionaly claim Turbolinks is pretty useless. It&#8217;s up to you to decide: <a href="https://github.com/steveklabnik/turbolinks_test">https://github.com/steveklabnik/turbolinks_test</a>.</p>
+<p>Most of critics additionaly claim Turbolinks is pretty useless. It&rsquo;s up to you to decide: <a href="https://github.com/steveklabnik/turbolinks_test">https://github.com/steveklabnik/turbolinks_test</a>.</p>
 
-<p>There is however small advantage that Turbolinks could give you – the ability to controll page switch animation. Unfortunately it doesn&#8217;t have required hooks. If you need animation – you should go use full-stack browser framework.</p>
+<p>There is however small advantage that Turbolinks could give you – the ability to controll page switch animation. Unfortunately it doesn&rsquo;t have required hooks. If you need animation – you should go use full-stack browser framework.</p>
 
 <h3>Turbolinks is the silent killer</h3>
 
-<p>Turbolinks claim that it&#8217;s the successor to pjax that seamlessly works out of box. As you can see – it&#8217;s not even close to that. Real problems of Turbolinks are hidden deep inside. Existing MVC frameworks like Ember or Joosy address such problems – they may use different approaches but they face them. Turbolinks silently ignore it. And if it will ever try start fighting – it will turn into another MVC framework.</p>
+<p>Turbolinks claim that it&rsquo;s the successor to pjax that seamlessly works out of box. As you can see – it&rsquo;s not even close to that. Real problems of Turbolinks are hidden deep inside. Existing MVC frameworks like Ember or Joosy address such problems – they may use different approaches but they face them. Turbolinks silently ignore it. And if it will ever try start fighting – it will turn into another MVC framework.</p>
 
-<p>Remember: with Turbolinks you might easily fix surface issues. But it&#8217;s an iceberg so think twice. You have to write your code in a very special way to work with that. You are likely to have issues with legacy code. And you get almost nothing for that.</p>
+<p>Remember: with Turbolinks you might easily fix surface issues. But it&rsquo;s an iceberg so think twice. You have to write your code in a very special way to work with that. You are likely to have issues with legacy code. And you get almost nothing for that.</p>
 ]]></content>
   </entry>
   
@@ -792,22 +1102,22 @@
     <link href="http://staal.io/blog/2013/01/12/redistributable-rails-applications/"/>
     <updated>2013-01-12T22:48:00+07:00</updated>
     <id>http://staal.io/blog/2013/01/12/redistributable-rails-applications</id>
-    <content type="html"><![CDATA[<p>Imagine you have a large Rails application that you are going to distribute. That&#8217;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
+    <content type="html"><![CDATA[<p>Imagine you have a large Rails application that you are going to distribute. That&rsquo;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
 
-<p>Clever consumer will also want to store such a &#8220;deployment&#8221; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
+<p>Clever consumer will also want to store such a &ldquo;deployment&rdquo; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
 
 <p><strong>How do you achieve that?</strong></p>
 
 <p>Let me share my story first. I manage two banking products: Roundbank and Smartkiosk. They are Rails applications. Every time bank wants to deploy Roundbank-based internet banking I need a way to:</p>
 
 <ol>
-<li>Get application core and create a nice new look that will match bank&#8217;s design using internal API.</li>
-<li>Extend core with the transport methods that are required to integrate with bank&#8217;s core banking platform.</li>
-<li>Support it.</li>
+<li> Get application core and create a nice new look that will match bank&rsquo;s design using internal API.</li>
+<li> Extend core with the transport methods that are required to integrate with bank&rsquo;s core banking platform.</li>
+<li> Support it.</li>
 </ol>
 
 
-<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that&#8217;s involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but&#8230; damn! So provocative! You remember he&#8217;s not supposed to change anything right?</p>
+<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that&rsquo;s involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but&hellip; damn! So provocative! You remember he&rsquo;s not supposed to change anything right?</p>
 
 <!-- more -->
 
@@ -816,7 +1126,7 @@
 
 <p>The solution to the dependency management is wide-known – Ruby Gems. Gems have nice versioning system that will solve the issue. You have a Rails application – can it be a gem at the same time? Answer is yes.</p>
 
-<p>I wrote <a href="http://github.com/inossidabile/matrioshka/tree/master/lib/generators/matrioshka/templates">a tiny gem called Matrioshka</a>. It contains the set of generators that will make everything on your behalf. Following sections will describe it&#8217;s internals. You can skip it safely to the end of the article to read about gem itself.</p>
+<p>I wrote <a href="http://github.com/inossidabile/matrioshka/tree/master/lib/generators/matrioshka/templates">a tiny gem called Matrioshka</a>. It contains the set of generators that will make everything on your behalf. Following sections will describe it&rsquo;s internals. You can skip it safely to the end of the article to read about gem itself.</p>
 
 <p>So what exactly do we need to allow another Rails application include the whole application as a gem?</p>
 
@@ -904,7 +1214,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Rails Engines system was created to make Rails applications extendible by gems. But it&#8217;s abilities are underestimated. It will even run <code>config/initializers</code> and <code>config/environments</code> for you. In fact it will transparently include most of your project with just the following code.</p>
+<p>Rails Engines system was created to make Rails applications extendible by gems. But it&rsquo;s abilities are underestimated. It will even run <code>config/initializers</code> and <code>config/environments</code> for you. In fact it will transparently include most of your project with just the following code.</p>
 
 <h5>3. I18n, autoload_path, migrations</h5>
 
@@ -947,7 +1257,7 @@
 
 <h5>4. Seeds</h5>
 
-<p>Seeds are not handled by Rails Engines too. And moreover you can&#8217;t improve your situation from within your gem. However all you need to do is to extend <code>db/seeds.rb</code> of descendant project with the following line:</p>
+<p>Seeds are not handled by Rails Engines too. And moreover you can&rsquo;t improve your situation from within your gem. However all you need to do is to extend <code>db/seeds.rb</code> of descendant project with the following line:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">load</span> <span class="no">Roundbank</span><span class="o">::</span><span class="no">Engine</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">*</span><span class="sx">%w(db seeds.rb)</span><span class="p">)</span>
@@ -960,11 +1270,11 @@
 
 <p><strong>You can not use gems from git</strong></p>
 
-<p>Okay it might be a strange requirement. But did you never use it with the Bundler itself? It&#8217;s extremely comfortable and useful. Are you ready to abandon it? I am not.</p>
+<p>Okay it might be a strange requirement. But did you never use it with the Bundler itself? It&rsquo;s extremely comfortable and useful. Are you ready to abandon it? I am not.</p>
 
 <p><strong>You can not split gems for platforms</strong></p>
 
-<p>Roundbank can work under MRI and JRuby. And it uses slightly different set of gems for different platforms. What am I supposed to do with that? There are some workarounds that invoke proper dependencies of a particular platform from within compilation hooks – don&#8217;t even try those. They will not work with Bundler well. They will stay ignored for <code>:path =&gt;</code> inclusion and even <code>:git =&gt;</code> inclusion. The worst thing is that new Ruby Gems 2.0 are ought to be released. And still no progress.</p>
+<p>Roundbank can work under MRI and JRuby. And it uses slightly different set of gems for different platforms. What am I supposed to do with that? There are some workarounds that invoke proper dependencies of a particular platform from within compilation hooks – don&rsquo;t even try those. They will not work with Bundler well. They will stay ignored for <code>:path =&gt;</code> inclusion and even <code>:git =&gt;</code> inclusion. The worst thing is that new Ruby Gems 2.0 are ought to be released. And still no progress.</p>
 
 <p>The best option I was able to come up with is to copy host project <code>Gemfile</code> to every descendant project. Put it to, say, <code>Gemfile.roundbank</code> and then require:</p>
 
@@ -975,7 +1285,7 @@
 
 <h5>6. Transparent initialization</h5>
 
-<p>During initial startup Rails relies on <code>Foo::Application</code> constant heavily. You might <code>grep</code> you code for that – it&#8217;s everywhere. Rack setup, Environments, Initializers, &#8230;. But now that we are trying to run it in a very special way – it will fail. <code>Foo::Application</code> will not exist in inherited context. Instead of that we are supposed to configure the descendant.</p>
+<p>During initial startup Rails relies on <code>Foo::Application</code> constant heavily. You might <code>grep</code> you code for that – it&rsquo;s everywhere. Rack setup, Environments, Initializers, &hellip;. But now that we are trying to run it in a very special way – it will fail. <code>Foo::Application</code> will not exist in inherited context. Instead of that we are supposed to configure the descendant.</p>
 
 <p>And here comes magic. During class initialization at <code>config/application.rb</code> your application instance is storead at <code>Rails.application</code> property. The final step required to make your application gem-compatible is to replace <code>Foo::Applicaton</code> with <code>Rails.application.class</code> everywhere. Here is the total list of locations you should check:</p>
 
@@ -1010,7 +1320,7 @@
 
 <h3>Matrioshka</h3>
 
-<p>I tested this approach at Roundbank and fell in love. To extend it to other products and automate the 5th step I created the Matrioshka gem. It will do everything for you with it&#8217;s mighty generators.</p>
+<p>I tested this approach at Roundbank and fell in love. To extend it to other products and automate the 5th step I created the Matrioshka gem. It will do everything for you with it&rsquo;s mighty generators.</p>
 
 <h5>Host Application (Gem)</h5>
 
@@ -1032,7 +1342,7 @@
 
 <h5>Client Application (Consumer)</h5>
 
-<p>As soon as your gem is ready to rumble we can procceed to the consumer. Let&#8217;s make it work within a new rails application:</p>
+<p>As soon as your gem is ready to rumble we can procceed to the consumer. Let&rsquo;s make it work within a new rails application:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>rails new marakash
@@ -1305,7 +1615,7 @@
     <link href="http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security/"/>
     <updated>2012-04-01T23:02:00+07:00</updated>
     <id>http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security</id>
-    <content type="html"><![CDATA[<p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn&#8217;t go down to fields).</p>
+    <content type="html"><![CDATA[<p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn&rsquo;t go down to fields).</p>
 
 <p>We’ve figured out something awesome to solve this issue. Meet <a href="https://github.com/roundlake/heimdallr/">Heimdallr</a> and it’s extension <a href="https://github.com/roundlake/heimdallr-resource">Heimdallr::Resource</a>. They will bring you a peace and security.</p>
 
@@ -1587,11 +1897,11 @@
 <!-- more -->
 
 
-<p>Imagine that, you have <code>Post</code> and <code>Comment</code> CRUDs. Every CRUD has 5 methods and potentially different field sets to otput. That&#8217;s already 10. Also when you otput <code>Post</code> you might want to inline serialized <code>Comment</code> relation. This will give you even more potential field sets for <code>Comment</code>. Imagine potential number of field sets for deeply nested entity. And every different field set has its own conditions and custom methods. We gonna die, aren&#8217;t we?</p>
+<p>Imagine that, you have <code>Post</code> and <code>Comment</code> CRUDs. Every CRUD has 5 methods and potentially different field sets to otput. That&rsquo;s already 10. Also when you otput <code>Post</code> you might want to inline serialized <code>Comment</code> relation. This will give you even more potential field sets for <code>Comment</code>. Imagine potential number of field sets for deeply nested entity. And every different field set has its own conditions and custom methods. We gonna die, aren&rsquo;t we?</p>
 
 <h3>Life with pain</h3>
 
-<p>The first thing we came with to was to leave the RABL alone. It looks fun and effective at first but you simply can not do anything complex and custom enough with that. And in real life RABL did not really go far away from basic <code>.to_json</code>. It&#8217;s a pitty but when it comes to serialization straight declaration is the best declaration. And RABL was built upon magic.</p>
+<p>The first thing we came with to was to leave the RABL alone. It looks fun and effective at first but you simply can not do anything complex and custom enough with that. And in real life RABL did not really go far away from basic <code>.to_json</code>. It&rsquo;s a pitty but when it comes to serialization straight declaration is the best declaration. And RABL was built upon magic.</p>
 
 <p>We’ve tried a lot of different builders and finally stopped with <a href="http://github.com/rails/jbuilder">Jbuilder</a>. It’s both straightforward and allows boilerplate-less.</p>
 
@@ -1644,7 +1954,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>So we reduced the number of files and grouped similar sets into the one method with parameters. It&#8217;s 1-1 number of models presenters declaring sets of fields. Time to refactor around with <a href="https://github.com/jcasimir/draper">Draper</a> gem. With help of Draper, our code turns into:</p>
+<p>So we reduced the number of files and grouped similar sets into the one method with parameters. It&rsquo;s 1-1 number of models presenters declaring sets of fields. Time to refactor around with <a href="https://github.com/jcasimir/draper">Draper</a> gem. With help of Draper, our code turns into:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1728,7 +2038,7 @@
 
 <h3>Keep on reading</h3>
 
-<p>You can find some real-life experience within this post: <a href="http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice">http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice</a>. If you think it&#8217;s worth trying, keep on reading :).</p>
+<p>You can find some real-life experience within this post: <a href="http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice">http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice</a>. If you think it&rsquo;s worth trying, keep on reading :).</p>
 ]]></content>
   </entry>
   

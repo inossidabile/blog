@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="author" content="Boris Staal">
   
-  <meta name="description" content="Last tweet was supposed to be here but Twitter blocked anonymous API requests ;( Rails + REST: views nightmare Mar 24, 2012 | JSON, Pattern, REST, &hellip;">
+  <meta name="description" content="Last tweet was supposed to be here but Twitter blocked anonymous API requests ;( Heimdallr: ORM field-level security Apr 01, 2012 | CanCan, &hellip;">
   
   
   <link rel="canonical" href="http://staal.io/blog/page/2/">
@@ -110,12 +110,49 @@
   
   <article class="main">
     <h1>
-      <a href="/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/">Rails + REST: views nightmare</a>
+      <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/">Heimdallr: ORM field-level security</a>
     </h1>
     <time>
-      Mar 24, 2012 | <a class='category' href='/blog/categories/json/'>JSON</a>, <a class='category' href='/blog/categories/pattern/'>Pattern</a>, <a class='category' href='/blog/categories/rest/'>REST</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>
+      Apr 01, 2012 | <a class='category' href='/blog/categories/cancan/'>CanCan</a>, <a class='category' href='/blog/categories/heimdallr/'>Heimdallr</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/security/'>Security</a>
     </time>
-    <p>Rails is rapidly getting more and more popular as a comfortable platform for REST services. And it really is. We do Rails in this way for quite a long time already. There is however a real problem: <strong>JSON views are unmanageable!</strong></p>
+    <p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn&rsquo;t go down to fields).</p>
+
+<p>We’ve figured out something awesome to solve this issue. Meet <a href="https://github.com/roundlake/heimdallr/">Heimdallr</a> and it’s extension <a href="https://github.com/roundlake/heimdallr-resource">Heimdallr::Resource</a>. They will bring you a peace and security.</p>
+
+<h3>Heimdallr</h3>
+
+<p>Let’s start from the deeper problem investigation though. Large part of Rails projects equates security to a REST restriction. The bigger projects sometimes fall down to a model to keep code DRY. And to keep your controllers/actions number from getting wild you may fall down to fields.</p>
+
+<p><img src="http://media.tumblr.com/tumblr_m1tdm3wF8m1r9yc7i.png" alt="" /></p>
+
+
+  </article>
+  <div class="more">
+    <div class="read">
+      <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/">Read more</a>
+      <span>&rarr;</span>
+    </div>
+    <div class="comments">
+      <img src="/images/comments.png">
+      <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/#disqus_thread">Comments</a>
+    </div>
+  </div>
+  
+  
+  
+  
+  <div class="olders">
+  
+    <ul class="olders">
+    <li class="older odd">
+      <article>
+        <h1>
+          <a href="/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/">Rails + REST: views nightmare</a>
+        </h1>
+        <time>
+          Mar 24, 2012 | <a class='category' href='/blog/categories/json/'>JSON</a>, <a class='category' href='/blog/categories/pattern/'>Pattern</a>, <a class='category' href='/blog/categories/rest/'>REST</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>
+        </time>
+        <p>Rails is rapidly getting more and more popular as a comfortable platform for REST services. And it really is. We do Rails in this way for quite a long time already. There is however a real problem: <strong>JSON views are unmanageable!</strong></p>
 
 <p>At first it may look like everything’s just fine. All you need is <s>love</s> <code>.to_json</code> or <a href="https://github.com/nesquena/rabl">RABL</a> is some particular cases. But then things go wild. And you start switching JSON Builders one after another.</p>
 
@@ -128,17 +165,22 @@
 <p><strong>The problem is that consumer often wants unique set of fields for EVERY method among EVERY endpoint. Set of relations&#8217; fields can differ too!</strong></p>
 
 
-  </article>
-  <div class="more">
-    <div class="read">
-      <a href="/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/">Read more</a>
-      <span>&rarr;</span>
-    </div>
-    <div class="comments">
-      <img src="/images/comments.png">
-      <a href="/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/#disqus_thread">Comments</a>
-    </div>
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    
+    
   </div>
+  
   
   
   <div style="clear:both"></div>

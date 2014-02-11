@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="author" content="Boris Staal">
   
-  <meta name="description" content="&larr; Back to entries Dangers of Turbolinks Jan 18, 2013 | Rails, Turbolinks Turbolinks! This &#8220;award-winning&#8221; technology earned &hellip;">
+  <meta name="description" content="&larr; Back to entries Dangers of Turbolinks Jan 18, 2013 | Rails, Turbolinks Turbolinks! This &ldquo;award-winning&rdquo; technology earned &hellip;">
   
   
   <link rel="canonical" href="http://staal.io/blog/2013/01/18/dangers-of-turbolinks/">
@@ -100,13 +100,13 @@
   <article>
     <h1>Dangers of Turbolinks</h1>
     <time>Jan 18, 2013 | <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/turbolinks/'>Turbolinks</a></time>
-    <p>Turbolinks! This &#8220;award-winning&#8221; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&#8217;s see if it really is THAT bad. And what are the reasons if it is.</p>
+    <p>Turbolinks! This &ldquo;award-winning&rdquo; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&rsquo;s see if it really is THAT bad. And what are the reasons if it is.</p>
 
 <h3>Part 1. Well-known problems</h3>
 
 <h4>Document ready event</h4>
 
-<p>Problems don&#8217;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&#8217;s <code>ready</code> event.</p>
+<p>Problems don&rsquo;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&rsquo;s <code>ready</code> event.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span> <span class="o">-&gt;</span> <span class="nx">alert</span> <span class="s">&#39;123&#39;</span>
@@ -122,7 +122,7 @@
 
 <h4>Global scope does not get cleaned</h4>
 
-<p>Turbolinks clames it reduces load time due to the fact browser doesn&#8217;t have to reevaluate your assets. True. But not only assets remain. The whole global scope saves a state.</p>
+<p>Turbolinks clames it reduces load time due to the fact browser doesn&rsquo;t have to reevaluate your assets. True. But not only assets remain. The whole global scope saves a state.</p>
 
 <p>Imagine we have a page with the script from previous example. Script is injected into the <code>body</code> tag. It could be i.e. some kind of external service inclusion. What happens in this case? It adds one more binding per each load. It evaluates one time for the first page, two times for second and so on. Bindings do not disappear automaticaly like before. You suddenly appear in a locked environment where nobody but you is responsible for page desctruction routines.</p>
 
@@ -132,7 +132,7 @@
 
 <h4>Global scope does not get cleaned 2</h4>
 
-<p>The worst side-effect of this behavior however is not in bindings. They are easily catchable in particular case of <code>ready</code> event. Let&#8217;s see what happens if we have heavy backbone application instead that <code>alert</code> script. Backbone applications are likely to use <code>window</code> as a global namespace to store reachable instances.</p>
+<p>The worst side-effect of this behavior however is not in bindings. They are easily catchable in particular case of <code>ready</code> event. Let&rsquo;s see what happens if we have heavy backbone application instead that <code>alert</code> script. Backbone applications are likely to use <code>window</code> as a global namespace to store reachable instances.</p>
 
 <p>We have 2 pages <strong>A</strong> and <strong>B</strong>. <strong>A</strong> is the text-only welcome page. <strong>B</strong> is the page that bootstraps backbone applicaton and therefore links it to particular DOM node. Backbone has:</p>
 
@@ -160,35 +160,35 @@
 
 <h3>Part 3. Something you might not even think about</h3>
 
-<p>I&#8217;ve started studying Turbolinks from reviews. So actually when I got to it&#8217;s source I was already aware of the described issues. The reason was simple – as an author of browser framework I already faced them at Joosy. And had to solve each of them at the framework level. But there&#8217;s one thing at sources that shocked me like a lightning bolt.</p>
+<p>I&rsquo;ve started studying Turbolinks from reviews. So actually when I got to it&rsquo;s source I was already aware of the described issues. The reason was simple – as an author of browser framework I already faced them at Joosy. And had to solve each of them at the framework level. But there&rsquo;s one thing at sources that shocked me like a lightning bolt.</p>
 
 <p><strong>Turbolinks store DOM trees of last 10 loaded pages.</strong></p>
 
 <p>Javascript does not have a way to directly erase an object once it was created. Engine automatically destroys all instances that are not referenced from anywhere. There are two things that make it awkward:</p>
 
 <ul>
-<li>It&#8217;s Javascript. Oppa-lambda-style.</li>
+<li>It&rsquo;s Javascript. Oppa-lambda-style.</li>
 <li>Nobody ever cares</li>
 </ul>
 
 
-<p>It&#8217;s incredibly easy to drain all the RAM out of client with a large application. But it&#8217;s affordable and, well, we can live with that since all that stuff is dead as soon as we reload a page. But thanks to Turbolinks it&#8217;s no more!</p>
+<p>It&rsquo;s incredibly easy to drain all the RAM out of client with a large application. But it&rsquo;s affordable and, well, we can live with that since all that stuff is dead as soon as we reload a page. But thanks to Turbolinks it&rsquo;s no more!</p>
 
-<p>Let me explain. Your large JS application is likely to be a huge graph that&#8217;s INCREDIBLY linked. It&#8217;s very typical for a JS app to have mostly atomic unload. In theory even with Turbolinks, as soon as we drop the page out and load the next one we are supposed to detach the application. Dereferenced application gets collected and our RAM is free again! But Turbolinks save DOM. And DOM has bindings. And bindings reference you application. So big parts of your application survive at page reload. Therefore in practice there&#8217;s a HUGE chance that Turbolinks will boost RAM usage up to 10 times.</p>
+<p>Let me explain. Your large JS application is likely to be a huge graph that&rsquo;s INCREDIBLY linked. It&rsquo;s very typical for a JS app to have mostly atomic unload. In theory even with Turbolinks, as soon as we drop the page out and load the next one we are supposed to detach the application. Dereferenced application gets collected and our RAM is free again! But Turbolinks save DOM. And DOM has bindings. And bindings reference you application. So big parts of your application survive at page reload. Therefore in practice there&rsquo;s a HUGE chance that Turbolinks will boost RAM usage up to 10 times.</p>
 
-<p>But&#8230; It&#8217;s not the worst again! Turbolinks don&#8217;t just store 10 last pages. They are stored for a reason. As soon as you go back – it restores your DOM. Therefore restoring your application parts. Now your application is likely to be broken – remember your botstrap has already been exectued several time for next pages. But some of bindings remain alive. How do you even debug that for god sake?</p>
+<p>But&hellip; It&rsquo;s not the worst again! Turbolinks don&rsquo;t just store 10 last pages. They are stored for a reason. As soon as you go back – it restores your DOM. Therefore restoring your application parts. Now your application is likely to be broken – remember your botstrap has already been exectued several time for next pages. But some of bindings remain alive. How do you even debug that for god sake?</p>
 
 <h3>What do you need it for?</h3>
 
-<p>Most of critics additionaly claim Turbolinks is pretty useless. It&#8217;s up to you to decide: <a href="https://github.com/steveklabnik/turbolinks_test">https://github.com/steveklabnik/turbolinks_test</a>.</p>
+<p>Most of critics additionaly claim Turbolinks is pretty useless. It&rsquo;s up to you to decide: <a href="https://github.com/steveklabnik/turbolinks_test">https://github.com/steveklabnik/turbolinks_test</a>.</p>
 
-<p>There is however small advantage that Turbolinks could give you – the ability to controll page switch animation. Unfortunately it doesn&#8217;t have required hooks. If you need animation – you should go use full-stack browser framework.</p>
+<p>There is however small advantage that Turbolinks could give you – the ability to controll page switch animation. Unfortunately it doesn&rsquo;t have required hooks. If you need animation – you should go use full-stack browser framework.</p>
 
 <h3>Turbolinks is the silent killer</h3>
 
-<p>Turbolinks claim that it&#8217;s the successor to pjax that seamlessly works out of box. As you can see – it&#8217;s not even close to that. Real problems of Turbolinks are hidden deep inside. Existing MVC frameworks like Ember or Joosy address such problems – they may use different approaches but they face them. Turbolinks silently ignore it. And if it will ever try start fighting – it will turn into another MVC framework.</p>
+<p>Turbolinks claim that it&rsquo;s the successor to pjax that seamlessly works out of box. As you can see – it&rsquo;s not even close to that. Real problems of Turbolinks are hidden deep inside. Existing MVC frameworks like Ember or Joosy address such problems – they may use different approaches but they face them. Turbolinks silently ignore it. And if it will ever try start fighting – it will turn into another MVC framework.</p>
 
-<p>Remember: with Turbolinks you might easily fix surface issues. But it&#8217;s an iceberg so think twice. You have to write your code in a very special way to work with that. You are likely to have issues with legacy code. And you get almost nothing for that.</p>
+<p>Remember: with Turbolinks you might easily fix surface issues. But it&rsquo;s an iceberg so think twice. You have to write your code in a very special way to work with that. You are likely to have issues with legacy code. And you get almost nothing for that.</p>
 
   </article>
 

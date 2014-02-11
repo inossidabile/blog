@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="author" content="Boris Staal">
   
-  <meta name="description" content="Last tweet was supposed to be here but Twitter blocked anonymous API requests ;( Incredibly convenient testing of front-end Javascript with Node.js &hellip;">
+  <meta name="description" content="Last tweet was supposed to be here but Twitter blocked anonymous API requests ;( 2-Way Data Binding under the Microscope Feb 05, 2014 | Angular, &hellip;">
   
   
   <link rel="canonical" href="http://staal.io/">
@@ -112,25 +112,23 @@
   
   <article class="main">
     <h1>
-      <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/">Incredibly convenient testing of front-end Javascript with Node.js</a>
+      <a href="/blog/2014/02/05/2-way-data-binding-under-the-microscope/">2-Way Data Binding under the Microscope</a>
     </h1>
     <time>
-      Aug 17, 2013 | <a class='category' href='/blog/categories/grunt/'>Grunt</a>, <a class='category' href='/blog/categories/joosy/'>Joosy</a>, <a class='category' href='/blog/categories/mincer/'>Mincer</a>, <a class='category' href='/blog/categories/node-js/'>Node.js</a>, <a class='category' href='/blog/categories/testem/'>Testem</a>
+      Feb 05, 2014 | <a class='category' href='/blog/categories/angular/'>Angular</a>, <a class='category' href='/blog/categories/ember/'>Ember</a>, <a class='category' href='/blog/categories/joosy/'>Joosy</a>
     </time>
-    <p>You do have automated testing for your front-end Javascript application / library / framework don&#8217;t you? And tests work equally well at console, browsers and Travis aren&#8217;t they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let&#8217;s see if we can do something about it!</p>
-
-<p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here&#8217;s the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
+    <p>2-way data binding has entrenched modern front-end development as a tool allowing you to avoid boilerplate code when working with DOM, concentrate on logic and isolate the logic from your templates. All the Angular is built around this piece of technology. Pretty big part of Ember joins that. And for the Backbone framework there are numerous extensions appearing every day. It makes a lot of sense actually: 2-way data binding is pretty awesome. However the technology has its own issues, limitations and mostly important implementation details (within different frameworks). Why not speculate about it a little bit?</p>
 
 
   </article>
   <div class="more">
     <div class="read">
-      <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/">Read more</a>
+      <a href="/blog/2014/02/05/2-way-data-binding-under-the-microscope/">Read more</a>
       <span>&rarr;</span>
     </div>
     <div class="comments">
       <img src="/images/comments.png">
-      <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/#disqus_thread">Comments</a>
+      <a href="/blog/2014/02/05/2-way-data-binding-under-the-microscope/#disqus_thread">Comments</a>
     </div>
   </div>
   
@@ -143,6 +141,38 @@
     <li class="older odd">
       <article>
         <h1>
+          <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/">Incredibly convenient testing of front-end Javascript with Node.js</a>
+        </h1>
+        <time>
+          Aug 17, 2013 | <a class='category' href='/blog/categories/grunt/'>Grunt</a>, <a class='category' href='/blog/categories/joosy/'>Joosy</a>, <a class='category' href='/blog/categories/mincer/'>Mincer</a>, <a class='category' href='/blog/categories/node-dot-js/'>Node.js</a>, <a class='category' href='/blog/categories/testem/'>Testem</a>
+        </time>
+        <p>You do have automated testing for your front-end Javascript application / library / framework don&rsquo;t you? And tests work equally well at console, browsers and Travis aren&rsquo;t they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let&rsquo;s see if we can do something about it!</p>
+
+<p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here&rsquo;s the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
+
+
+      </article>
+      <div class="more">
+        <div class="read">
+          <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/">Read more</a>
+          <span>&rarr;</span>
+        </div>
+        <div class="comments">
+          <img src="/images/comments.png">
+          <a href="/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/#disqus_thread">Comments</a>
+        </div>
+      </div>
+    </li>
+    
+    
+  
+  
+  
+  
+    
+    <li class="older even">
+      <article>
+        <h1>
           <a href="/blog/2013/06/04/the-protector/">The Protector!</a>
         </h1>
         <time>
@@ -150,9 +180,9 @@
         </time>
         <p>More than a year ago me and <a href="http://whitequark.org/">Peter Zotov</a> released <a href="https://github.com/inossidabile/heimdallr">Heimdallr</a> – gem allowing to control models&#8217; security using shiny DSL. It was an extraction from a huge API backend project where it was used to consolidate access control, ease testing and DRY controllers.</p>
 
-<p>Heimdallr was a proof-of-concept release and while I really like DSL part I never had a chance to seriously use it anywhere else. It appeared to be <strong>way</strong> too paranoid, difficult, slow and sometimes even buggy – it was so stubborn it didn&#8217;t feel Ruby way at all. But what&#8217;s even worse – it was incompatible with almost anything trying to work with ActiveRecord besides really basic interaction. Even with things like <a href="https://github.com/amatsuda/kaminari">Kaminari</a>.</p>
+<p>Heimdallr was a proof-of-concept release and while I really like DSL part I never had a chance to seriously use it anywhere else. It appeared to be <strong>way</strong> too paranoid, difficult, slow and sometimes even buggy – it was so stubborn it didn&rsquo;t feel Ruby way at all. But what&rsquo;s even worse – it was incompatible with almost anything trying to work with ActiveRecord besides really basic interaction. Even with things like <a href="https://github.com/amatsuda/kaminari">Kaminari</a>.</p>
 
-<p>Heimdallr as a proof-of-concept could afford having technical issues. And what&#8217;s good about having technical issues is that usually they can be solved. So I decided to make a Ruby-way clone of Heimdallr propagating the same idea (with similar DSL) but with really different implementation base and ideology.</p>
+<p>Heimdallr as a proof-of-concept could afford having technical issues. And what&rsquo;s good about having technical issues is that usually they can be solved. So I decided to make a Ruby-way clone of Heimdallr propagating the same idea (with similar DSL) but with really different implementation base and ideology.</p>
 
 <p>And the first thing I fixed was the name: meet <a href="https://github.com/inossidabile/protector">Protector</a>.</p>
 
@@ -169,14 +199,14 @@
         </div>
       </div>
     </li>
+    </ul>
     
-    
   
   
   
   
-    
-    <li class="older even">
+    <ul class="olders">
+    <li class="older odd">
       <article>
         <h1>
           <a href="/blog/2013/04/12/vagrant-to-the-masses/">Vagrant to the masses!</a>
@@ -188,11 +218,11 @@
 
 <p><strong>But unfortunately the chances to win provisioning are not high at all.</strong></p>
 
-<blockquote><p>There are two feature-rich options for provisioning: Chef and Puppet. Hereinafter I will intend Chef (as the most popular option) whenever I say &#8220;provisioning&#8221;.</p></blockquote>
+<blockquote><p>There are two feature-rich options for provisioning: Chef and Puppet. Hereinafter I will intend Chef (as the most popular option) whenever I say &ldquo;provisioning&rdquo;.</p></blockquote>
 
 <p>Setting up a virtual environment with Chef is NOT an easy task. Chef lacks centralized repository of recipes and this results into a huge mess. There are at least ten Redis recipes with different configurations for example. Top 5 Google results are outdated and will not even start. So while in general Chef is a great piece of technology, you better be a qualified DevOps with a set of ready and tested recipes to navigate nicely in its world.</p>
 
-<p>What&#8217;s for us as developers? Recently I had a chance to help with the development of something that sorts naughty provisioning out. On behalf of its author, Andrey Deryabin, let me present you <strong><a href="http://rove.io">Rove</a></strong> &mdash; the Vagrant configuration service.</p>
+<p>What&rsquo;s for us as developers? Recently I had a chance to help with the development of something that sorts naughty provisioning out. On behalf of its author, Andrey Deryabin, let me present you <strong><a href="http://rove.io">Rove</a></strong> &mdash; the Vagrant configuration service.</p>
 
 
       </article>
@@ -207,14 +237,14 @@
         </div>
       </div>
     </li>
-    </ul>
+    
     
   
   
   
   
-    <ul class="olders">
-    <li class="older odd">
+    
+    <li class="older even">
       <article>
         <h1>
           <a href="/blog/2013/02/26/mastering-activeadmin/">Mastering ActiveAdmin</a>
@@ -228,7 +258,7 @@
 
 <p>The main goal of this post is to share my vision of administration frameworks potential we could expect. While ActiveAdmin in my opinion is the first one that finally felt the ground.</p>
 
-<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I&#8217;ll keep it short addressing main of them. After &#8220;why I think AA is the true way&#8221; introduction I&#8217;ll do a bit of interface nit-picking. And that&#8217;s probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
+<p>Blog post format is not the best one to gather all the issues (while GitHub definitely is) – so I&rsquo;ll keep it short addressing main of them. After &ldquo;why I think AA is the true way&rdquo; introduction I&rsquo;ll do a bit of interface nit-picking. And that&rsquo;s probably the most interesting part for you cause you can grab all that tiny improvements and add them to your own AA integrations. Second part on the other hand describes fundamental architecture lacks and possible alternative implementations.</p>
 
 
       </article>
@@ -243,14 +273,14 @@
         </div>
       </div>
     </li>
+    </ul>
     
-    
   
   
   
   
-    
-    <li class="older even">
+    <ul class="olders">
+    <li class="older odd">
       <article>
         <h1>
           <a href="/blog/2013/01/18/dangers-of-turbolinks/">Dangers of Turbolinks</a>
@@ -258,13 +288,13 @@
         <time>
           Jan 18, 2013 | <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/turbolinks/'>Turbolinks</a>
         </time>
-        <p>Turbolinks! This &#8220;award-winning&#8221; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&#8217;s see if it really is THAT bad. And what are the reasons if it is.</p>
+        <p>Turbolinks! This &ldquo;award-winning&rdquo; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&rsquo;s see if it really is THAT bad. And what are the reasons if it is.</p>
 
 <h3>Part 1. Well-known problems</h3>
 
 <h4>Document ready event</h4>
 
-<p>Problems don&#8217;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&#8217;s <code>ready</code> event.</p>
+<p>Problems don&rsquo;t keep waiting. <a href="http://railscasts.com/episodes/390-turbolinks">RailsCast #390</a> starts the marathon with the most popular issue: Turbolinks do not call document&rsquo;s <code>ready</code> event.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='coffeescript'><span class='line'><span class="nx">$</span> <span class="o">-&gt;</span> <span class="nx">alert</span> <span class="s">&#39;123&#39;</span>
@@ -286,14 +316,14 @@
         </div>
       </div>
     </li>
-    </ul>
+    
     
   
   
   
   
-    <ul class="olders">
-    <li class="older odd">
+    
+    <li class="older even">
       <article>
         <h1>
           <a href="/blog/2013/01/12/redistributable-rails-applications/">Redistributable Rails applications</a>
@@ -301,22 +331,22 @@
         <time>
           Jan 12, 2013 | <a class='category' href='/blog/categories/matrioshka/'>Matrioshka</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>
         </time>
-        <p>Imagine you have a large Rails application that you are going to distribute. That&#8217;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
+        <p>Imagine you have a large Rails application that you are going to distribute. That&rsquo;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
 
-<p>Clever consumer will also want to store such a &#8220;deployment&#8221; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
+<p>Clever consumer will also want to store such a &ldquo;deployment&rdquo; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
 
 <p><strong>How do you achieve that?</strong></p>
 
 <p>Let me share my story first. I manage two banking products: Roundbank and Smartkiosk. They are Rails applications. Every time bank wants to deploy Roundbank-based internet banking I need a way to:</p>
 
 <ol>
-<li>Get application core and create a nice new look that will match bank&#8217;s design using internal API.</li>
-<li>Extend core with the transport methods that are required to integrate with bank&#8217;s core banking platform.</li>
-<li>Support it.</li>
+<li> Get application core and create a nice new look that will match bank&rsquo;s design using internal API.</li>
+<li> Extend core with the transport methods that are required to integrate with bank&rsquo;s core banking platform.</li>
+<li> Support it.</li>
 </ol>
 
 
-<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that&#8217;s involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but&#8230; damn! So provocative! You remember he&#8217;s not supposed to change anything right?</p>
+<p>First two steps are pretty easy. It can even be a fork on the Github. And then comes third. Release management crashes. Especially if bank has own team that&rsquo;s involved. Another downside of forks is that your consumer has the whole codebase inside his project. You might not think so but&hellip; damn! So provocative! You remember he&rsquo;s not supposed to change anything right?</p>
 
 
       </article>
@@ -331,14 +361,14 @@
         </div>
       </div>
     </li>
+    </ul>
     
-    
   
   
   
   
-    
-    <li class="older even">
+    <ul class="olders">
+    <li class="older odd">
       <article>
         <h1>
           <a href="/blog/2012/11/24/rails-acceptance-tests-coverage/">Rails acceptance tests coverage</a>
@@ -369,14 +399,14 @@
         </div>
       </div>
     </li>
-    </ul>
+    
     
   
   
   
   
-    <ul class="olders">
-    <li class="older odd">
+    
+    <li class="older even">
       <article>
         <h1>
           <a href="/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/">Joosy: alternative approach to browser frameworks</a>
@@ -412,14 +442,14 @@
         </div>
       </div>
     </li>
+    </ul>
     
-    
   
   
   
   
-    
-    <li class="older even">
+    <ul class="olders">
+    <li class="older odd">
       <article>
         <h1>
           <a href="/blog/2012/04/08/conventions-i-kill-you/">Conventions! I kill you!</a>
@@ -450,44 +480,6 @@
         <div class="comments">
           <img src="/images/comments.png">
           <a href="/blog/2012/04/08/conventions-i-kill-you/#disqus_thread">Comments</a>
-        </div>
-      </div>
-    </li>
-    </ul>
-    
-  
-  
-  
-  
-    <ul class="olders">
-    <li class="older odd">
-      <article>
-        <h1>
-          <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/">Heimdallr: ORM field-level security</a>
-        </h1>
-        <time>
-          Apr 01, 2012 | <a class='category' href='/blog/categories/cancan/'>CanCan</a>, <a class='category' href='/blog/categories/heimdallr/'>Heimdallr</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>, <a class='category' href='/blog/categories/security/'>Security</a>
-        </time>
-        <p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn&#8217;t go down to fields).</p>
-
-<p>We’ve figured out something awesome to solve this issue. Meet <a href="https://github.com/roundlake/heimdallr/">Heimdallr</a> and it’s extension <a href="https://github.com/roundlake/heimdallr-resource">Heimdallr::Resource</a>. They will bring you a peace and security.</p>
-
-<h3>Heimdallr</h3>
-
-<p>Let’s start from the deeper problem investigation though. Large part of Rails projects equates security to a REST restriction. The bigger projects sometimes fall down to a model to keep code DRY. And to keep your controllers/actions number from getting wild you may fall down to fields.</p>
-
-<p><img src="http://media.tumblr.com/tumblr_m1tdm3wF8m1r9yc7i.png" alt="" /></p>
-
-
-      </article>
-      <div class="more">
-        <div class="read">
-          <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/">Read more</a>
-          <span>&rarr;</span>
-        </div>
-        <div class="comments">
-          <img src="/images/comments.png">
-          <a href="/blog/2012/04/01/heimdallr-orm-field-level-security/#disqus_thread">Comments</a>
         </div>
       </div>
     </li>

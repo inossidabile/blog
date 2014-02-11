@@ -104,18 +104,18 @@
 
 <p><strong>But unfortunately the chances to win provisioning are not high at all.</strong></p>
 
-<blockquote><p>There are two feature-rich options for provisioning: Chef and Puppet. Hereinafter I will intend Chef (as the most popular option) whenever I say &#8220;provisioning&#8221;.</p></blockquote>
+<blockquote><p>There are two feature-rich options for provisioning: Chef and Puppet. Hereinafter I will intend Chef (as the most popular option) whenever I say &ldquo;provisioning&rdquo;.</p></blockquote>
 
 <p>Setting up a virtual environment with Chef is NOT an easy task. Chef lacks centralized repository of recipes and this results into a huge mess. There are at least ten Redis recipes with different configurations for example. Top 5 Google results are outdated and will not even start. So while in general Chef is a great piece of technology, you better be a qualified DevOps with a set of ready and tested recipes to navigate nicely in its world.</p>
 
-<p>What&#8217;s for us as developers? Recently I had a chance to help with the development of something that sorts naughty provisioning out. On behalf of its author, Andrey Deryabin, let me present you <strong><a href="http://rove.io">Rove</a></strong> &mdash; the Vagrant configuration service.</p>
+<p>What&rsquo;s for us as developers? Recently I had a chance to help with the development of something that sorts naughty provisioning out. On behalf of its author, Andrey Deryabin, let me present you <strong><a href="http://rove.io">Rove</a></strong> &mdash; the Vagrant configuration service.</p>
 
 <!-- more -->
 
 
 <h3>How to use</h3>
 
-<p>We&#8217;ve gathered some working recipes for typical configurations and wraped them into a visual interface. Use a form to select packages you need, fill in required options and, ta-dam, you have a new and shiny environment.</p>
+<p>We&rsquo;ve gathered some working recipes for typical configurations and wraped them into a visual interface. Use a form to select packages you need, fill in required options and, ta-dam, you have a new and shiny environment.</p>
 
 <p><img src="http://f.cl.ly/items/2z19450w3u1O1Y14011c/hospice.png" alt="Rove" /></p>
 
@@ -123,7 +123,7 @@
 
 <ol>
 <li><p><strong>Vagrantfile</strong> is a main Vagrant configuration. Typically it is supposed to be placed at the root of your project. Just put it whenever you want your box root should be. Additional documentation can be found <a href="http://docs.vagrantup.com/v2/vagrantfile/index.html">here</a>.</p></li>
-<li><p><strong>Cheffile</strong> describes sources of cookbooks we use to provision packages you demanded. It&#8217;s used by <a href="https://github.com/applicationsonline/librarian">Librarian</a> to download all the cookbooks you need including referenced dependencies. Unless you already have it install it using <code>gem install librarian-chef</code> command.</p></li>
+<li><p><strong>Cheffile</strong> describes sources of cookbooks we use to provision packages you demanded. It&rsquo;s used by <a href="https://github.com/applicationsonline/librarian">Librarian</a> to download all the cookbooks you need including referenced dependencies. Unless you already have it install it using <code>gem install librarian-chef</code> command.</p></li>
 </ol>
 
 
@@ -138,9 +138,9 @@
 
 <h3>The goal</h3>
 
-<p>There is something more behind Rove than just a web interface. The interface itself is based on a small DSL that allows you to help us make the service better. Currently it consists of 12 recipes but we hope it&#8217;s just a start. Rove sources are hosted at <a href="https://github.com/aderyabin/">Github</a> and you are free to extend the whole service with new recipes by using <a href="https://github.com/aderyabin/rove/pulls">pull requests</a>.</p>
+<p>There is something more behind Rove than just a web interface. The interface itself is based on a small DSL that allows you to help us make the service better. Currently it consists of 12 recipes but we hope it&rsquo;s just a start. Rove sources are hosted at <a href="https://github.com/aderyabin/">Github</a> and you are free to extend the whole service with new recipes by using <a href="https://github.com/aderyabin/rove/pulls">pull requests</a>.</p>
 
-<p>That&#8217;s said: Chef recipes&#8217; reality is a big mess at the moment. We hope to separate the wheat from the chaff. And if you can help &mdash; you are very very welcome.</p>
+<p>That&rsquo;s said: Chef recipes&#8217; reality is a big mess at the moment. We hope to separate the wheat from the chaff. And if you can help &mdash; you are very very welcome.</p>
 
 <p>We have prepared a <a href="https://github.com/aderyabin/rove#dsl-description">nice introduction to the DSL at README</a>. Duplicating it here would not make a lot of sense. Let met introduce you a real package to demonstrate how easy it is instead:</p>
 
@@ -207,7 +207,7 @@
 
 <hr />
 
-<p>Personally I&#8217;m pretty excited about Rove. It&#8217;s something that made Vagrant affordable for me &mdash; I don&#8217;t have to spend days seeking for a proper recipe anymore. And I really hope Rove will get a chance to save a bit of your time too <img class="icon" src="https://a248.e.akamai.net/assets.github.com/images/icons/emoji/bow.png" height="20" />.</p>
+<p>Personally I&rsquo;m pretty excited about Rove. It&rsquo;s something that made Vagrant affordable for me &mdash; I don&rsquo;t have to spend days seeking for a proper recipe anymore. And I really hope Rove will get a chance to save a bit of your time too <img class="icon" src="https://a248.e.akamai.net/assets.github.com/images/icons/emoji/bow.png" height="20" />.</p>
 
   </article>
 

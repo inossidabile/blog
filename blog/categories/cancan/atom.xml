@@ -4,7 +4,7 @@
   <title><![CDATA[Category: CanCan | Staal Forge]]></title>
   <link href="http://staal.io/blog/categories/cancan/atom.xml" rel="self"/>
   <link href="http://staal.io/"/>
-  <updated>2013-11-07T22:42:14+07:00</updated>
+  <updated>2014-02-12T00:06:08+07:00</updated>
   <id>http://staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
@@ -18,7 +18,7 @@
     <link href="http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security/"/>
     <updated>2012-04-01T23:02:00+07:00</updated>
     <id>http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security</id>
-    <content type="html"><![CDATA[<p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn't go down to fields).</p>
+    <content type="html"><![CDATA[<p>We are currently migrating most of our products to browser-side application. One of the worst issues it raises is proper permissions handling. There are no comfortable ways to implement context-based protection of models (and their fields) within ActiveRecord (Egor, say hi ;). <code>attr_acessible</code> is too weak. CanCan is too abstract (doesn&rsquo;t go down to fields).</p>
 
 <p>We’ve figured out something awesome to solve this issue. Meet <a href="https://github.com/roundlake/heimdallr/">Heimdallr</a> and it’s extension <a href="https://github.com/roundlake/heimdallr-resource">Heimdallr::Resource</a>. They will bring you a peace and security.</p>
 
@@ -47,7 +47,7 @@
 class Article &lt; ActiveRecord::Base
   include Heimdallr::Model</p>
 
-<p>  belongs_to :owner, :class_name => 'User'</p>
+<p>  belongs_to :owner, :class_name => &lsquo;User&rsquo;</p>
 
 <p>  restrict do |user, record|</p>
 

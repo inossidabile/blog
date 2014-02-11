@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JSON | Staal Forge]]></title>
   <link href="http://staal.io/blog/categories/json/atom.xml" rel="self"/>
   <link href="http://staal.io/"/>
-  <updated>2013-11-07T22:42:14+07:00</updated>
+  <updated>2014-02-12T00:06:08+07:00</updated>
   <id>http://staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
@@ -33,11 +33,11 @@
 <!-- more -->
 
 
-<p>Imagine that, you have <code>Post</code> and <code>Comment</code> CRUDs. Every CRUD has 5 methods and potentially different field sets to otput. That's already 10. Also when you otput <code>Post</code> you might want to inline serialized <code>Comment</code> relation. This will give you even more potential field sets for <code>Comment</code>. Imagine potential number of field sets for deeply nested entity. And every different field set has its own conditions and custom methods. We gonna die, aren't we?</p>
+<p>Imagine that, you have <code>Post</code> and <code>Comment</code> CRUDs. Every CRUD has 5 methods and potentially different field sets to otput. That&rsquo;s already 10. Also when you otput <code>Post</code> you might want to inline serialized <code>Comment</code> relation. This will give you even more potential field sets for <code>Comment</code>. Imagine potential number of field sets for deeply nested entity. And every different field set has its own conditions and custom methods. We gonna die, aren&rsquo;t we?</p>
 
 <h3>Life with pain</h3>
 
-<p>The first thing we came with to was to leave the RABL alone. It looks fun and effective at first but you simply can not do anything complex and custom enough with that. And in real life RABL did not really go far away from basic <code>.to_json</code>. It's a pitty but when it comes to serialization straight declaration is the best declaration. And RABL was built upon magic.</p>
+<p>The first thing we came with to was to leave the RABL alone. It looks fun and effective at first but you simply can not do anything complex and custom enough with that. And in real life RABL did not really go far away from basic <code>.to_json</code>. It&rsquo;s a pitty but when it comes to serialization straight declaration is the best declaration. And RABL was built upon magic.</p>
 
 <p>We’ve tried a lot of different builders and finally stopped with <a href="http://github.com/rails/jbuilder">Jbuilder</a>. It’s both straightforward and allows boilerplate-less.</p>
 
@@ -49,7 +49,7 @@
 
 <p>``` ruby</p>
 
-<h1>example taken from http://quickleft.com/blog/presenters-as-a-solution-to-asjson-woes-in-rails-apis</h1>
+<h1>example taken from <a href="http://quickleft.com/blog/presenters-as-a-solution-to-asjson-woes-in-rails-apis">http://quickleft.com/blog/presenters-as-a-solution-to-asjson-woes-in-rails-apis</a></h1>
 
 <p>class Api::V1::ResourcePresenter</p>
 
@@ -77,7 +77,7 @@ data_hash
 <p>end
 ```</p>
 
-<p>So we reduced the number of files and grouped similar sets into the one method with parameters. It's 1-1 number of models presenters declaring sets of fields. Time to refactor around with <a href="https://github.com/jcasimir/draper">Draper</a> gem. With help of Draper, our code turns into:</p>
+<p>So we reduced the number of files and grouped similar sets into the one method with parameters. It&rsquo;s 1-1 number of models presenters declaring sets of fields. Time to refactor around with <a href="https://github.com/jcasimir/draper">Draper</a> gem. With help of Draper, our code turns into:</p>
 
 <p>``` ruby</p>
 
@@ -143,7 +143,7 @@ end
 
 <h3>Keep on reading</h3>
 
-<p>You can find some real-life experience within this post: <a href="http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice">http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice</a>. If you think it's worth trying, keep on reading :).</p>
+<p>You can find some real-life experience within this post: <a href="http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice">http://blog.alerticus.ru/post/20183094648/rails-rest-avoiding-the-views-nightmare-practice</a>. If you think it&rsquo;s worth trying, keep on reading :).</p>
 ]]></content>
   </entry>
   

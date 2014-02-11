@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mincer | Staal Forge]]></title>
   <link href="http://staal.io/blog/categories/mincer/atom.xml" rel="self"/>
   <link href="http://staal.io/"/>
-  <updated>2013-11-07T22:42:14+07:00</updated>
+  <updated>2014-02-12T00:06:08+07:00</updated>
   <id>http://staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
@@ -18,9 +18,9 @@
     <link href="http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/"/>
     <updated>2013-08-17T23:28:00+07:00</updated>
     <id>http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js</id>
-    <content type="html"><![CDATA[<p>You do have automated testing for your front-end Javascript application / library / framework don't you? And tests work equally well at console, browsers and Travis aren't they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let's see if we can do something about it!</p>
+    <content type="html"><![CDATA[<p>You do have automated testing for your front-end Javascript application / library / framework don&rsquo;t you? And tests work equally well at console, browsers and Travis aren&rsquo;t they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let&rsquo;s see if we can do something about it!</p>
 
-<p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here's the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
+<p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here&rsquo;s the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
 
 <!-- more -->
 
@@ -31,46 +31,46 @@
 
 <p>When it comes to testing, the first question is &mdash; which framework are we going to use? There are numerous articles on the Internet that describe pros and cons of those. Read this for example: <a href="http://www.netmagazine.com/features/essential-javascript-top-five-testing-libraries">http://www.netmagazine.com/features/essential-javascript-top-five-testing-libraries</a>.</p>
 
-<p>I personally prefer <a href="http://pivotal.github.io/jasmine/">Jasmine</a> and <a href="http://visionmedia.github.io/mocha/">Mocha</a> (coupled with CoffeeScript and <a href="http://chaijs.com">Chai</a> they feel so much like RSpec). But it's only a matter of taste in fact. Their capabilities are more or less equal.</p>
+<p>I personally prefer <a href="http://pivotal.github.io/jasmine/">Jasmine</a> and <a href="http://visionmedia.github.io/mocha/">Mocha</a> (coupled with CoffeeScript and <a href="http://chaijs.com">Chai</a> they feel so much like RSpec). But it&rsquo;s only a matter of taste in fact. Their capabilities are more or less equal.</p>
 
-<p>Let's say we have a framework. Then we can manually create HTML file, include JS we want to test, open it in a browser and, well, test. It's certainly a kind of automatic testing already but still so far away from something reasonable. And the first thing to think about is Continuous Integration. You can only run such tests manually and see the results with your eyes. No "on-commit runs", no Travis integration. Sadness.</p>
+<p>Let&rsquo;s say we have a framework. Then we can manually create HTML file, include JS we want to test, open it in a browser and, well, test. It&rsquo;s certainly a kind of automatic testing already but still so far away from something reasonable. And the first thing to think about is Continuous Integration. You can only run such tests manually and see the results with your eyes. No &ldquo;on-commit runs&rdquo;, no Travis integration. Sadness.</p>
 
 <h4>PhantomJS</h4>
 
-<p><a href="http://phantomjs.org">Phantom</a> is a thing that solves that. It's a headless invisible browser that you can control programmatically. Like this for example: <a href="https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js">https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js</a>. <strong>Phantom</strong> will play the role of our eyes and hands &mdash; it will open a page, check the results and pass them back to a "script runner". The "script runner" that can run on commit or at Travis.</p>
+<p><a href="http://phantomjs.org">Phantom</a> is a thing that solves that. It&rsquo;s a headless invisible browser that you can control programmatically. Like this for example: <a href="https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js">https://github.com/ariya/phantomjs/blob/master/examples/colorwheel.js</a>. <strong>Phantom</strong> will play the role of our eyes and hands &mdash; it will open a page, check the results and pass them back to a &ldquo;script runner&rdquo;. The &ldquo;script runner&rdquo; that can run on commit or at Travis.</p>
 
 <h4>Grunt</h4>
 
 <p><img src="http://gruntjs.com/img/grunt-logo.png" style="float: right; margin-left: 10px; height: 80px"></p>
 
-<p>And the "script runner" in its turn is <a href="http://gruntjs.com">Grunt</a>. Did you use <strong>Grunt</strong> before? <a href="http://gruntjs.com/getting-started">Go and try</a> if you did not &mdash; it's incredible. <strong>Grunt</strong> comes with <a href="https://github.com/cowboy/jquery-tiny-pubsub/">sample project</a> showing its main features. And guess what? It has testing section! The sample project uses <a href="http://qunitjs.com">QUnit</a>. Here we see:</p>
+<p>And the &ldquo;script runner&rdquo; in its turn is <a href="http://gruntjs.com">Grunt</a>. Did you use <strong>Grunt</strong> before? <a href="http://gruntjs.com/getting-started">Go and try</a> if you did not &mdash; it&rsquo;s incredible. <strong>Grunt</strong> comes with <a href="https://github.com/cowboy/jquery-tiny-pubsub/">sample project</a> showing its main features. And guess what? It has testing section! The sample project uses <a href="http://qunitjs.com">QUnit</a>. Here we see:</p>
 
 <ul>
 <li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/test/tiny-pubsub.html">hand-made HTML testing playground</a></li>
 <li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/test/tiny-pubsub_test.js">single test file</a></li>
-<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L80">external plug-in <strong>grunt-contrib-qunit</strong>...</a></li>
-<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L37-L39">...and its configuration</a></li>
+<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L80">external plug-in <strong>grunt-contrib-qunit</strong>&hellip;</a></li>
+<li><a href="https://github.com/cowboy/jquery-tiny-pubsub/blob/master/Gruntfile.js#L37-L39">&hellip;and its configuration</a></li>
 </ul>
 
 
 <p>Unlike this one, most of real projects do not keep HTML playground manually crafted. They use another (more powerful) <strong>Grunt</strong> plug-ins allowing to generate that on the fly. Combining all that we have a <strong>Grunt</strong> task that:</p>
 
 <ol>
-<li>generates page with test</li>
-<li>runs <strong>Phantom</strong></li>
-<li>grabs the result</li>
-<li>prints it to console</li>
-<li>exits with proper code (whether test succeeded)</li>
+<li> generates page with test</li>
+<li> runs <strong>Phantom</strong></li>
+<li> grabs the result</li>
+<li> prints it to console</li>
+<li> exits with proper code (whether test succeeded)</li>
 </ol>
 
 
-<p>That's pretty much it. This is exactly how Javascript front-end testing works basically. And it has some issues that you either experienced already or are going to experience.</p>
+<p>That&rsquo;s pretty much it. This is exactly how Javascript front-end testing works basically. And it has some issues that you either experienced already or are going to experience.</p>
 
 <h3>Part 2. Basic stuff and issues</h3>
 
 <blockquote><p>Have you already automated tests that run in both, console and browsers? If you already know the pains and just want a cure &mdash; pass on to the Part 3.</p></blockquote>
 
-<p>It's pretty easy to organize tests like its described in Part 1. It's a common way to solve the issue and there are tons of ready-made <strong>Grunt</strong> plug-ins for any framework no matter which one you use. Seriously, take a look at these for example:</p>
+<p>It&rsquo;s pretty easy to organize tests like its described in Part 1. It&rsquo;s a common way to solve the issue and there are tons of ready-made <strong>Grunt</strong> plug-ins for any framework no matter which one you use. Seriously, take a look at these for example:</p>
 
 <ul>
 <li><a href="https://github.com/gruntjs/grunt-contrib-jasmine">grunt-contrib-jasmine</a> (I used this one before)</li>
@@ -79,17 +79,17 @@
 </ul>
 
 
-<p>Alright! Isn't that simple? Install the plug-in, drop couple lines into a config, add proper runner to <code>.travis.yml</code>. That's it. Flawless victory. Victory? Doh...</p>
+<p>Alright! Isn&rsquo;t that simple? Install the plug-in, drop couple lines into a config, add proper runner to <code>.travis.yml</code>. That&rsquo;s it. Flawless victory. Victory? Doh&hellip;</p>
 
 <h4>Development mode</h4>
 
-<p>Single runs are working now. But that's just a start. To keep development process away from the "switch a window" game runners are supposed to watch modifications of the test files and restart tests automatically. Here comes <a href="https://github.com/gruntjs/grunt-contrib-watch">grunt-contrib-watch</a>! Right? Another entry to config and we are done &mdash; <strong>Grunt</strong> keeps process running and every time you save a file it runs test runner from scratch.</p>
+<p>Single runs are working now. But that&rsquo;s just a start. To keep development process away from the &ldquo;switch a window&rdquo; game runners are supposed to watch modifications of the test files and restart tests automatically. Here comes <a href="https://github.com/gruntjs/grunt-contrib-watch">grunt-contrib-watch</a>! Right? Another entry to config and we are done &mdash; <strong>Grunt</strong> keeps process running and every time you save a file it runs test runner from scratch.</p>
 
-<p>In simple cases (if we forgive <strong>watch</strong> its bugginess) it saves indeed. Let's just keep it in mind for now: we have the development mode and it utilizes <strong>watch</strong> internally.</p>
+<p>In simple cases (if we forgive <strong>watch</strong> its bugginess) it saves indeed. Let&rsquo;s just keep it in mind for now: we have the development mode and it utilizes <strong>watch</strong> internally.</p>
 
 <h4>Bundling</h4>
 
-<p>Libraries happen to be big. And sometimes even huge. But even mid-sized libraries typically use more then one file. And as you know front-end JS can't bundle itself, something has to help it (and this "something" probably runs from <strong>Grunt</strong> as well).</p>
+<p>Libraries happen to be big. And sometimes even huge. But even mid-sized libraries typically use more then one file. And as you know front-end JS can&rsquo;t bundle itself, something has to help it (and this &ldquo;something&rdquo; probably runs from <strong>Grunt</strong> as well).</p>
 
 <p>It means that before we actually test our code we have to bundle it. No probs you say, <strong>Grunt</strong> can hook tasks. We just make it run bundling task before the tests run. And now do you remember we have a development mode with <strong>watch</strong>? So we have to bundle code every single time we press Save in the editor and/or file changes. How long does it take to bundle your code once? ;)</p>
 
@@ -97,30 +97,30 @@
 
 <h4>CoffeeScript</h4>
 
-<p>But even if you don't we are still not there yet. If your application is in CoffeeScript or another dialect, you probably use the same language for specs. So you have to compile them too. Now you have to compile both &mdash; your app and EVERY test file you have on EACH test run. Should I say there are can be MUCH more test files than application files? So how long did you say it takes to bundle your code?</p>
+<p>But even if you don&rsquo;t we are still not there yet. If your application is in CoffeeScript or another dialect, you probably use the same language for specs. So you have to compile them too. Now you have to compile both &mdash; your app and EVERY test file you have on EACH test run. Should I say there are can be MUCH more test files than application files? So how long did you say it takes to bundle your code?</p>
 
-<p>Wait. Can't we only recompile files that actually changed? Not really. <strong>watch</strong> simply can't do that. And none of existing workarounds help with modern version unfortunately. The only thing that works (if you can call that <em>works</em>) is full recompilation on each change.</p>
+<p>Wait. Can&rsquo;t we only recompile files that actually changed? Not really. <strong>watch</strong> simply can&rsquo;t do that. And none of existing workarounds help with modern version unfortunately. The only thing that works (if you can call that <em>works</em>) is full recompilation on each change.</p>
 
 <h4>Run with something else but Phantom</h4>
 
-<p>In the real life nobody is going to use your code in <strong>PhantomJS</strong>. From time to time you have to check it with real browsers anyway. To do that we should manually open HTML that was generated by runner in the browser we target. If you are unlucky enough to deal with things that behave differently in different browsers you get back to the start. To the "switch a window" game.</p>
+<p>In the real life nobody is going to use your code in <strong>PhantomJS</strong>. From time to time you have to check it with real browsers anyway. To do that we should manually open HTML that was generated by runner in the browser we target. If you are unlucky enough to deal with things that behave differently in different browsers you get back to the start. To the &ldquo;switch a window&rdquo; game.</p>
 
-<p>It's not a 100% of cases for sure. Not even 50% of them. Is that what you might be thinking. At least so did I before I experienced it for the first time. And the circle has closed.</p>
+<p>It&rsquo;s not a 100% of cases for sure. Not even 50% of them. Is that what you might be thinking. At least so did I before I experienced it for the first time. And the circle has closed.</p>
 
 <h3>Part 3. Testem, Mincer and the way they integrate</h3>
 
-<p><a href="github.com/airportyh/testem/">Testem</a> is simply awesome. Really. It's so incredible I can't even describe what I felt when I tried it first. Just watch this:</p>
+<p><a href="github.com/airportyh/testem/">Testem</a> is simply awesome. Really. It&rsquo;s so incredible I can&rsquo;t even describe what I felt when I tried it first. Just watch this:</p>
 
 <iframe width="560" height="315" src="http://staal.io//www.youtube.com/embed/-1mjv4yk5JM" frameborder="0" allowfullscreen style="margin-top: 20px; margin-bottom: 20px;"></iframe>
 
 
-<p><strong>Testem</strong> completely removes the difference between headless console runs and real browsers. Things just get bundled into a big ecosystem with single large green "CHECK" button. And I was happy until I tried to use it with a real project...</p>
+<p><strong>Testem</strong> completely removes the difference between headless console runs and real browsers. Things just get bundled into a big ecosystem with single large green &ldquo;CHECK&rdquo; button. And I was happy until I tried to use it with a real project&hellip;</p>
 
-<p>The marketing lies! Well... A little bit at least. <strong>Testem</strong> says it supports preprocessing. No it does not. I mean it does in some way &mdash; it allows you to run custom bash command before each test run and after that. It states it's possible to do anything from command line. Well... Technically it is. It's also technically possible to cross an ocean riding a dolphin.</p>
+<p>The marketing lies! Well&hellip; A little bit at least. <strong>Testem</strong> says it supports preprocessing. No it does not. I mean it does in some way &mdash; it allows you to run custom bash command before each test run and after that. It states it&rsquo;s possible to do anything from command line. Well&hellip; Technically it is. It&rsquo;s also technically possible to cross an ocean riding a dolphin.</p>
 
 <hr />
 
-<p>But I didn't give up! Despite this limitation <strong>Testem</strong> still has a lot of stuff to support. At least we are going to solve the problem with manual browsers checking. This alone is a huge step forward. Yet another disappointment &mdash; <strong>Testem</strong> absolutely is (was!) not adapted for external programmatic integration. It's all kinda selfish and independent. So I did this:</p>
+<p>But I didn&rsquo;t give up! Despite this limitation <strong>Testem</strong> still has a lot of stuff to support. At least we are going to solve the problem with manual browsers checking. This alone is a huge step forward. Yet another disappointment &mdash; <strong>Testem</strong> absolutely is (was!) not adapted for external programmatic integration. It&rsquo;s all kinda selfish and independent. So I did this:</p>
 
 <p><strong>I wrote a Grunt task that was running Testem that was running bash script that was running Grunt that was compiling Coffee.</strong></p>
 
@@ -144,7 +144,7 @@
 
 <ul>
 <li>Accept configuration from API calls. Config file is not required anymore.</li>
-<li>Accept hooks as JS functions (instead of bash strings that run X that runs Y that runs...)</li>
+<li>Accept hooks as JS functions (instead of bash strings that run X that runs Y that runs&hellip;)</li>
 <li>Pass data to hooks</li>
 <li>Run <code>on_change</code> event when <strong>Testem</strong> notices file modification</li>
 <li>Include JS from URLs not just paths</li>
@@ -154,7 +154,7 @@
 
 <p>And as a bonus new version supports Javascript configuration files (testem.js).</p>
 
-<p>Okay then. Here I come, storage. At 1.2 branch of <a href="http://joosy.ws">Joosy</a> we have adapted <a href="https://github.com/nodeca/mincer">Mincer</a> to manage internal dependencies. And that's exactly the storage we need in fact. It suits us simply perfect. Here is the resulting workflow:</p>
+<p>Okay then. Here I come, storage. At 1.2 branch of <a href="http://joosy.ws">Joosy</a> we have adapted <a href="https://github.com/nodeca/mincer">Mincer</a> to manage internal dependencies. And that&rsquo;s exactly the storage we need in fact. It suits us simply perfect. Here is the resulting workflow:</p>
 
 <p><img src="https://github-camo.global.ssl.fastly.net/800e21517caf421200ca027c0bd50da0a5b913f1/687474703a2f2f662e636c2e6c792f6974656d732f30513275327632633143316531333252334c33332f636c6f75642e706e67" style="float: left; margin-right: 40px;"></p>
 
@@ -171,9 +171,9 @@
 <br style="clear: both">
 
 
-<p>As the result <strong>Testem</strong> watches modification of original files but it doesn't include them directly. Instead it includes them through <strong>Mincer</strong> that is listening the neighbor port. And <strong>Mincer</strong> in its turn handles all compilations and caching.</p>
+<p>As the result <strong>Testem</strong> watches modification of original files but it doesn&rsquo;t include them directly. Instead it includes them through <strong>Mincer</strong> that is listening the neighbor port. And <strong>Mincer</strong> in its turn handles all compilations and caching.</p>
 
-<p>I have to say here that <strong>Mincer</strong> isn't just fast. It's incredibly smart when it comes to caching. You can rest assured that at any moment you get actual code for any file. But what's really important it has nothing to do with <strong>Testem</strong>. Even if it takes a while to compile all your code (which happens on the first run) &mdash; it's browser that waits. It makes <strong>Testem</strong> watcher feel relaxed and work well. It also means that at any time you open console &mdash; you can be sure you see the latest results. You'll just see zero progress if it's compiling right now.</p>
+<p>I have to say here that <strong>Mincer</strong> isn&rsquo;t just fast. It&rsquo;s incredibly smart when it comes to caching. You can rest assured that at any moment you get actual code for any file. But what&rsquo;s really important it has nothing to do with <strong>Testem</strong>. Even if it takes a while to compile all your code (which happens on the first run) &mdash; it&rsquo;s browser that waits. It makes <strong>Testem</strong> watcher feel relaxed and work well. It also means that at any time you open console &mdash; you can be sure you see the latest results. You&rsquo;ll just see zero progress if it&rsquo;s compiling right now.</p>
 
 <p>All this stuff is wrapped into a Grunt plug-in. All you have to do to start using it is to install <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> and list files you want to test at the config like this:</p>
 
