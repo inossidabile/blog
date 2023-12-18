@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Sinatra | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/sinatra/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/sinatra/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Vagrant to the masses!]]></title>
-    <link href="http://staal.io/blog/2013/04/12/vagrant-to-the-masses/"/>
+    <link href="http://archive.staal.io/blog/2013/04/12/vagrant-to-the-masses/"/>
     <updated>2013-04-12T21:06:00+07:00</updated>
-    <id>http://staal.io/blog/2013/04/12/vagrant-to-the-masses</id>
+    <id>http://archive.staal.io/blog/2013/04/12/vagrant-to-the-masses</id>
     <content type="html"><![CDATA[<p>If you ever tried to unify development environments across project teams you probably heard of <a href="http://vagrantup.com/">Vagrant</a>. It integrates into a development process like a charm and works flawlessly. The chances that you stay with that as soon as you won an epic fight against provisioning are pretty high.</p>
 
 <p><strong>But unfortunately the chances to win provisioning are not high at all.</strong></p>

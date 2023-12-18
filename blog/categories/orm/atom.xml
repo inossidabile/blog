@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ORM | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/orm/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/orm/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[The Protector!]]></title>
-    <link href="http://staal.io/blog/2013/06/04/the-protector/"/>
+    <link href="http://archive.staal.io/blog/2013/06/04/the-protector/"/>
     <updated>2013-06-04T22:00:00+07:00</updated>
-    <id>http://staal.io/blog/2013/06/04/the-protector</id>
+    <id>http://archive.staal.io/blog/2013/06/04/the-protector</id>
     <content type="html"><![CDATA[<p>More than a year ago me and <a href="http://whitequark.org/">Peter Zotov</a> released <a href="https://github.com/inossidabile/heimdallr">Heimdallr</a> – gem allowing to control models' security using shiny DSL. It was an extraction from a huge API backend project where it was used to consolidate access control, ease testing and DRY controllers.</p>
 
 <p>Heimdallr was a proof-of-concept release and while I really like DSL part I never had a chance to seriously use it anywhere else. It appeared to be <strong>way</strong> too paranoid, difficult, slow and sometimes even buggy – it was so stubborn it didn&rsquo;t feel Ruby way at all. But what&rsquo;s even worse – it was incompatible with almost anything trying to work with ActiveRecord besides really basic interaction. Even with things like <a href="https://github.com/amatsuda/kaminari">Kaminari</a>.</p>

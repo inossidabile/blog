@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Turbolinks | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/turbolinks/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/turbolinks/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Dangers of Turbolinks]]></title>
-    <link href="http://staal.io/blog/2013/01/18/dangers-of-turbolinks/"/>
+    <link href="http://archive.staal.io/blog/2013/01/18/dangers-of-turbolinks/"/>
     <updated>2013-01-18T21:35:00+07:00</updated>
-    <id>http://staal.io/blog/2013/01/18/dangers-of-turbolinks</id>
+    <id>http://archive.staal.io/blog/2013/01/18/dangers-of-turbolinks</id>
     <content type="html"><![CDATA[<p>Turbolinks! This &ldquo;award-winning&rdquo; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&rsquo;s see if it really is THAT bad. And what are the reasons if it is.</p>
 
 <h3>Part 1. Well-known problems</h3>

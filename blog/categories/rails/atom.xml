@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Rails | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/rails/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/rails/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Mastering ActiveAdmin]]></title>
-    <link href="http://staal.io/blog/2013/02/26/mastering-activeadmin/"/>
+    <link href="http://archive.staal.io/blog/2013/02/26/mastering-activeadmin/"/>
     <updated>2013-02-26T01:06:00+07:00</updated>
-    <id>http://staal.io/blog/2013/02/26/mastering-activeadmin</id>
+    <id>http://archive.staal.io/blog/2013/02/26/mastering-activeadmin</id>
     <content type="html"><![CDATA[<p>Did you know ActiveAdmin was awesome?</p>
 
 <p>For the last 6 months I tried adapting ActiveAdmin to three projects with pretty different goals. And it was a great success for each of them. However everything comes with a price. ActiveAdmin has excellent DSL but it lacks architectural quality and feature-richness (mainly due to extremely slow development progress).</p>
@@ -265,9 +265,9 @@ ActiveAdmin.setup do |config|
   
   <entry>
     <title type="html"><![CDATA[Dangers of Turbolinks]]></title>
-    <link href="http://staal.io/blog/2013/01/18/dangers-of-turbolinks/"/>
+    <link href="http://archive.staal.io/blog/2013/01/18/dangers-of-turbolinks/"/>
     <updated>2013-01-18T21:35:00+07:00</updated>
-    <id>http://staal.io/blog/2013/01/18/dangers-of-turbolinks</id>
+    <id>http://archive.staal.io/blog/2013/01/18/dangers-of-turbolinks</id>
     <content type="html"><![CDATA[<p>Turbolinks! This &ldquo;award-winning&rdquo; technology earned incredible amount of criticism in such a short time! But it still is on the roadmap of Rails 4. As an evangelist of client frameworks I did not find any interest in that previously. And now suddenly life has brought us together. So let&rsquo;s see if it really is THAT bad. And what are the reasons if it is.</p>
 
 <h3>Part 1. Well-known problems</h3>
@@ -360,9 +360,9 @@ collection: -&gt; window.AppView.currentCollection ||= new AppCollection
   
   <entry>
     <title type="html"><![CDATA[Redistributable Rails applications]]></title>
-    <link href="http://staal.io/blog/2013/01/12/redistributable-rails-applications/"/>
+    <link href="http://archive.staal.io/blog/2013/01/12/redistributable-rails-applications/"/>
     <updated>2013-01-12T22:48:00+07:00</updated>
-    <id>http://staal.io/blog/2013/01/12/redistributable-rails-applications</id>
+    <id>http://archive.staal.io/blog/2013/01/12/redistributable-rails-applications</id>
     <content type="html"><![CDATA[<p>Imagine you have a large Rails application that you are going to distribute. That&rsquo;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
 
 <p>Clever consumer will also want to store such a &ldquo;deployment&rdquo; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
@@ -570,9 +570,9 @@ rake $application:link
   
   <entry>
     <title type="html"><![CDATA[Rails acceptance tests coverage]]></title>
-    <link href="http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage/"/>
+    <link href="http://archive.staal.io/blog/2012/11/24/rails-acceptance-tests-coverage/"/>
     <updated>2012-11-24T23:52:00+07:00</updated>
-    <id>http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage</id>
+    <id>http://archive.staal.io/blog/2012/11/24/rails-acceptance-tests-coverage</id>
     <content type="html"><![CDATA[<p>Most of our banking products share the same architecture. We use Rails as a REST application server and <a href="http://www.joosy.ws">Joosy</a> application working at browser as a client. One of the greatest advantages we get is the ability to cover the whole Ruby implementation with the acceptance tests. We use <strong>requests</strong> specs that are <a href="https://github.com/rspec/rspec-rails#request-specs">part of RSpec Rails</a> integration. However it’s easier said then done: our remote banking app-server for instance has near 500 routes to test. And the number of active routes grows constantly.</p>
 
 <p>Managing such a great amount of routes is a real pain no matter how good you organize your specs. To solve that my colleague <a href="http://twitter.com/ImGearHead">Andrew</a> prepared a small rspec plugin handling exactly this task: counting what’s tested on your behalf.  We spent several days playing with it and increasing it’s functionality. Join us and have some fun with the <a href="https://github.com/inossidabile/rspec-routes_coverage">rspec-routes_coverage</a> gem.</p>
@@ -663,9 +663,9 @@ rake spec:requests:coverage
   
   <entry>
     <title type="html"><![CDATA[Joosy: alternative approach to browser frameworks]]></title>
-    <link href="http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/"/>
+    <link href="http://archive.staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/"/>
     <updated>2012-06-04T23:42:00+07:00</updated>
-    <id>http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks</id>
+    <id>http://archive.staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks</id>
     <content type="html"><![CDATA[<h3>Long story short</h3>
 
 <p>We created a new JS framework that doesn’t clone anything existing but uses slightly different approach. Joosy we call it.</p>

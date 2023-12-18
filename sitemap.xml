@@ -1,63 +1,63 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://staal.io/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/</loc>
+        <loc>http://archive.staal.io/blog/2012/03/24/rails-plus-rest-avoiding-the-views-nightmare/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2012/04/01/heimdallr-orm-field-level-security/</loc>
+        <loc>http://archive.staal.io/blog/2012/04/01/heimdallr-orm-field-level-security/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2012/04/08/conventions-i-kill-you/</loc>
+        <loc>http://archive.staal.io/blog/2012/04/08/conventions-i-kill-you/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
         <loc>
-            http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/
+            http://archive.staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/
         </loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage/</loc>
+        <loc>http://archive.staal.io/blog/2012/11/24/rails-acceptance-tests-coverage/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2013/01/12/redistributable-rails-applications/</loc>
+        <loc>http://archive.staal.io/blog/2013/01/12/redistributable-rails-applications/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2013/01/18/dangers-of-turbolinks/</loc>
+        <loc>http://archive.staal.io/blog/2013/01/18/dangers-of-turbolinks/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2013/02/26/mastering-activeadmin/</loc>
+        <loc>http://archive.staal.io/blog/2013/02/26/mastering-activeadmin/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2013/04/12/vagrant-to-the-masses/</loc>
+        <loc>http://archive.staal.io/blog/2013/04/12/vagrant-to-the-masses/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2013/06/04/the-protector/</loc>
+        <loc>http://archive.staal.io/blog/2013/06/04/the-protector/</loc>
         <lastmod>2013-11-07T22:41:23+07:00</lastmod>
     </url>
     <url>
         <loc>
-            http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/
+            http://archive.staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/
         </loc>
         <lastmod>2014-02-06T10:22:43+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope/</loc>
+        <loc>http://archive.staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope/</loc>
         <lastmod>2014-02-12T00:22:13+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/blog/archives/</loc>
+        <loc>http://archive.staal.io/blog/archives/</loc>
         <lastmod>2014-02-12T00:22:13+07:00</lastmod>
     </url>
     <url>
-        <loc>http://staal.io/</loc>
+        <loc>http://archive.staal.io/</loc>
         <lastmod>2014-02-12T00:22:13+07:00</lastmod>
     </url>
 </urlset>

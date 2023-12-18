@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: RSpec | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/rspec/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/rspec/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rails acceptance tests coverage]]></title>
-    <link href="http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage/"/>
+    <link href="http://archive.staal.io/blog/2012/11/24/rails-acceptance-tests-coverage/"/>
     <updated>2012-11-24T23:52:00+07:00</updated>
-    <id>http://staal.io/blog/2012/11/24/rails-acceptance-tests-coverage</id>
+    <id>http://archive.staal.io/blog/2012/11/24/rails-acceptance-tests-coverage</id>
     <content type="html"><![CDATA[<p>Most of our banking products share the same architecture. We use Rails as a REST application server and <a href="http://www.joosy.ws">Joosy</a> application working at browser as a client. One of the greatest advantages we get is the ability to cover the whole Ruby implementation with the acceptance tests. We use <strong>requests</strong> specs that are <a href="https://github.com/rspec/rspec-rails#request-specs">part of RSpec Rails</a> integration. However it’s easier said then done: our remote banking app-server for instance has near 500 routes to test. And the number of active routes grows constantly.</p>
 
 <p>Managing such a great amount of routes is a real pain no matter how good you organize your specs. To solve that my colleague <a href="http://twitter.com/ImGearHead">Andrew</a> prepared a small rspec plugin handling exactly this task: counting what’s tested on your behalf.  We spent several days playing with it and increasing it’s functionality. Join us and have some fun with the <a href="https://github.com/inossidabile/rspec-routes_coverage">rspec-routes_coverage</a> gem.</p>

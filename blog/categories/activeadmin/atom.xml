@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ActiveAdmin | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/activeadmin/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/activeadmin/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Mastering ActiveAdmin]]></title>
-    <link href="http://staal.io/blog/2013/02/26/mastering-activeadmin/"/>
+    <link href="http://archive.staal.io/blog/2013/02/26/mastering-activeadmin/"/>
     <updated>2013-02-26T01:06:00+07:00</updated>
-    <id>http://staal.io/blog/2013/02/26/mastering-activeadmin</id>
+    <id>http://archive.staal.io/blog/2013/02/26/mastering-activeadmin</id>
     <content type="html"><![CDATA[<p>Did you know ActiveAdmin was awesome?</p>
 
 <p>For the last 6 months I tried adapting ActiveAdmin to three projects with pretty different goals. And it was a great success for each of them. However everything comes with a price. ActiveAdmin has excellent DSL but it lacks architectural quality and feature-richness (mainly due to extremely slow development progress).</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Ember | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/ember/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/ember/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[2-Way Data Binding under the Microscope]]></title>
-    <link href="http://staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope/"/>
+    <link href="http://archive.staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope/"/>
     <updated>2014-02-05T23:43:00+07:00</updated>
-    <id>http://staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope</id>
+    <id>http://archive.staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope</id>
     <content type="html"><![CDATA[<p>2-way data binding has entrenched modern front-end development as a tool allowing you to avoid boilerplate code when working with DOM, concentrate on logic and isolate the logic from your templates. All the Angular is built around this piece of technology. Pretty big part of Ember joins that. And for the Backbone framework there are numerous extensions appearing every day. It makes a lot of sense actually: 2-way data binding is pretty awesome. However the technology has its own issues, limitations and mostly important implementation details (within different frameworks). Why not speculate about it a little bit?</p>
 
 <!-- more -->

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Joosy | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/joosy/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/joosy/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[2-Way Data Binding under the Microscope]]></title>
-    <link href="http://staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope/"/>
+    <link href="http://archive.staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope/"/>
     <updated>2014-02-05T23:43:00+07:00</updated>
-    <id>http://staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope</id>
+    <id>http://archive.staal.io/blog/2014/02/05/2-way-data-binding-under-the-microscope</id>
     <content type="html"><![CDATA[<p>2-way data binding has entrenched modern front-end development as a tool allowing you to avoid boilerplate code when working with DOM, concentrate on logic and isolate the logic from your templates. All the Angular is built around this piece of technology. Pretty big part of Ember joins that. And for the Backbone framework there are numerous extensions appearing every day. It makes a lot of sense actually: 2-way data binding is pretty awesome. However the technology has its own issues, limitations and mostly important implementation details (within different frameworks). Why not speculate about it a little bit?</p>
 
 <!-- more -->
@@ -294,9 +294,9 @@ output.appendChild(a);
   
   <entry>
     <title type="html"><![CDATA[Incredibly convenient testing of front-end Javascript with Node.js]]></title>
-    <link href="http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/"/>
+    <link href="http://archive.staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js/"/>
     <updated>2013-08-17T23:28:00+07:00</updated>
-    <id>http://staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js</id>
+    <id>http://archive.staal.io/blog/2013/08/17/incredibly-convenient-testing-of-frontend-javascript-with-node-dot-js</id>
     <content type="html"><![CDATA[<p>You do have automated testing for your front-end Javascript application / library / framework don&rsquo;t you? And tests work equally well at console, browsers and Travis aren&rsquo;t they? And you run them in every possible browser on each release (or even push) right? If the answer is no, you might be doing it wrong. Let&rsquo;s see if we can do something about it!</p>
 
 <p>This article briefly describes a little piece of theory behind testing of standalone front-end projects, issues that you are likely to meet and the solution I came up with. Here&rsquo;s the shortcut <a href="https://github.com/inossidabile/grunt-contrib-testem">https://github.com/inossidabile/grunt-contrib-testem</a> if you are already bored so far ;).</p>
@@ -390,7 +390,7 @@ output.appendChild(a);
 
 <p><a href="github.com/airportyh/testem/">Testem</a> is simply awesome. Really. It&rsquo;s so incredible I can&rsquo;t even describe what I felt when I tried it first. Just watch this:</p>
 
-<iframe width="560" height="315" src="http://staal.io//www.youtube.com/embed/-1mjv4yk5JM" frameborder="0" allowfullscreen style="margin-top: 20px; margin-bottom: 20px;"></iframe>
+<iframe width="560" height="315" src="http://archive.staal.io//www.youtube.com/embed/-1mjv4yk5JM" frameborder="0" allowfullscreen style="margin-top: 20px; margin-bottom: 20px;"></iframe>
 
 
 <p><strong>Testem</strong> completely removes the difference between headless console runs and real browsers. Things just get bundled into a big ecosystem with single large green &ldquo;CHECK&rdquo; button. And I was happy until I tried to use it with a real project&hellip;</p>
@@ -486,9 +486,9 @@ grunt.initConfig
   
   <entry>
     <title type="html"><![CDATA[Joosy: alternative approach to browser frameworks]]></title>
-    <link href="http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/"/>
+    <link href="http://archive.staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks/"/>
     <updated>2012-06-04T23:42:00+07:00</updated>
-    <id>http://staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks</id>
+    <id>http://archive.staal.io/blog/2012/06/04/joosy-alternative-approach-to-browser-frameworks</id>
     <content type="html"><![CDATA[<h3>Long story short</h3>
 
 <p>We created a new JS framework that doesn’t clone anything existing but uses slightly different approach. Joosy we call it.</p>

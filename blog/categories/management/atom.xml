@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Management | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/management/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/management/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Conventions! I kill you!]]></title>
-    <link href="http://staal.io/blog/2012/04/08/conventions-i-kill-you/"/>
+    <link href="http://archive.staal.io/blog/2012/04/08/conventions-i-kill-you/"/>
     <updated>2012-04-08T23:31:00+07:00</updated>
-    <id>http://staal.io/blog/2012/04/08/conventions-i-kill-you</id>
+    <id>http://archive.staal.io/blog/2012/04/08/conventions-i-kill-you</id>
     <content type="html"><![CDATA[<p>For the development speed and quality there are a lot of factors like motivation, management style and all that stuff. It is important indeed. But they are quite common. I’ve seen a lot of SCRUMified happy teams that spend years to create large but straightforward projects. Why is this happening over and over? The wrong points of motivation and incorrect tasks prioritization are the roots. But besides project organization these roots also have an inner reason: the conventions problem.</p>
 
 <p>To take a long story short, here are three rules I encourage you follow:</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Matrioshka | Staal Forge]]></title>
-  <link href="http://staal.io/blog/categories/matrioshka/atom.xml" rel="self"/>
-  <link href="http://staal.io/"/>
+  <link href="http://archive.staal.io/blog/categories/matrioshka/atom.xml" rel="self"/>
+  <link href="http://archive.staal.io/"/>
   <updated>2014-02-12T00:24:08+07:00</updated>
-  <id>http://staal.io/</id>
+  <id>http://archive.staal.io/</id>
   <author>
     <name><![CDATA[Boris Staal]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Redistributable Rails applications]]></title>
-    <link href="http://staal.io/blog/2013/01/12/redistributable-rails-applications/"/>
+    <link href="http://archive.staal.io/blog/2013/01/12/redistributable-rails-applications/"/>
     <updated>2013-01-12T22:48:00+07:00</updated>
-    <id>http://staal.io/blog/2013/01/12/redistributable-rails-applications</id>
+    <id>http://archive.staal.io/blog/2013/01/12/redistributable-rails-applications</id>
     <content type="html"><![CDATA[<p>Imagine you have a large Rails application that you are going to distribute. That&rsquo;s might be a new world-crashing CMS or incredibly modern Redmine fork. Every separate installation produced by a consumer requires different configs. Or maybe even some code that will adapt your product for particular needs using amazing internal API.</p>
 
 <p>Clever consumer will also want to store such a &ldquo;deployment&rdquo; in his own git repository. And as the last point – he will definitely require a nice way to maintain ability to upgrade your product within required version branch.</p>
